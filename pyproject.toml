@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "invo"
+version = "0.1.0"
+description = "Inventory management system"
+authors = ["Patrick Forringer <patrick@forringer.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+django = "^3.1.2"
+django-mptt = "^0.11.0"
+django-mptt-admin = "^2.0.0"
+django-polymorphic = "^3.0.0"
+psycopg2-binary = "^2.8.6"
+django-polymorphic-tree = "^1.5.1"
+django-extensions = "^3.0.9"
+
+[tool.poetry.dev-dependencies]
+ipdb = "^0.13.4"
+
+# [tool.poetry.scripts]
+# start = 'manage:main runserver'
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
