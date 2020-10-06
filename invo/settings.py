@@ -40,8 +40,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
+    "safedelete",
     'mptt',
-    "invo.apps.spaces"
+    "invo.apps.spaces",
+    "invo.apps.items",
 ]
 
 MIDDLEWARE = [

@@ -128,6 +128,17 @@ future = ">=0.12.2"
 
 [[package]]
 category = "main"
+description = "Mask your objects instead of deleting them from your database."
+name = "django-safedelete"
+optional = false
+python-versions = "*"
+version = "0.5.6"
+
+[package.dependencies]
+Django = "*"
+
+[[package]]
+category = "main"
 description = "Micro-library to easily write custom Django template tags"
 name = "django-tag-parser"
 optional = false
@@ -327,7 +338,7 @@ python-versions = "*"
 version = "0.2.5"
 
 [metadata]
-content-hash = "ea7d1c14153f4478bb9358208425a6bc8bf205bf812de2b026a411d1cfe78579"
+content-hash = "a3066ee746a860752e5946661561b200770538093effbc12bc9ec20ce1c14318"
 lock-version = "1.0"
 python-versions = "^3.8"
 
@@ -380,6 +391,11 @@ django-polymorphic = [
 django-polymorphic-tree = [
     {file = "django-polymorphic-tree-1.5.1.tar.gz", hash = "sha256:0d113886d88c31c68a304c8ae7e9af8493b177e12cc431f8135645408c9de58c"},
     {file = "django_polymorphic_tree-1.5.1-py2.py3-none-any.whl", hash = "sha256:270388a711d43d0813af78cd8d702958eeb33d63e3948d93b40a78d43f879852"},
+]
+django-safedelete = [
+    {file = "django-safedelete-0.5.6.tar.gz", hash = "sha256:b829e8a3abae3e00aa04461263c812d3444ebd7ae57aa0fa1ca3cdc7c414a82a"},
+    {file = "django_safedelete-0.5.6-py2-none-any.whl", hash = "sha256:95790074a017c5feb0bb1eae161d300d8eceda9c0dddcc93a81ac5f83be82e2e"},
+    {file = "django_safedelete-0.5.6-py3-none-any.whl", hash = "sha256:ee86498ea6bf59e27d73c0ae196f5b5060a917ed6b5b6df77f108e91dd9bfe57"},
 ]
 django-tag-parser = [
     {file = "django-tag-parser-3.2.tar.gz", hash = "sha256:903cd4bf3692c8c060770ca2b9d6e74e4ee52d6078308852acffe1ef4a49e0f7"},
