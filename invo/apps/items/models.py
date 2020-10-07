@@ -4,15 +4,19 @@ from django.utils.translation import ugettext_lazy as _
 from django_extensions.db.models import TimeStampedModel
 from polymorphic.models import PolymorphicModel
 from safedelete.models import SafeDeleteModel, SOFT_DELETE_CASCADE
+from invo.utils.protocol import Protocol
+from decimal import Decimal as D
 
 
-class Item(TimeStampedModel, PolymorphicModel, SafeDeleteModel):
+class Item(Protocol, TimeStampedModel, PolymorphicModel, SafeDeleteModel):
     """Base item that can be stored in different spaces"""
     _safedelete_policy = SOFT_DELETE_CASCADE
 
     name = models.CharField(_("Name"), max_length=50)
     data = models.JSONField(null=True, blank=True)
 
+    # Many to many? can an item be inside multiple spaces? currently spaces are nested
+    # so that could result in issues
     space = models.ForeignKey(
         "spaces.SpaceNode", blank=True, null=True, related_name="items", on_delete=models.SET_NULL
     )
@@ -23,9 +27,10 @@ class Item(TimeStampedModel, PolymorphicModel, SafeDeleteModel):
 
 class Consumable(Item):
     """Stores extra data related to if an item"""
-    count = models.PositiveIntegerField(default=0)
+    # What about Units? What about non-integer amounts?
+    count = models.DecimalField(default=D("0"), max_digits=13, decimal_places=4)
     warning_enabled = models.BooleanField(default=False)
-    warning_count = models.PositiveIntegerField(default=10)
+    warning_count = models.DecimalField(default=D("10"), max_digits=13, decimal_places=4)
 
     def consume(self, amount=1, save=True):
         self.count -= amount

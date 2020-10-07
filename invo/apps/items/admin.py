@@ -1,44 +1,48 @@
 from django.contrib import admin
 from polymorphic.admin import PolymorphicParentModelAdmin, PolymorphicChildModelAdmin, PolymorphicChildModelFilter
-from .models import Item, Consumable, Tool, TrackedConsumable
+from . import models 
 from safedelete.admin import SafeDeleteAdmin, highlight_deleted
 
 
 class ItemChildAdmin(PolymorphicChildModelAdmin):
     """Base admin class for all child models"""
-    base_model = Item  # Optional, explicitly set here.
-
-    # By using these `base_...` attributes instead of the regular Itemdmin `form` and `fieldsets`,
-    # the additional fields of the child models are automatically added to the admin form.
-    # base_form = ...
+    base_model = models.Item 
+    base_readonly_fields = ("space",)
     base_fields = (
-        "name", "data", "space"
+        "name", "data", "space",
     )
 
 
-@admin.register(Item)
+@admin.register(models.Item)
 class ItemParentAdmin(SafeDeleteAdmin, PolymorphicParentModelAdmin):
     """The parent model admin"""
-    base_model = Item 
-    child_models = (Consumable, TrackedConsumable, Tool)
+    base_model = models.Item 
+    child_models = (models.Consumable, models.TrackedConsumable, models.Tool)
     list_filter = (PolymorphicChildModelFilter,) + SafeDeleteAdmin.list_filter 
-    list_display = (highlight_deleted,) + SafeDeleteAdmin.list_display
+    list_display = (highlight_deleted, "protocol_ident",) + SafeDeleteAdmin.list_display
 
 
-@admin.register(Consumable)
+@admin.register(models.Consumable)
 class ConsumableAdmin(SafeDeleteAdmin, ItemChildAdmin):
-    base_model = Consumable
+    base_model = models.Consumable
     show_in_index = True
-    list_display = (highlight_deleted, "count", "warning_count", "warning") + SafeDeleteAdmin.list_display
+    list_display = (
+        highlight_deleted,
+        "count",
+        "warning_count",
+        "warning",
+        "protocol_ident"
+    ) + SafeDeleteAdmin.list_display
     
 
 @admin.register(TrackedConsumable)
+@admin.register(models.TrackedConsumable)
 class TrackedConsumableAdmin(ConsumableAdmin):
-    base_model = TrackedConsumable
+    base_model = models.TrackedConsumable
     show_in_index = True
 
 
-@admin.register(Tool)
+@admin.register(models.Tool)
 class ToolAdmin(ItemChildAdmin):
-    base_model = Tool
+    base_model = models.Tool
     show_in_index = True

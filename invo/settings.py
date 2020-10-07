@@ -11,9 +11,14 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+import sys
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+# Add apps to dir
+sys.path.append(str(Path(__file__).parent / "apps"))
 
 
 # Quick-start development settings - unsuitable for production
@@ -42,8 +47,9 @@ INSTALLED_APPS = [
     'django_extensions',
     "safedelete",
     'mptt',
-    "invo.apps.spaces",
-    "invo.apps.items",
+    'qr_code',
+    "spaces",
+    "items",
 ]
 
 MIDDLEWARE = [

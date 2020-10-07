@@ -16,8 +16,10 @@ from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
 from polymorphic_tree.models import PolymorphicMPTTModel, PolymorphicTreeForeignKey
 
+from invo.utils.protocol import Protocol
 
-class SpaceNode(TimeStampedModel, PolymorphicMPTTModel):
+
+class SpaceNode(Protocol, TimeStampedModel, PolymorphicMPTTModel):
     """
     A space that objects can be organized under
     """
@@ -36,6 +38,10 @@ class SpaceNode(TimeStampedModel, PolymorphicMPTTModel):
 
     def __str__(self):
         return self.name
+    
+    # TODO: smart item lookup with left/right bounds in item or space queryset?
+    # If you want to query or filter all items that are contained within a parent node
+    # Could do a query where all items are searched based on their space left/right value.
 
 
 class GridSpaceNode(SpaceNode):
@@ -59,13 +65,13 @@ class GridSpaceNode(SpaceNode):
     def sync_children(self, child_class=None):
         """Create missing children if needed"""
 
+        if child_class is None:
+            child_class = GridSpaceNode
+
         assert issubclass(child_class, SpaceNode)
 
         if self.grid_size is None:
             return
-
-        if child_class is None:
-            child_class = GridSpaceNode
 
         # Create of update children Spaces
         children = self.get_children()
@@ -87,3 +93,6 @@ class GridSpaceNode(SpaceNode):
 # class DrawerNode(GridSpaceNode):
 # Maybe for parts/tools different drawers for things?
 # What extra fields does it add?
+
+# class RackNode(GridSpaceNode):
+# Vertical rack with the units marked out. Items can fill multiple units?
