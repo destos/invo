@@ -23,11 +23,37 @@ ipdb = "^0.13.4"
 pytest-django = "^3.10.0"
 model_bakery = "^1.2.0"
 pytest-watch = "^4.2.0"
+black = {version = "^20.8b1", allow-prereleases = true}
 
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "invo.settings"
 python_files = "tests.py test_*.py *_tests.py"
 addopts = "--no-migrations --disable-pytest-warnings --reuse-db -vvv"
+
+[tool.black]
+line-length = 99
+target-version = ['py38']
+include = '\.pyi?$'
+exclude = '''
+
+(
+  /(
+      \.eggs         # exclude a few common directories in the
+    | \.git          # root of the project
+    | \.hg
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+    | _build
+    | buck-out
+    | build
+    | dist
+    | migrations 
+  )/
+  | foo.py           # also separately exclude a file named foo.py in
+                     # the root of the project
+)
+'''
 
 [build-system]
 requires = ["poetry>=0.12"]

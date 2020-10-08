@@ -1,4 +1,3 @@
-
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django_extensions.db.models import TimeStampedModel
@@ -12,6 +11,7 @@ from .managers import ItemManager
 
 class Item(Protocol, TimeStampedModel, PolymorphicModel, SafeDeleteModel):
     """Base item that can be stored in different spaces"""
+
     _safedelete_policy = SOFT_DELETE_CASCADE
 
     name = models.CharField(_("Name"), max_length=50)
@@ -20,7 +20,11 @@ class Item(Protocol, TimeStampedModel, PolymorphicModel, SafeDeleteModel):
     # Many to many? can an item be inside multiple spaces? currently spaces are nested
     # so that could result in issues
     space = models.ForeignKey(
-        "spaces.SpaceNode", blank=True, null=True, related_name="items", on_delete=models.SET_NULL
+        "spaces.SpaceNode",
+        blank=True,
+        null=True,
+        related_name="items",
+        on_delete=models.SET_NULL,
     )
 
     def __str__(self):
@@ -31,6 +35,7 @@ class Item(Protocol, TimeStampedModel, PolymorphicModel, SafeDeleteModel):
 
 class Consumable(Item):
     """Stores extra data related to if an item"""
+
     # What about Units? What about non-integer amounts?
     count = models.DecimalField(default=D("0"), max_digits=13, decimal_places=4)
     warning_enabled = models.BooleanField(default=False)
@@ -39,20 +44,31 @@ class Consumable(Item):
     def consume(self, amount=1, save=True):
         self.count -= amount
         if save:
-            self.save(update_fields=("count", "modified",))
+            self.save(
+                update_fields=(
+                    "count",
+                    "modified",
+                )
+            )
 
     def addition(self, amount=1, save=True):
         self.count += amount
         if save:
-            self.save(update_fields=("count", "modified",))
-    
+            self.save(
+                update_fields=(
+                    "count",
+                    "modified",
+                )
+            )
+
     @property
     def warning(self):
-        return self.warning_enabled and self.count <= self.warning_count 
+        return self.warning_enabled and self.count <= self.warning_count
 
 
 class TrackedConsumable(Consumable):
     """Serialized consumable consumption for tracking"""
+
     # Count may be able to tracked via relation to equipment in the future?
 
     def consume(self, *equipment, **kwargs):
@@ -64,5 +80,6 @@ class TrackedConsumable(Consumable):
 
 class Tool(Item):
     """Tools yo"""
+
     # TODO: tools taxonomy system
     pass

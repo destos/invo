@@ -1,25 +1,37 @@
 from django.contrib import admin
-from polymorphic.admin import PolymorphicParentModelAdmin, PolymorphicChildModelAdmin, PolymorphicChildModelFilter
-from . import models 
+from polymorphic.admin import (
+    PolymorphicParentModelAdmin,
+    PolymorphicChildModelAdmin,
+    PolymorphicChildModelFilter,
+)
+from . import models
 from safedelete.admin import SafeDeleteAdmin, highlight_deleted
 
 
 class ItemChildAdmin(PolymorphicChildModelAdmin):
     """Base admin class for all child models"""
-    base_model = models.Item 
+
+    base_model = models.Item
     base_readonly_fields = ("space",)
     base_fields = (
-        "name", "data", "space",
+        "name",
+        "data",
+        "space",
     )
 
 
 @admin.register(models.Item)
 class ItemParentAdmin(SafeDeleteAdmin, PolymorphicParentModelAdmin):
     """The parent model admin"""
-    base_model = models.Item 
+
+    base_model = models.Item
     child_models = (models.Consumable, models.TrackedConsumable, models.Tool)
-    list_filter = (PolymorphicChildModelFilter,) + SafeDeleteAdmin.list_filter 
-    list_display = (highlight_deleted, "protocol_ident", "space",) + SafeDeleteAdmin.list_display
+    list_filter = (PolymorphicChildModelFilter,) + SafeDeleteAdmin.list_filter
+    list_display = (
+        highlight_deleted,
+        "protocol_ident",
+        "space",
+    ) + SafeDeleteAdmin.list_display
 
 
 @admin.register(models.Consumable)
@@ -31,7 +43,7 @@ class ConsumableAdmin(SafeDeleteAdmin, ItemChildAdmin):
         "count",
         "warning_count",
         "warning",
-        "protocol_ident"
+        "protocol_ident",
     ) + SafeDeleteAdmin.list_display
 
 

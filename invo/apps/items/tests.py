@@ -7,10 +7,10 @@ from spaces.models import SpaceNode
 class TestItem(TestCase):
     def setUp(self):
         self.item = baker.make(models.Item, name="Test Item", data=dict(test="data"))
-    
+
     def test_attrs(self):
         self.assertEqual(str(self.item), "Test Item")
-    
+
     def test_item_can_be_assigned_to_space(self):
         node = baker.make(SpaceNode)
         self.item.space = node
@@ -40,34 +40,34 @@ class TestItemQueryset(TestCase):
         # These items shouldn't show up in our tests
         baker.make(models.Item, name="Extra Item")
         baker.make(models.Item, name="Outside Item", space=outside_space)
-    
+
     def test_manager_in_space_items(self):
         self.assertSequenceEqual(
             models.Item.objects.in_space(self.top_space),
             [self.top_item, self.inner_item, self.leaf_item],
-            "Should include all leafs"
+            "Should include all leafs",
         )
         self.assertSequenceEqual(
             models.Item.objects.in_space(self.inner_space),
             [self.inner_item, self.leaf_item],
-            "Should include just inner items"
+            "Should include just inner items",
         )
         self.assertSequenceEqual(
             models.Item.objects.in_space(self.leaf_space),
             [self.leaf_item],
-            "Should only be the leaf node"
+            "Should only be the leaf node",
         )
 
 
 class TestConsumable(TestCase):
     def setUp(self):
         self.item = baker.make(models.Consumable)
-    
+
     def test_default_state(self):
         self.assertEqual(self.item.count, 0)
         self.assertEqual(self.item.warning_enabled, False)
         self.assertEqual(self.item.warning_count, 10)
-    
+
     def test_warning(self):
         self.assertFalse(self.item.warning, "Warning should not be on by default")
         self.item.count = 20
@@ -84,10 +84,14 @@ class TestConsumable(TestCase):
 
     def test_consume(self):
         self.item.count = 30
-        first_modified = self.item.modified 
+        first_modified = self.item.modified
         self.item.consume()
         self.assertEqual(self.item.count, 29)
-        self.assertNotEqual(first_modified, self.item.modified, "my default consume should update modified date")
+        self.assertNotEqual(
+            first_modified,
+            self.item.modified,
+            "my default consume should update modified date",
+        )
 
         self.item.consume(20)
         self.assertEqual(self.item.count, 9)
