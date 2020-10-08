@@ -96,3 +96,18 @@ class TestConsumable(TestCase):
         self.item.consume(20)
         self.assertEqual(self.item.count, 9)
         self.assertNotEqual(first_modified, self.item.modified)
+
+    def test_addition(self):
+        self.item.count = 10
+        first_modified = self.item.modified
+        self.item.addition()
+        self.assertEqual(self.item.count, 11)
+        self.assertNotEqual(
+            first_modified,
+            self.item.modified,
+            "my default addition should update modified date",
+        )
+
+        self.item.addition(20)
+        self.assertEqual(self.item.count, 31)
+        self.assertNotEqual(first_modified, self.item.modified)
