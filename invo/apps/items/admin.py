@@ -19,7 +19,7 @@ class ItemParentAdmin(SafeDeleteAdmin, PolymorphicParentModelAdmin):
     base_model = models.Item 
     child_models = (models.Consumable, models.TrackedConsumable, models.Tool)
     list_filter = (PolymorphicChildModelFilter,) + SafeDeleteAdmin.list_filter 
-    list_display = (highlight_deleted, "protocol_ident",) + SafeDeleteAdmin.list_display
+    list_display = (highlight_deleted, "protocol_ident", "space",) + SafeDeleteAdmin.list_display
 
 
 @admin.register(models.Consumable)
