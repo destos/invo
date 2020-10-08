@@ -24,6 +24,11 @@ pytest-django = "^3.10.0"
 model_bakery = "^1.2.0"
 pytest-watch = "^4.2.0"
 
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "invo.settings"
+python_files = "tests.py test_*.py *_tests.py"
+addopts = "--no-migrations --disable-pytest-warnings --reuse-db -vvv"
+
 [build-system]
 requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"
