@@ -33,9 +33,8 @@ class ConsumableAdmin(SafeDeleteAdmin, ItemChildAdmin):
         "warning",
         "protocol_ident"
     ) + SafeDeleteAdmin.list_display
-    
 
-@admin.register(TrackedConsumable)
+
 @admin.register(models.TrackedConsumable)
 class TrackedConsumableAdmin(ConsumableAdmin):
     base_model = models.TrackedConsumable

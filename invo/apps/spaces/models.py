@@ -38,7 +38,10 @@ class SpaceNode(Protocol, TimeStampedModel, PolymorphicMPTTModel):
 
     def __str__(self):
         return self.name
-    
+
+    def add_item(self, item):
+        return self.items.add(item)
+   
     # TODO: smart item lookup with left/right bounds in item or space queryset?
     # If you want to query or filter all items that are contained within a parent node
     # Could do a query where all items are searched based on their space left/right value.
@@ -82,9 +85,6 @@ class GridSpaceNode(SpaceNode):
                 for y in range(y_total):
                     if not children.instance_of(GridSpaceNode).filter(data__position=[x, y]).exists():
                         child_class(name=f"{x},{y}", data=dict(position=[x, y])).insert_at(self, position="last-child", save=True)
-
-    def add_item(self, item):
-        return self.items.add(item)
 
     class MPTTMeta:
         order_insertion_by = ("name")

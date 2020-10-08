@@ -7,6 +7,8 @@ from safedelete.models import SafeDeleteModel, SOFT_DELETE_CASCADE
 from invo.utils.protocol import Protocol
 from decimal import Decimal as D
 
+from .managers import ItemManager
+
 
 class Item(Protocol, TimeStampedModel, PolymorphicModel, SafeDeleteModel):
     """Base item that can be stored in different spaces"""
@@ -24,6 +26,8 @@ class Item(Protocol, TimeStampedModel, PolymorphicModel, SafeDeleteModel):
     def __str__(self):
         return self.name
 
+    objects = ItemManager()
+
 
 class Consumable(Item):
     """Stores extra data related to if an item"""
@@ -37,7 +41,6 @@ class Consumable(Item):
         if save:
             self.save(update_fields=("count", "modified",))
 
-
     def addition(self, amount=1, save=True):
         self.count += amount
         if save:
@@ -45,7 +48,7 @@ class Consumable(Item):
     
     @property
     def warning(self):
-        return self.warning_enabled and self.warning_count >= self.count
+        return self.warning_enabled and self.count <= self.warning_count 
 
 
 class TrackedConsumable(Consumable):

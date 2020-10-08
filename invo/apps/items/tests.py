@@ -1,6 +1,62 @@
 from django.test import TestCase
 from model_bakery import baker
 from . import models
+from spaces.models import SpaceNode
+
+
+class TestItem(TestCase):
+    def setUp(self):
+        self.item = baker.make(models.Item, name="Test Item", data=dict(test="data"))
+    
+    def test_attrs(self):
+        self.assertEqual(str(self.item), "Test Item")
+    
+    def test_item_can_be_assigned_to_space(self):
+        node = baker.make(SpaceNode)
+        self.item.space = node
+        self.item.save()
+        self.assertEqual(node.items.count(), 1)
+
+
+class TestItemQueryset(TestCase):
+    def setUp(self):
+        # with SpaceNode.objects.delay_mptt_updates():
+        self.top_space = baker.make(SpaceNode, name="Top Space")
+        self.inner_space = baker.make(SpaceNode, name="Inner Space", parent=self.top_space)
+        self.leaf_space = baker.make(SpaceNode, name="Leaf Space", parent=self.inner_space)
+        # Empty space with no item inside
+        baker.make(SpaceNode, name="Empty Space", parent=self.leaf_space)
+        outside_space = baker.make(SpaceNode, name="Outside Space")
+
+        # rebuild tree
+        SpaceNode.objects.rebuild()
+        self.top_space.refresh_from_db()
+        self.inner_space.refresh_from_db()
+        self.leaf_space.refresh_from_db()
+
+        self.leaf_item = baker.make(models.Item, name="Leaf Item", space=self.leaf_space)
+        self.inner_item = baker.make(models.Item, name="Inner Item", space=self.inner_space)
+        self.top_item = baker.make(models.Item, name="Top Item", space=self.top_space)
+        # These items shouldn't show up in our tests
+        baker.make(models.Item, name="Extra Item")
+        baker.make(models.Item, name="Outside Item", space=outside_space)
+    
+    def test_manager_in_space_items(self):
+        self.assertSequenceEqual(
+            models.Item.objects.in_space(self.top_space),
+            [self.top_item, self.inner_item, self.leaf_item],
+            "Should include all leafs"
+        )
+        self.assertSequenceEqual(
+            models.Item.objects.in_space(self.inner_space),
+            [self.inner_item, self.leaf_item],
+            "Should include just inner items"
+        )
+        self.assertSequenceEqual(
+            models.Item.objects.in_space(self.leaf_space),
+            [self.leaf_item],
+            "Should only be the leaf node"
+        )
 
 
 class TestConsumable(TestCase):
