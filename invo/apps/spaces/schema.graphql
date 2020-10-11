@@ -1,0 +1,35 @@
+input SpaceFilter {
+    name: String
+}
+
+interface SpaceInterface {
+    id: ID!
+    name: String
+    parent: Space
+    children(filter: SpaceFilter): [Space]
+    data: JSONData
+}
+
+type SpaceNode implements SpaceInterface {
+    id: ID!
+    name: String
+    parent: Space
+    children(filter: SpaceFilter): [Space]
+    data: JSONData
+}
+
+type GridSpaceNode implements SpaceInterface {
+    id: ID!
+    name: String
+    size: [Int]
+    parent: Space
+    children(filter: SpaceFilter): [Space]
+    data: JSONData
+}
+
+union Space = SpaceNode | GridSpaceNode
+
+extend type Query {
+    space(id: ID!): Space
+    getSpaces(filter: SpaceFilter): [Space]
+}

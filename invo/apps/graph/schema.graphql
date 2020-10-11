@@ -1,0 +1,30 @@
+scalar Date
+scalar DateTime
+scalar JSONData
+
+interface TimeStamped {
+  created: DateTime
+  modified: DateTime
+}
+
+# Extend Waffle items with TimeStamped interface
+extend type WaffleFlag implements TimeStamped {
+  created: DateTime
+  modified: DateTime
+}
+
+extend type WaffleSwitch implements TimeStamped {
+  created: DateTime
+  modified: DateTime
+}
+
+extend type WaffleSample implements TimeStamped {
+  created: DateTime
+  modified: DateTime
+}
+
+type Query
+
+type Mutation {
+    root: Boolean
+}
