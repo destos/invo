@@ -1,19 +1,18 @@
-from ariadne_extended.resolvers import ModelResolver
+from ariadne_extended.resolvers import ModelResolver, ListModelMixin
 from .models import SpaceNode
 
 from graph.types import query
 from .types import space_interface
+from .filters import SpaceNodeFilter
 
 
-class SpaceNodeResolver(ModelResolver):
+class SpaceNodeResolver(ListModelMixin, ModelResolver):
     model = SpaceNode
+    filterset_class = SpaceNodeFilter
     queryset = SpaceNode.objects.all()
 
 
 query.set_field("space", SpaceNodeResolver.as_resolver(method="retrieve"))
 query.set_field("getSpaces", SpaceNodeResolver.as_resolver(method="list"))
 
-
-@space_interface.field("children")
-def resolve_children(obj, info):
-    return obj.children.all()
+space_interface.set_field("children", SpaceNodeResolver.as_nested_resolver(method="list"))

@@ -1,5 +1,6 @@
 input SpaceFilter {
     name: String
+    name__icontains: String
 }
 
 interface SpaceInterface {
