@@ -316,6 +316,19 @@ testing = ["Django (<3.1)", "colorama", "docopt", "pytest (>=3.9.0,<5.0.0)"]
 
 [[package]]
 category = "dev"
+description = "Rolling backport of unittest.mock for all Pythons"
+name = "mock"
+optional = false
+python-versions = ">=3.6"
+version = "4.0.2"
+
+[package.extras]
+build = ["twine", "wheel", "blurb"]
+docs = ["sphinx"]
+test = ["pytest", "pytest-cov"]
+
+[[package]]
+category = "dev"
 description = "Smart object creation facility for Django."
 name = "model-bakery"
 optional = false
@@ -506,6 +519,20 @@ testing = ["django", "django-configurations (>=2.0)", "six"]
 
 [[package]]
 category = "dev"
+description = "Thin-wrapper around the mock package for easier use with pytest"
+name = "pytest-mock"
+optional = false
+python-versions = ">=3.5"
+version = "3.3.1"
+
+[package.dependencies]
+pytest = ">=5.0"
+
+[package.extras]
+dev = ["pre-commit", "tox", "pytest-asyncio"]
+
+[[package]]
+category = "dev"
 description = "Local continuous test runner with pytest and watchdog."
 name = "pytest-watch"
 optional = false
@@ -631,7 +658,7 @@ python-versions = "*"
 version = "0.2.5"
 
 [metadata]
-content-hash = "618e7cc61183fec4331f096d9600492f876ada70752e258b7b04844ac98b6fa6"
+content-hash = "c853b90c8b12ebe4e801b846cf59f8bdf21754b279e67b3461dc78e19867a673"
 lock-version = "1.0"
 python-versions = "^3.8"
 
@@ -742,6 +769,10 @@ jedi = [
     {file = "jedi-0.17.2-py2.py3-none-any.whl", hash = "sha256:98cc583fa0f2f8304968199b01b6b4b94f469a1f4a74c1560506ca2a211378b5"},
     {file = "jedi-0.17.2.tar.gz", hash = "sha256:86ed7d9b750603e4ba582ea8edc678657fb4007894a12bcf6f4bb97892f31d20"},
 ]
+mock = [
+    {file = "mock-4.0.2-py3-none-any.whl", hash = "sha256:3f9b2c0196c60d21838f307f5825a7b86b678cedc58ab9e50a8988187b4d81e0"},
+    {file = "mock-4.0.2.tar.gz", hash = "sha256:dd33eb70232b6118298d516bbcecd26704689c386594f0f3c4f13867b2c56f72"},
+]
 model-bakery = [
     {file = "model_bakery-1.2.0-py2.py3-none-any.whl", hash = "sha256:b25f400b392067f02d841a0ef33e861543c04b1702dc004020bdd50e1dbce05f"},
     {file = "model_bakery-1.2.0.tar.gz", hash = "sha256:088698cdf62e5ccedeb97e55ceb966c974cc79e2514928aec9beab27a8c1faf4"},
@@ -842,6 +873,10 @@ pytest = [
 pytest-django = [
     {file = "pytest-django-3.10.0.tar.gz", hash = "sha256:4de6dbd077ed8606616958f77655fed0d5e3ee45159475671c7fa67596c6dba6"},
     {file = "pytest_django-3.10.0-py2.py3-none-any.whl", hash = "sha256:c33e3d3da14d8409b125d825d4e74da17bb252191bf6fc3da6856e27a8b73ea4"},
+]
+pytest-mock = [
+    {file = "pytest-mock-3.3.1.tar.gz", hash = "sha256:a4d6d37329e4a893e77d9ffa89e838dd2b45d5dc099984cf03c703ac8411bb82"},
+    {file = "pytest_mock-3.3.1-py3-none-any.whl", hash = "sha256:024e405ad382646318c4281948aadf6fe1135632bea9cc67366ea0c4098ef5f2"},
 ]
 pytest-watch = [
     {file = "pytest-watch-4.2.0.tar.gz", hash = "sha256:06136f03d5b361718b8d0d234042f7b2f203910d8568f63df2f866b547b3d4b9"},

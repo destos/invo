@@ -17,15 +17,19 @@ sync_grid_children.short_description = "Sync grid children nodes"
 
 
 class BaseSpaceNodeAdmin(PolymorphicMPTTChildModelAdmin):
-    # readonly_fields = ("parent",)
     GENERAL_FIELDSET = (
-        None,
+        _("General "),
         {
             "fields": ("parent", "name"),
         },
     )
+    list_display = (
+        "name",
+        "item_count",
+    )
 
     base_model = models.SpaceNode
+    # base_readonly_fields = ("parent",)
     base_fieldsets = (GENERAL_FIELDSET,)
 
 
@@ -36,6 +40,7 @@ class GridSpaceNodeAdmin(BaseSpaceNodeAdmin):
 
 
 class TreeNodeParentAdmin(PolymorphicMPTTParentModelAdmin):
+    # readonly_fields = ("parent",)
     base_model = models.SpaceNode
     child_models = (
         models.SpaceNode,
@@ -44,9 +49,11 @@ class TreeNodeParentAdmin(PolymorphicMPTTParentModelAdmin):
 
     list_display = (
         "name",
+        "item_count",
         "actions_column",
     )
 
 
 admin.site.register(models.SpaceNode, TreeNodeParentAdmin)
+# admin.site.register(models.SpaceNode, BaseSpaceNodeAdmin)
 admin.site.register(models.GridSpaceNode, GridSpaceNodeAdmin)

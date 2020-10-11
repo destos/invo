@@ -21,7 +21,7 @@ from invo.utils.protocol import Protocol
 
 class SpaceNode(Protocol, TimeStampedModel, PolymorphicMPTTModel):
     """
-    A space that objects can be organized under
+    A space that items can be organized under
     """
 
     name = models.CharField(_("Name"), max_length=50)
@@ -34,13 +34,18 @@ class SpaceNode(Protocol, TimeStampedModel, PolymorphicMPTTModel):
         order_insertion_by = ("name",)
 
     class Meta:
-        ordering = ("parent__name", "name")
+        ordering = ("lft", "parent__name", "name")
         unique_together = ("parent", "name")
         verbose_name = _("Space")
         verbose_name_plural = _("Spaces")
+        get_latest_by = ("created",)
 
     def __str__(self):
         return self.name
+
+    @property
+    def item_count(self):
+        return self.items.model.objects.in_space(self).count()
 
     def add_item(self, item):
         return self.items.add(item)

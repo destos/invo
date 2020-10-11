@@ -1,60 +1,56 @@
 [tool.poetry]
+authors = ["Patrick Forringer <patrick@forringer.com>"]
+description = "Inventory management system"
+license = "MIT"
 name = "invo"
 version = "0.1.0"
-description = "Inventory management system"
-authors = ["Patrick Forringer <patrick@forringer.com>"]
-license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.8"
 django = "^3.1.2"
+django-extensions = "^3.0.9"
 django-mptt = "^0.11.0"
 django-mptt-admin = "^2.0.0"
 django-polymorphic = "^3.0.0"
-psycopg2-binary = "^2.8.6"
 django-polymorphic-tree = "^1.5.1"
-django-extensions = "^3.0.9"
-django-safedelete = "^0.5.6"
-pyhumps = "^1.6.1"
 django-qr-code = "^1.3.1"
+django-safedelete = "^0.5.6"
+psycopg2-binary = "^2.8.6"
+pyhumps = "^1.6.1"
+python = "^3.8"
 
 [tool.poetry.dev-dependencies]
-ipdb = "^0.13.4"
-pytest-django = "^3.10.0"
-model_bakery = "^1.2.0"
-pytest-watch = "^4.2.0"
 black = {version = "^20.8b1", allow-prereleases = true}
+ipdb = "^0.13.4"
+model_bakery = "^1.2.0"
+pytest-django = "^3.10.0"
+pytest-mock = "^3.3.1"
+pytest-watch = "^4.2.0"
+mock = "^4.0.2"
 
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "invo.settings"
-python_files = "tests.py test_*.py *_tests.py"
 addopts = "--no-migrations --disable-pytest-warnings --reuse-db -vvv"
+python_files = "tests.py test_*.py *_tests.py"
 
 [tool.black]
+# exclude = '''
+# (
+#   /(
+#       \.eggs         
+#     | \.git          
+#     | \.mypy_cache
+#     | \.tox
+#     | \.venv
+#     | build
+#     | dist
+#     | migrations 
+#   )/
+# )
+# '''
+include = '\.pyi?$'
 line-length = 99
 target-version = ['py38']
-include = '\.pyi?$'
-exclude = '''
-
-(
-  /(
-      \.eggs         # exclude a few common directories in the
-    | \.git          # root of the project
-    | \.hg
-    | \.mypy_cache
-    | \.tox
-    | \.venv
-    | _build
-    | buck-out
-    | build
-    | dist
-    | migrations 
-  )/
-  | foo.py           # also separately exclude a file named foo.py in
-                     # the root of the project
-)
-'''
 
 [build-system]
-requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"
+requires = ["poetry>=0.12"]

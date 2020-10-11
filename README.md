@@ -1,0 +1,2 @@
+- [ ] ability to take pictures and assign them to spaces/items
+- [ ] protocol QR code
