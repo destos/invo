@@ -5,27 +5,34 @@ input SpaceFilter {
 
 interface SpaceInterface {
     id: ID!
-    name: String
+    name: String!
     parent: Space
     children(filter: SpaceFilter): [Space]
-    data: JSONData
+    data: JSONData!
+    itemCount: Int!
 }
 
-type SpaceNode implements SpaceInterface {
+type SpaceNode implements SpaceInterface & TimeStamped {
     id: ID!
-    name: String
+    created: DateTime!
+    modified: DateTime!
+    name: String!
     parent: Space
     children(filter: SpaceFilter): [Space]
-    data: JSONData
+    data: JSONData!
+    itemCount: Int!
 }
 
-type GridSpaceNode implements SpaceInterface {
+type GridSpaceNode implements SpaceInterface & TimeStamped {
     id: ID!
-    name: String
+    created: DateTime!
+    modified: DateTime!
+    name: String!
     size: [Int]
     parent: Space
     children(filter: SpaceFilter): [Space]
-    data: JSONData
+    data: JSONData!
+    itemCount: Int!
 }
 
 union Space = SpaceNode | GridSpaceNode
