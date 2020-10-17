@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     "graph",
     "spaces",
     "items",
+    "situations",
 ]
 
 MIDDLEWARE = [

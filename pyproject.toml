@@ -21,6 +21,7 @@ ariadne-extended = {path = "../python/ariadne-extended"}
 django-filter = "^2.4.0"
 django-waffle = "^2.0.0"
 dateutils = "^0.6.11"
+django-fsm = "^2.7.0"
 
 [tool.poetry.dev-dependencies]
 black = {version = "^20.8b1", allow-prereleases = true}

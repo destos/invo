@@ -200,6 +200,14 @@ Django = ">=2.2"
 
 [[package]]
 category = "main"
+description = "Django friendly finite state machine support."
+name = "django-fsm"
+optional = false
+python-versions = "*"
+version = "2.7.0"
+
+[[package]]
+category = "main"
 description = "script tag with additional attributes for django.forms.Media"
 name = "django-js-asset"
 optional = false
@@ -775,7 +783,7 @@ python-versions = "*"
 version = "0.2.5"
 
 [metadata]
-content-hash = "1c7b2bc7c806829cf3f20e766e391eda7d1786a0b5b197a7b7558ef5e52dbd36"
+content-hash = "797e302ccf37f10408d1fa09dc178a738eb74921c0e865b8b760407fddad146e"
 lock-version = "1.0"
 python-versions = "^3.8"
 
@@ -843,6 +851,10 @@ django-extensions = [
 django-filter = [
     {file = "django-filter-2.4.0.tar.gz", hash = "sha256:84e9d5bb93f237e451db814ed422a3a625751cbc9968b484ecc74964a8696b06"},
     {file = "django_filter-2.4.0-py3-none-any.whl", hash = "sha256:e00d32cebdb3d54273c48f4f878f898dced8d5dfaad009438fe61ebdf535ace1"},
+]
+django-fsm = [
+    {file = "django-fsm-2.7.0.tar.gz", hash = "sha256:9f42111814a273cdfd79cdf839f3596bc48b9cfe5fe5102293f07ade5b0048d5"},
+    {file = "django_fsm-2.7.0-py2.py3-none-any.whl", hash = "sha256:d5b0ca13965261f4fffad350fadd388dcfd9b6712399a84021073a40b161fbd7"},
 ]
 django-js-asset = [
     {file = "django-js-asset-1.2.2.tar.gz", hash = "sha256:c163ae80d2e0b22d8fb598047cd0dcef31f81830e127cfecae278ad574167260"},
