@@ -1,0 +1,7 @@
+# type ProtocolURIs {
+#   detail:
+# }
+
+interface Protocol {
+  protocolUri: URL
+}

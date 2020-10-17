@@ -3,7 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 from django_extensions.db.models import TimeStampedModel
 from polymorphic.models import PolymorphicModel
 from safedelete.models import SafeDeleteModel, SOFT_DELETE_CASCADE
-from invo.utils.protocol import Protocol
+from protocol.models import Protocol
 from decimal import Decimal as D
 
 from .managers import ItemManager
@@ -34,7 +34,7 @@ class Item(Protocol, TimeStampedModel, PolymorphicModel, SafeDeleteModel):
 
 
 class Consumable(Item):
-    """Stores extra data related to if an item"""
+    """Tracks the amount of a particular item, usually placed all together."""
 
     # What about Units? What about non-integer amounts?
     count = models.DecimalField(default=D("0"), max_digits=13, decimal_places=4)
@@ -69,7 +69,11 @@ class Consumable(Item):
 class TrackedConsumable(Consumable):
     """Serialized consumable consumption for tracking"""
 
+    # Tracked items and consumables maybe need to exist in multiple spaces?
+    # that is outside the nesting scheme, how to handle that?
+    # Do tracked consumables have a single instance per item?
     # Count may be able to tracked via relation to equipment in the future?
+    # or synced from it, becomes normalized field
 
     def consume(self, *equipment, **kwargs):
         return super().consume(amount=len(equipment), **kwargs)
@@ -79,7 +83,7 @@ class TrackedConsumable(Consumable):
 
 
 class Tool(Item):
-    """Tools yo"""
+    """Tools allow you to store """
 
-    # TODO: tools taxonomy system
+    # TODO: tools taxonomy system, mqtt yo!
     pass

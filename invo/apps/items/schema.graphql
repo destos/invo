@@ -1,0 +1,81 @@
+interface ItemInterface {
+    id: ID!
+    name: String!
+    data: JSONData
+    space: Space
+}
+
+# Singular items
+
+type Item implements Node & ItemInterface & TimeStamped & Protocol {
+    id: ID!
+    created: DateTime!
+    modified: DateTime!
+    name: String!
+    data: JSONData
+    space: Space
+    protocolUri: URL!
+}
+
+type Tool implements Node & ItemInterface & TimeStamped & Protocol {
+    id: ID!
+    created: DateTime!
+    modified: DateTime!
+    name: String!
+    data: JSONData
+    space: Space
+    protocolUri: URL!
+}
+
+# Consumables
+
+interface ConsumableInterface {
+    count: Int!
+    warningEnabled: Boolean!
+    warningCount: Float!
+    warning: Boolean!
+}
+
+"""
+Consumables are items that consist of multiple physically similar objects, like screws.
+"""
+type Consumable implements Node & ItemInterface & ConsumableInterface & TimeStamped & Protocol {
+    id: ID!
+    created: DateTime!
+    modified: DateTime!
+    name: String!
+    data: JSONData
+    space: Space
+    count: Int!
+    warningEnabled: Boolean!
+    warningCount: Float!
+    warning: Boolean!
+    protocolUri: URL!
+}
+
+"""
+Tracked consumables hold a reference to identifiable information.
+Like a bar code or item number, consuming Tracked items requires you pass 
+the reference that you are consuming.
+"""
+type TrackedConsumable implements Node & ItemInterface & ConsumableInterface & TimeStamped & Protocol {
+    id: ID!
+    created: DateTime!
+    modified: DateTime!
+    name: String!
+    data: JSONData
+    space: Space
+    count: Int!
+    warningEnabled: Boolean!
+    warningCount: Float!
+    warning: Boolean!
+    protocolUri: URL!
+}
+
+"All the different Item types"
+union ItemTypes = Item | Tool | Consumable | TrackedConsumable
+
+extend type Query {
+    item(id: ID!): ItemTypes
+    items(first: Int, last: Int, after: String, before: String): Connection
+}

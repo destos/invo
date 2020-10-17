@@ -50,9 +50,10 @@ INSTALLED_APPS = [
     "qr_code",
     "ariadne.contrib.django",
     "ariadne_extended.graph_loader",
-    # "ariadne_extended.cursor_pagination",
+    "ariadne_extended.cursor_pagination",
     # "ariadne_extended.payload",
     "ariadne_extended.contrib.waffle_graph",
+    "protocol",
     "graph",
     "spaces",
     "items",
@@ -100,6 +101,9 @@ DATABASES = {
         "PASSWORD": "g6MQiUtEWNYJpQt",
         "HOST": "localhost",
         "PORT": "32768",
+        'TEST': {
+            'NAME': 'invo_test',
+        },
     }
 }
 

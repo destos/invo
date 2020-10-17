@@ -4,20 +4,6 @@ from . import models
 from spaces.models import SpaceNode
 
 
-class TestItem(TestCase):
-    def setUp(self):
-        self.item = baker.make(models.Item, name="Test Item", data=dict(test="data"))
-
-    def test_attrs(self):
-        self.assertEqual(str(self.item), "Test Item")
-
-    def test_item_can_be_assigned_to_space(self):
-        node = baker.make(SpaceNode)
-        self.item.space = node
-        self.item.save()
-        self.assertEqual(node.items.count(), 1)
-
-
 class TestItemQueryset(TestCase):
     def setUp(self):
         # with SpaceNode.objects.delay_mptt_updates():
@@ -59,9 +45,30 @@ class TestItemQueryset(TestCase):
         )
 
 
+class TestItem(TestCase):
+    def setUp(self):
+        self.item = baker.make(models.Item, name="Test Item", data=dict(test="data"), id=21)
+
+    def test_attrs(self):
+        self.assertEqual(str(self.item), "Test Item")
+        self.assertEqual(self.item.protocol_ident, "items.item:21")
+        self.assertEqual(self.item.protocol_self, "invo:items.item:21")
+
+    def test_item_can_be_assigned_to_space(self):
+        node = baker.make(SpaceNode)
+        self.item.space = node
+        self.item.save()
+        self.assertEqual(node.items.count(), 1)
+
+
 class TestConsumable(TestCase):
     def setUp(self):
-        self.item = baker.make(models.Consumable)
+        self.item = baker.make(models.Consumable, name="Test Consumable", id=42)
+
+    def test_attrs(self):
+        self.assertEqual(str(self.item), "Test Consumable")
+        self.assertEqual(self.item.protocol_ident, "items.consumable:42")
+        self.assertEqual(self.item.protocol_self, "invo:items.consumable:42")
 
     def test_default_state(self):
         self.assertEqual(self.item.count, 0)
@@ -111,3 +118,13 @@ class TestConsumable(TestCase):
         self.item.addition(20)
         self.assertEqual(self.item.count, 31)
         self.assertNotEqual(first_modified, self.item.modified)
+
+
+class TestTrackedConsumable(TestCase):
+    def setUp(self):
+        self.item = baker.make(models.TrackedConsumable, name="Test Tracked Consumable", id=84)
+
+    def test_attrs(self):
+        self.assertEqual(str(self.item), "Test Tracked Consumable")
+        self.assertEqual(self.item.protocol_ident, "items.trackedconsumable:84")
+        self.assertEqual(self.item.protocol_self, "invo:items.trackedconsumable:84")

@@ -1,5 +1,5 @@
 """
-The spaces app help create an easy way to divide up physical areas into an organized
+The spaces app helps create an easy way to divide up physical areas into an organized
 hierarchy so as to enable quick lookup and suggested organization.
 
 Spaces can be assigned to different objects that can move into other spaces,
@@ -16,7 +16,7 @@ from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
 from polymorphic_tree.models import PolymorphicMPTTModel, PolymorphicTreeForeignKey
 
-from invo.utils.protocol import Protocol
+from protocol.models import Protocol
 
 
 class SpaceNode(Protocol, TimeStampedModel, PolymorphicMPTTModel):
@@ -108,6 +108,7 @@ class GridSpaceNode(SpaceNode):
 # class DrawerNode(GridSpaceNode):
 # Maybe for parts/tools different drawers for things?
 # What extra fields does it add?
+# Shelves
 
 # class RackNode(GridSpaceNode):
 # Vertical rack with the units marked out. Items can fill multiple units?

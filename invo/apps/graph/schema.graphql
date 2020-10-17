@@ -1,6 +1,7 @@
 scalar Date
 scalar DateTime
 scalar JSONData
+scalar URL
 
 interface TimeStamped {
   created: DateTime!

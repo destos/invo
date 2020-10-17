@@ -6,7 +6,9 @@ from qr_code.qrcode.utils import QRCodeOptions
 class Protocol:
     @property
     def protocol_ident(self):
-        return f"{humps.decamelize(self._meta.model_name)}:{self.pk}"
+        # Only works on polymorphic models RN?
+        label = self.get_real_concrete_instance_class()._meta.label_lower
+        return f"{label}:{self.pk}"
 
     @property
     def protocol_self(self):
