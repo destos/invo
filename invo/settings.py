@@ -53,11 +53,11 @@ INSTALLED_APPS = [
     "ariadne_extended.cursor_pagination",
     # "ariadne_extended.payload",
     "ariadne_extended.contrib.waffle_graph",
+    "situations",
     "protocol",
     "graph",
     "spaces",
     "items",
-    "situations",
 ]
 
 MIDDLEWARE = [

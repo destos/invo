@@ -8,7 +8,12 @@ from .models import Situation
 # Create your tests here.
 class TestSituation(TestCase):
     def setUp(self):
-        self.user = baker.make(settings.AUTH_USER_MODEL)
+        self.user = baker.make(settings.AUTH_USER_MODEL, username="test_user")
+
+    def test_attr(self):
+        situ = baker.make(Situation, user=self.user)
+        self.assertEqual(str(situ), "test_user (Start, Open)")
+        self.assertEqual(repr(situ), "<Situation: test_user (Start, Open)>")
 
     def test_selecting_space(self):
         situ = baker.make(Situation, user=self.user)
@@ -27,7 +32,7 @@ class TestSituation(TestCase):
         situ.select_item(item)
         self.assertEqual(item, situ.item)
         self.assertEqual(situ.state, Situation.States.SELECTING)
-    
+
     def test_selecting_in_bad_state(self):
         situ = baker.make(Situation, user=self.user, state=Situation.States.PLACING)
         item = baker.make("items.Item")
@@ -47,7 +52,7 @@ class TestSituation(TestCase):
 
         self.assertNotEqual(space, situ.space)
         self.assertEqual(situ.state, Situation.States.PLACING)
-    
+
     def test_chose_item(self):
         space = baker.make("spaces.SpaceNode")
         situ = baker.make(Situation, user=self.user, state=Situation.States.SELECTING, space=space)
@@ -83,14 +88,14 @@ class TestSituation(TestCase):
     def test_chose_item_space_bad_state(self):
         item = baker.make("items.Item")
         space = baker.make("spaces.SpaceNode")
-        situ = baker.make(Situation, user=self.user, state=Situation.States.START, item=item)
+        situ = baker.make(Situation, user=self.user, item=item)
 
         self.assertEqual(situ.state, Situation.States.START)
         with self.assertRaises(django_fsm.TransitionNotAllowed):
             situ.chose_item()
         self.assertEqual(situ.state, Situation.States.START)
 
-        situ = baker.make(Situation, user=self.user, state=Situation.States.START, space=space)
+        situ = baker.make(Situation, user=self.user, space=space)
         self.assertEqual(situ.state, Situation.States.START)
         with self.assertRaises(django_fsm.TransitionNotAllowed):
             situ.chose_space()
@@ -101,6 +106,46 @@ class TestSituation(TestCase):
     # Deleted situations are still available for lookup/history
 
 
-class TestSituationQuerySet(TestCase):
+class TestSituationManager(TestCase):
+    def setUp(self):
+        self.user = baker.make(settings.AUTH_USER_MODEL, username="test_user")
+
     def test_get_active(self):
+        situ = baker.make(Situation, user=self.user)
+        baker.make(Situation, user=self.user).delete()
+        baker.make(Situation, user=self.user, exit_condition=Situation.Exit.Abandoned)
+        baker.make(Situation, user=self.user, exit_condition=Situation.Exit.Completed)
+
+        # The active situation should be an open non-deleted one
+        active_situ = Situation.objects.get_active(self.user)
+        self.assertEqual(active_situ, situ)
+        self.assertEqual(Situation.all_objects.count(), 4)
+
+    def test_get_active_no_deleted(self):
+        baker.make(Situation, user=self.user).delete()
+        baker.make(Situation, user=self.user)
+        situ = baker.make(Situation, user=self.user)
+        baker.make(Situation, user=self.user).delete()
+
+        active_situ = Situation.objects.get_active(self.user)
+        self.assertEqual(active_situ, situ)
+        self.assertEqual(Situation.all_objects.count(), 4)
+        self.assertEqual(Situation.objects.count(), 2)
+
+    def test_no_active_situation_returns_unsaved_new_instance(self):
         pass
+        # Does it?
+
+
+class TestSituationScenarios(TestCase):
+    def setUp(self):
+        self.user = baker.make(settings.AUTH_USER_MODEL, username="test_user")
+
+    def test_adding_new_part(self):
+        item = baker.make("items.Item")
+        space = baker.make("spaces.SpaceNode")
+        situ = baker.make(Situation, user=self.user)
+
+        situ.select_space(space)
+        situ.select_item(item)
+        # situ.
