@@ -139,13 +139,13 @@ class TestSituationManager(TestCase):
 
     def test_get_active_past_timeout(self):
         # Active situations that are past the active time range
-        baker.make(
+        situ1 = baker.make(
             Situation,
             user=self.user,
             modified=arrow.now().shift(hours=-2).datetime,
             _save_kwargs=dict(update_modified=False),
         )
-        baker.make(
+        situ2 = baker.make(
             Situation,
             user=self.user,
             modified=arrow.now().shift(days=-3).datetime,
@@ -154,6 +154,7 @@ class TestSituationManager(TestCase):
 
         no_situ = Situation.objects.get_active(self.user)
         self.assertIsNone(no_situ)
+        self.assertSequenceEqual(Situation.deleted_objects.all(), [situ1, situ2])
 
     def test_get_active_in_timeout(self):
         # Active situations that are past the active time range
@@ -185,6 +186,7 @@ class TestSituationManager(TestCase):
         active_situ = Situation.objects.get_active(self.user)
 
         self.assertEqual(active_situ, latest_situ)
+        self.assertSequenceEqual(Situation.deleted_objects.all(), [])
 
 
 class TestSituationScenarios(TestCase):
