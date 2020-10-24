@@ -2,8 +2,6 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
-from ariadne_extended.utils.monkey import patch_autoreload
-
 
 def main():
     """Run administrative tasks."""
@@ -22,10 +20,11 @@ def main():
     from django.db import models
 
     models.FieldDoesNotExist = FieldDoesNotExist
-    patch_autoreload()
 
     execute_from_command_line(sys.argv)
 
 
 if __name__ == "__main__":
+    from ariadne_extended.utils.monkey import patch_autoreload
+    patch_autoreload()
     main()
