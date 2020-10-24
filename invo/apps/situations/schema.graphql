@@ -1,0 +1,28 @@
+enum SituationState {
+    START 
+    SELECTING 
+    ADDING 
+    PLACING 
+    INCREMENT 
+    CONSUMING 
+}
+
+enum SituationExit {
+    OPEN
+    ABANDONED
+    COMPLETED
+}
+
+type Situation implements Node & TimeStamped {
+    id: ID!
+    created: DateTime!
+    modified: DateTime!
+    user: User
+    space: SpaceNode
+    state: SituationState
+    exitCondition: SituationExit
+}
+
+extend type Query {
+    activeSituation: Situation
+}

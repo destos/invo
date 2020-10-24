@@ -1,10 +1,20 @@
+# from datetime import now
+import arrow
 from safedelete.queryset import SafeDeleteQueryset
 
 
 class SituationQuerySet(SafeDeleteQueryset):
-    pass
-    # def get_active(self, user):
-    #     return self.get(user=user)
+    def _get_active_shift_kwargs(self):
+        return dict(hours=-1)
+
+    def get_active(self, user):
+        offset = arrow.now().shift(**self._get_active_shift_kwargs()).datetime
+        try:
+            return self.filter(
+                user=user, exit_condition=self.model.Exit.OPEN, modified__gte=offset
+            ).latest()
+        except self.model.DoesNotExist:
+            return None
 
     # Should this exist on the user? or the user sub-filters these?
     # def get_active(self):

@@ -8,6 +8,13 @@ interface TimeStamped {
   modified: DateTime!
 }
 
+type User implements Node {
+  id: ID!
+  username: String
+  firstName: String
+  listName: String
+}
+
 # Extend Waffle items with TimeStamped interface
 extend type WaffleFlag implements TimeStamped {
   created: DateTime!

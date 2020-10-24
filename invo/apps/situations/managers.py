@@ -6,4 +6,4 @@ class SituationManager(SafeDeleteManager):
     _queryset_class = SituationQuerySet
 
     def get_active(self, user):
-        return self.get_queryset().filter(user=user, exit_condition=self.model.Exit.Open).latest()
+        return self.get_queryset().get_active(user)

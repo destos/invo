@@ -47,9 +47,8 @@ class Situation(SafeDeleteModel, TimeStampedModel):
 
     objects = SituationManager()
 
-    class Meta:
+    class Meta(TimeStampedModel.Meta):
         ordering = ("created",)
-        get_latest_by = "created"
 
     def __str__(self):
         return f"{self.user.username} ({self.States(self.state).label}, {self.Exit(self.exit_condition).label})"
