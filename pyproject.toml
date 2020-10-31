@@ -39,20 +39,18 @@ addopts = "--no-migrations --disable-pytest-warnings -vvv"
 python_files = "tests.py test_*.py *_tests.py"
 
 [tool.black]
-# exclude = '''
-# (
-#   /(
-#       \.eggs         
-#     | \.git          
-#     | \.mypy_cache
-#     | \.tox
-#     | \.venv
-#     | build
-#     | dist
-#     | migrations 
-#   )/
-# )
-# '''
+exclude = '''
+/(
+    \.eggs
+  | \.git
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+  | migrations 
+)/
+'''
 include = '\.pyi?$'
 line-length = 99
 target-version = ['py38']
