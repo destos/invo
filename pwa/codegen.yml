@@ -1,0 +1,27 @@
+overwrite: true
+schema: "http://localhost:8000/graphql"
+# documents: "src/**/*.graphql"
+documents: 
+  # - ./src/fragments/*.{ts,tsx,js}
+  - ./src/queries/*.{ts,tsx,js}
+generates:
+  src/generated/.d.ts:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-graphql-files-modules"
+  # src/generated/apollo.ts:
+  #     - typescript
+  #     - typescript-operations
+  #     - "typescript-react-apollo"
+  #     # - "typescript-document-nodes"
+  src/generated/possibleTypes.json:
+    plugins:
+      - "fragment-matcher"
+    config:
+      apolloClientVersion: 3
+  src/generated/graphql.schema.json:
+    plugins:
+      - "introspection"
+    config:
+      minify: true

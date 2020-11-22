@@ -1,0 +1,62 @@
+{
+  "possibleTypes": {
+    "WaffleItem": [
+      "WaffleFlag",
+      "WaffleSwitch",
+      "WaffleSample"
+    ],
+    "TimeStamped": [
+      "WaffleFlag",
+      "WaffleSwitch",
+      "WaffleSample",
+      "Situation",
+      "SpaceNode",
+      "GridSpaceNode",
+      "Item",
+      "Tool",
+      "Consumable",
+      "TrackedConsumable"
+    ],
+    "Node": [
+      "Situation",
+      "User",
+      "Item",
+      "Tool",
+      "Consumable",
+      "TrackedConsumable"
+    ],
+    "SpaceTypes": [
+      "SpaceNode",
+      "GridSpaceNode"
+    ],
+    "SpaceInterface": [
+      "SpaceNode",
+      "GridSpaceNode"
+    ],
+    "ListPageInfo": [
+      "Connection"
+    ],
+    "ItemTypes": [
+      "Item",
+      "Tool",
+      "Consumable",
+      "TrackedConsumable"
+    ],
+    "ItemInterface": [
+      "Item",
+      "Tool",
+      "Consumable",
+      "TrackedConsumable"
+    ],
+    "Protocol": [
+      "Item",
+      "Tool",
+      "Consumable",
+      "TrackedConsumable"
+    ],
+    "ConsumableInterface": [
+      "Consumable",
+      "TrackedConsumable"
+    ]
+  }
+}
