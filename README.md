@@ -49,5 +49,5 @@ DJANGO_CONFIGURATION=Test poetry run ptw -- -s invo/apps
 
 Run black formattings:
 ```bash
-poetry run black ./invo/apps
+poetry run black ./invo/
 ```

@@ -14,7 +14,6 @@ class UrnNamespaceRegistrar:
     def register(cls, model):
         pass
 
-    # apps.get_model
 
 
 class IRN(NamedTuple):
@@ -43,6 +42,12 @@ class IRN(NamedTuple):
 
     def __str__(self):
         return ":".join([str(v) for v in self._asdict().values()])
+    
+    def get_model(self):
+        return apps.get_model(self.etype)
+    
+    def get_instance(self):
+        return self.get_model().objects.get(id=self.nss)
 
 
 class Protocol:
@@ -60,11 +65,11 @@ class Protocol:
 
     @property
     def urn(self):
-        return str(IRN.build(etype=self.urn_etype, nss=self.pk))
+        return IRN.build(etype=self.urn_etype, nss=self.pk)
 
     @property
     def irn(self):
-        return self.urn
+        return str(self.urn)
 
     def qr(self, options=QRCodeOptions(error_correction="Q")):
         # TODO: add "qr" as frag to identify source?

@@ -29,11 +29,12 @@ class SituationResolver(ModelResolver):
         active = self.get_active()
         if active is not None:
             irns = self.get_input_data()["irns"]
-            # import ipdb; ipdb.set_trace()
-            # active.select(*)
-            # import ipdb; ipdb.set_trace()
+            entities = [i.get_instance() for i in irns]
+            active.select(*entities)
+            active.refresh_from_db()
+            return dict(object=active, success=True)
 
-        return dict(object=active, success=True)
+        return dict(object=active, success=False)
 
 
 @situation.field("items")

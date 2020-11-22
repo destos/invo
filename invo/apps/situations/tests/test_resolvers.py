@@ -75,7 +75,7 @@ class TestSituationResolver(TestCase):
         # Should return no active
         pass
 
-    def test_select_entities_works(self):
+    def test_select_entities_e2e(self):
         item = baker.make("items.Item")
         space = baker.make("spaces.SpaceNode")
 
@@ -88,3 +88,5 @@ class TestSituationResolver(TestCase):
 
         self.assertTrue(success)
         self.assertEqual(int(glom(result["data"], "selectEntities.object.id")), self.situation.id)
+        self.assertEqual(int(glom(result["data"], "selectEntities.object.items[0].id")), item.id)
+        self.assertEqual(int(glom(result["data"], "selectEntities.object.spaces[0].id")), space.id)

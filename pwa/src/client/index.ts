@@ -1,5 +1,4 @@
-import { ApolloClient, ApolloLink, createHttpLink, InMemoryCache, PossibleTypesMap } from '@apollo/client'
-import { setContext } from '@apollo/client/link/context'
+import { ApolloClient, ApolloLink, createHttpLink, InMemoryCache } from '@apollo/client'
 import { withScalars } from "apollo-link-scalars"
 import { irn } from '../utils/urns'
 import { possibleTypes } from "../generated/possibleTypes.json"
