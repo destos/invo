@@ -27,25 +27,27 @@ class SituationResolver(ModelResolver):
 
     def select_entities(self, into, **kwargs):
         active = self.get_active()
+        entities = []
         if active is not None:
             irns = self.get_input_data()["irns"]
             entities = [i.get_instance() for i in irns]
             active.select(*entities)
             active.refresh_from_db()
-            return dict(object=active, success=True)
+            return dict(object=active, entities=entities, success=True)
 
-        return dict(object=active, success=False)
+        return dict(object=active, entities=entities, success=False)
 
     def unselect_entities(self, into, **kwargs):
         active = self.get_active()
+        entities = []
         if active is not None:
             irns = self.get_input_data()["irns"]
             entities = [i.get_instance() for i in irns]
             active.unselect(*entities)
             active.refresh_from_db()
-            return dict(object=active, success=True)
+            return dict(object=active, entities=entities, success=True)
 
-        return dict(object=active, success=False)
+        return dict(object=active, entities=entities, success=False)
 
 
 @situation.field("items")

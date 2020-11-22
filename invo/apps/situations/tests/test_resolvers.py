@@ -66,6 +66,7 @@ unselect_entities = """
     }
 """
 
+
 class TestSituationResolver(TestCase):
     def setUp(self):
         self.user = baker.make(settings.AUTH_USER_MODEL, username="test_user")
@@ -118,7 +119,7 @@ class TestSituationResolver(TestCase):
         space = baker.make("spaces.SpaceNode")
         self.situation.items.add(item)
         self.situation.spaces.add(space)
-        self.situation.state=self.situation.States.SELECTING
+        self.situation.state = self.situation.States.SELECTING
         self.situation.save()
         self.situation.refresh_from_db()
 
@@ -130,7 +131,9 @@ class TestSituationResolver(TestCase):
         success, result = graphql_sync(schema, data, context_value=self.context)
 
         self.assertTrue(success)
-        self.assertEqual(int(glom(result["data"], "unselectEntities.object.id")), self.situation.id)
+        self.assertEqual(
+            int(glom(result["data"], "unselectEntities.object.id")), self.situation.id
+        )
         self.assertEqual(glom(result["data"], "unselectEntities.object.items"), [])
         self.assertEqual(glom(result["data"], "unselectEntities.object.spaces"), [])
 

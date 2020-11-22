@@ -15,7 +15,6 @@ class UrnNamespaceRegistrar:
         pass
 
 
-
 class IRN(NamedTuple):
     """
     Invo Resource Name
@@ -42,10 +41,10 @@ class IRN(NamedTuple):
 
     def __str__(self):
         return ":".join([str(v) for v in self._asdict().values()])
-    
+
     def get_model(self):
         return apps.get_model(self.etype)
-    
+
     def get_instance(self):
         return self.get_model().objects.get(id=self.nss)
 

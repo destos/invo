@@ -16,7 +16,6 @@ class TestSpaceNode(TestCase):
 
     @mock.patch("spaces.models.SpaceNode.items")
     def xtest_item_count(self, mock_items):
-        # import ipdb; ipdb.set_trace()
         # mocker.patch(self.space.items, return_value=mocker.Mock)
         # in_space_mock = mock_items.model.objects.in_space.return_value = Mock()
         # in_space_mock.count.return_value = 12
@@ -30,7 +29,6 @@ class TestSpaceNode(TestCase):
 
         # self.assertEqual(self.space.item_count, 0)
         # baker.make("items.Item", space=self.space)
-        # import ipdb; ipdb.set_trace()
         # # self.space.refresh_from_db()
         # # models.SpaceNode.objects.rebuild()
 

@@ -36,6 +36,7 @@ input SelectEntitiesInput {
 type SituationPayload {
     success: Boolean!
     object: Situation!
+    entities: [Protocol]!
 }
 
 extend type Mutation {

@@ -15,19 +15,33 @@ class SituationQuerySet(SafeDeleteQueryset):
 
         Gets the previous situation if it hasn't been abandoned or closed.
         If a certain time period has passed, will remove those open Situations.
+
+        If there is a situation in the Start state that is outside the time limit it will
+        use that.
         """
 
         offset = arrow.now().shift(**self._get_active_shift_kwargs()).datetime
-        open_situ = self.filter(user=user, exit_condition=self.model.Exit.OPEN)
+        user_situ = self.filter(user=user)
+        open_situ = user_situ.filter(exit_condition=self.model.Exit.OPEN)
+        clean_situ = open_situ.filter(state=self.model.States.START)
 
+        active = None
         try:
-            # Also include a new dirty check? does it have a space selected?
-            # Find the non-deleted open situation
-            return open_situ.filter(modified__gte=offset).latest()
+            active = clean_situ.latest()
         except self.model.DoesNotExist:
-            # Safe delete all users situations and set as abandoned
-            abandoned_ids = list(open_situ.values_list("id", flat=True))
-            open_situ.update(exit_condition=self.model.Exit.ABANDONED)
-            # safe delete makes sure they no longer show up in default manager queries
-            self.model.objects.filter(id__in=abandoned_ids).delete()
-            return None
+            try:
+                # Also include a new dirty check? does it have a space selected?
+                # Find the non-deleted open situation
+                active = open_situ.filter(modified__gte=offset).latest()
+            except self.model.DoesNotExist:
+                pass
+
+        if active:
+            open_situ = open_situ.exclude(id=active.id)
+        # Keep ref so we can delete them after abandoned update
+        abandoned_ids = list(open_situ.values_list("id", flat=True))
+        # Safe delete all users situations and set as abandoned
+        open_situ.update(exit_condition=self.model.Exit.ABANDONED)
+        self.model.objects.filter(id__in=abandoned_ids).delete()
+
+        return active

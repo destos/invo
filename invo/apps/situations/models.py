@@ -4,7 +4,7 @@ from django.db import models
 from django.conf import settings
 from django_extensions.db.models import TimeStampedModel
 from django_fsm import FSMIntegerField, transition
-from safedelete.models import SafeDeleteModel, SOFT_DELETE_CASCADE
+from safedelete.models import SafeDeleteModel, SOFT_DELETE_CASCADE, SOFT_DELETE
 from polymorphic.contrib.guardian import get_polymorphic_base_content_type
 
 from .managers import SituationManager
@@ -22,8 +22,18 @@ class Situation(SafeDeleteModel, TimeStampedModel):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
     # TODO: through model that handles insertion order and handles manager sort?
-    spaces = models.ManyToManyField(SpaceNode, related_name="situations")
-    items = models.ManyToManyField(Item, related_name="situations")
+    spaces = models.ManyToManyField(
+        SpaceNode,
+        through="SelectedSpace",
+        through_fields=("situation", "space"),
+        related_name="situations",
+    )
+    items = models.ManyToManyField(
+        Item,
+        through="SelectedItem",
+        through_fields=("situation", "item"),
+        related_name="situations",
+    )
 
     # TODO: when two spaces are selected the move/swap state transition becomes available
 
@@ -109,6 +119,16 @@ class Situation(SafeDeleteModel, TimeStampedModel):
     # def remove_from_space(self):
     #     self.item.space = None
     #     self.item.save(update_fields=("space", "modified"))
+
+
+class SelectedSpace(TimeStampedModel):
+    space = models.ForeignKey(SpaceNode, on_delete=models.CASCADE)
+    situation = models.ForeignKey(Situation, on_delete=models.CASCADE)
+
+
+class SelectedItem(TimeStampedModel):
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    situation = models.ForeignKey(Situation, on_delete=models.CASCADE)
 
 
 # Triggers that feed data into a situation
