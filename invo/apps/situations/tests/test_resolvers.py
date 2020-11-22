@@ -43,6 +43,28 @@ select_entities = """
     }
 """
 
+unselect_entities = """
+    mutation doUnselectEntities($input: SelectEntitiesInput!) {
+        unselectEntities(input: $input) {
+            success
+            object {
+                ... on Node {
+                    id
+                }
+                items {
+                    ... on ItemInterface {
+                        id
+                    }
+                }
+                spaces {
+                    ... on SpaceInterface {
+                        id
+                    }
+                }
+            }
+        }
+    }
+"""
 
 class TestSituationResolver(TestCase):
     def setUp(self):
@@ -88,5 +110,30 @@ class TestSituationResolver(TestCase):
 
         self.assertTrue(success)
         self.assertEqual(int(glom(result["data"], "selectEntities.object.id")), self.situation.id)
-        self.assertEqual(int(glom(result["data"], "selectEntities.object.items[0].id")), item.id)
-        self.assertEqual(int(glom(result["data"], "selectEntities.object.spaces[0].id")), space.id)
+        self.assertEqual(int(glom(result["data"], "selectEntities.object.items.0.id")), item.id)
+        self.assertEqual(int(glom(result["data"], "selectEntities.object.spaces.0.id")), space.id)
+
+    def test_unselect_entities_e2e(self):
+        item = baker.make("items.Item")
+        space = baker.make("spaces.SpaceNode")
+        self.situation.items.add(item)
+        self.situation.spaces.add(space)
+        self.situation.state=self.situation.States.SELECTING
+        self.situation.save()
+        self.situation.refresh_from_db()
+
+        data = dict(
+            query=unselect_entities,
+            variables=dict(input=dict(irns=[item.irn, space.irn])),
+            operationName="doUnselectEntities",
+        )
+        success, result = graphql_sync(schema, data, context_value=self.context)
+
+        self.assertTrue(success)
+        self.assertEqual(int(glom(result["data"], "unselectEntities.object.id")), self.situation.id)
+        self.assertEqual(glom(result["data"], "unselectEntities.object.items"), [])
+        self.assertEqual(glom(result["data"], "unselectEntities.object.spaces"), [])
+
+    def test_abandon_situation(self):
+        "When you need to start your selection over"
+        pass

@@ -36,6 +36,17 @@ class SituationResolver(ModelResolver):
 
         return dict(object=active, success=False)
 
+    def unselect_entities(self, into, **kwargs):
+        active = self.get_active()
+        if active is not None:
+            irns = self.get_input_data()["irns"]
+            entities = [i.get_instance() for i in irns]
+            active.unselect(*entities)
+            active.refresh_from_db()
+            return dict(object=active, success=True)
+
+        return dict(object=active, success=False)
+
 
 @situation.field("items")
 def resolve_situation_items(situ, info, **kwargs):
@@ -49,3 +60,4 @@ def resolve_situation_spaces(situ, info, **kwargs):
 
 query.set_field("activeSituation", SituationResolver.as_resolver(method="active"))
 mutation.set_field("selectEntities", SituationResolver.as_resolver(method="select_entities"))
+mutation.set_field("unselectEntities", SituationResolver.as_resolver(method="unselect_entities"))

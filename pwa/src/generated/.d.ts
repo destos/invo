@@ -9,7 +9,7 @@ export type Scalars = {
   Float: number;
   DateTime: any;
   JSONData: any;
-  /** IRN, the invo URN scalar that can be used to differentiate entities and be used for entity lookup. */
+  /** IRN, the invo URN scalar that can be used to differentiate entities and for entity lookup. */
   IRN: any;
   Date: any;
   URL: any;
@@ -354,7 +354,8 @@ export enum SituationExit {
 export type Mutation = {
   __typename?: 'Mutation';
   root?: Maybe<Scalars['Boolean']>;
-  selectEntities: SelectEntitiesPayload;
+  selectEntities: SituationPayload;
+  unselectEntities: SituationPayload;
   abandonSituation?: Maybe<Situation>;
 };
 
@@ -363,12 +364,17 @@ export type MutationSelectEntitiesArgs = {
   input: SelectEntitiesInput;
 };
 
+
+export type MutationUnselectEntitiesArgs = {
+  input: SelectEntitiesInput;
+};
+
 export type SelectEntitiesInput = {
   irns: Array<Scalars['IRN']>;
 };
 
-export type SelectEntitiesPayload = {
-  __typename?: 'SelectEntitiesPayload';
+export type SituationPayload = {
+  __typename?: 'SituationPayload';
   success: Scalars['Boolean'];
   object: Situation;
 };
@@ -511,8 +517,8 @@ export type AddToActiveSituationMutationVariables = Exact<{
 export type AddToActiveSituationMutation = (
   { __typename?: 'Mutation' }
   & { selectEntities: (
-    { __typename?: 'SelectEntitiesPayload' }
-    & Pick<SelectEntitiesPayload, 'success'>
+    { __typename?: 'SituationPayload' }
+    & Pick<SituationPayload, 'success'>
     & { object: (
       { __typename?: 'Situation' }
       & SituationBitFragment

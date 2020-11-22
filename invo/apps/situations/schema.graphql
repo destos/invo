@@ -33,12 +33,13 @@ input SelectEntitiesInput {
     irns: [IRN!]!
 }
 
-type SelectEntitiesPayload {
+type SituationPayload {
     success: Boolean!
     object: Situation!
 }
 
 extend type Mutation {
-    selectEntities(input: SelectEntitiesInput!): SelectEntitiesPayload!
+    selectEntities(input: SelectEntitiesInput!): SituationPayload!
+    unselectEntities(input: SelectEntitiesInput!): SituationPayload!
     abandonSituation: Situation
 }
