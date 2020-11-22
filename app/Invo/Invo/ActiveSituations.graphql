@@ -1,0 +1,18 @@
+query activeSituation {
+  activeSituation {
+    state
+    exitCondition
+    items {
+      ... on Node {
+        id
+      }
+      ... on Protocol {
+        protocolUri
+      }
+      ... on ItemInterface {
+        name
+        data
+      }
+    }
+  }
+}

@@ -10,7 +10,7 @@ import ClockKit
 
 class ComplicationController: NSObject, CLKComplicationDataSource {
     
-    // MARK: - Complication Configuration
+    // MARK: - Complication configuration
 
     func getComplicationDescriptors(handler: @escaping ([CLKComplicationDescriptor]) -> Void) {
         let descriptors = [
@@ -26,7 +26,7 @@ class ComplicationController: NSObject, CLKComplicationDataSource {
         // Do any necessary work to support these newly shared complication descriptors
     }
 
-    // MARK: - Timeline Configuration
+    // MARK: - Timeline configuration
     
     func getTimelineEndDate(for complication: CLKComplication, withHandler handler: @escaping (Date?) -> Void) {
         // Call the handler with the last entry date you can currently provide or nil if you can't support future timelines
