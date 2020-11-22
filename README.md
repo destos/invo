@@ -32,6 +32,22 @@ trigger actions
 Ideas:
 Scan an item, see what spaces it has belonged to? Where does it need to go?
 
-
 # Ideas
 When using barcodes or non unique ways of identification, allow for lookup of all items that use that serialized code. 
+
+# Bits
+
+Make the requirements.txt for github
+```bash
+poetry export -f requirements.txt --output requirements.txt
+```
+
+Run tests with test config:
+```bash
+DJANGO_CONFIGURATION=Test poetry run ptw -- -s invo/apps
+```
+
+Run black formattings:
+```bash
+poetry run black ./invo/apps
+```

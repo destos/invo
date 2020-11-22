@@ -34,7 +34,10 @@ class SpaceNode(Protocol, TimeStampedModel, PolymorphicMPTTModel):
         order_insertion_by = ("name",)
 
     class Meta:
-        ordering = ("lft", "parent__name", "name")
+        ordering = (
+            "lft",
+            "id",
+        )
         unique_together = ("parent", "name")
         verbose_name = _("Space")
         verbose_name_plural = _("Spaces")
@@ -45,6 +48,9 @@ class SpaceNode(Protocol, TimeStampedModel, PolymorphicMPTTModel):
 
     @property
     def item_count(self):
+        # If there are no descendants of this node, don't do complex count
+        if self.get_descendant_count() == 0:
+            return self.items.count()
         return self.items.model.objects.in_space(self).count()
 
     def add_item(self, item):
@@ -58,11 +64,12 @@ class SpaceNode(Protocol, TimeStampedModel, PolymorphicMPTTModel):
 class GridSpaceNode(SpaceNode):
     """
     A type of Space that manages the spaces below it into a grid,
-    A Grid can be terminated,
+    A Grid can be terminated, WHAT?!?!
 
-    How to span nodes
     """
 
+    # Orientation? to other grids
+    # How to span nodes? maybe some sort of span config.
     # The total grid size for contained nodes
     grid_size = ArrayField(models.PositiveIntegerField(), size=2, blank=True, null=True)
     # Where in the grid this item is located
@@ -78,7 +85,7 @@ class GridSpaceNode(SpaceNode):
         """Create missing children if needed"""
 
         if child_class is None:
-            child_class = GridSpaceNode
+            child_class = SpaceNode
 
         assert issubclass(child_class, SpaceNode)
 

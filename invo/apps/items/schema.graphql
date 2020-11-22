@@ -2,7 +2,7 @@ interface ItemInterface {
     id: ID!
     name: String!
     data: JSONData
-    space: Space
+    space: SpaceTypes
 }
 
 # Singular items
@@ -13,8 +13,8 @@ type Item implements Node & ItemInterface & TimeStamped & Protocol {
     modified: DateTime!
     name: String!
     data: JSONData
-    space: Space
-    protocolUri: URL!
+    space: SpaceTypes
+    irn: IRN!
 }
 
 type Tool implements Node & ItemInterface & TimeStamped & Protocol {
@@ -23,8 +23,8 @@ type Tool implements Node & ItemInterface & TimeStamped & Protocol {
     modified: DateTime!
     name: String!
     data: JSONData
-    space: Space
-    protocolUri: URL!
+    space: SpaceTypes
+    irn: IRN!
 }
 
 # Consumables
@@ -45,12 +45,12 @@ type Consumable implements Node & ItemInterface & ConsumableInterface & TimeStam
     modified: DateTime!
     name: String!
     data: JSONData
-    space: Space
+    space: SpaceTypes
     count: Int!
     warningEnabled: Boolean!
     warningCount: Float!
     warning: Boolean!
-    protocolUri: URL!
+    irn: IRN!
 }
 
 """
@@ -64,12 +64,12 @@ type TrackedConsumable implements Node & ItemInterface & ConsumableInterface & T
     modified: DateTime!
     name: String!
     data: JSONData
-    space: Space
+    space: SpaceTypes
     count: Int!
     warningEnabled: Boolean!
     warningCount: Float!
     warning: Boolean!
-    protocolUri: URL!
+    irn: IRN!
 }
 
 "All the different Item types"
@@ -77,5 +77,5 @@ union ItemTypes = Item | Tool | Consumable | TrackedConsumable
 
 extend type Query {
     item(id: ID!): ItemTypes
-    items(first: Int, last: Int, after: String, before: String): Connection
+    items(first: Int, last: Int, after: String, before: String): Connection!
 }

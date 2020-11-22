@@ -25,6 +25,7 @@ class BaseSpaceNodeAdmin(PolymorphicMPTTChildModelAdmin):
     )
     list_display = (
         "name",
+        "urn",
         "item_count",
     )
 
@@ -49,9 +50,16 @@ class TreeNodeParentAdmin(PolymorphicMPTTParentModelAdmin):
 
     list_display = (
         "name",
-        "item_count",
-        "actions_column",
+        # There appears to be JS that doesn't take into account the extra list items when making the draggable interface
+        # "item_count",
+        "urn",
+        # "actions_column",
     )
+
+    # class Media:
+    #     css = {
+    #         'all': ('admin/treenode/admin.css',)
+    #     }
 
 
 admin.site.register(models.SpaceNode, TreeNodeParentAdmin)

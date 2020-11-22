@@ -1,7 +1,6 @@
-# type ProtocolURIs {
-#   detail:
-# }
+"""IRN, the invo URN scalar that can be used to differentiate entities and for entity lookup."""
+scalar IRN
 
 interface Protocol {
-  protocolUri: URL
+  irn: IRN!
 }

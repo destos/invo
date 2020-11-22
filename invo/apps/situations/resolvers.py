@@ -1,19 +1,50 @@
-from ariadne_extended.resolvers import ModelResolver, ListModelMixin
-from .models import Situation
+from ariadne_extended.resolvers import ListModelMixin, ModelResolver
+from django.contrib.auth.models import AnonymousUser
+from graph.types import query, mutation
 
-from graph.types import query
+from .models import Situation
+from .types import situation
 
 
 class SituationResolver(ModelResolver):
     model = Situation
     queryset = Situation.objects.all()
 
-    def active(self, info, **kwargs):
-        situ = self.get_queryset().get_active(self.request.user)
+    def get_active(self):
+        user = getattr(self.request, "user", None)
+        # Catch un-authed users for now
+        if user is None or isinstance(user, AnonymousUser):
+            return None
+        situ = self.get_queryset().get_active(user)
+        # No active situation found create and return a new one
         if situ is None:
             # if no active, make it
-            return Situation.objects.create(user=self.request.user)
+            return Situation.objects.create(user=user)
         return situ
+
+    def active(self, info, **kwargs):
+        return self.get_active()
+
+    def select_entities(self, into, **kwargs):
+        active = self.get_active()
+        if active is not None:
+            irns = self.get_input_data()["irns"]
+            # import ipdb; ipdb.set_trace()
+            # active.select(*)
+            # import ipdb; ipdb.set_trace()
+
+        return dict(object=active, success=True)
+
+
+@situation.field("items")
+def resolve_situation_items(situ, info, **kwargs):
+    return situ.items.all()
+
+
+@situation.field("spaces")
+def resolve_situation_spaces(situ, info, **kwargs):
+    return situ.spaces.all()
 
 
 query.set_field("activeSituation", SituationResolver.as_resolver(method="active"))
+mutation.set_field("selectEntities", SituationResolver.as_resolver(method="select_entities"))

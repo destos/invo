@@ -17,12 +17,28 @@ type Situation implements Node & TimeStamped {
     id: ID!
     created: DateTime!
     modified: DateTime!
-    user: User
-    space: SpaceNode
-    state: SituationState
-    exitCondition: SituationExit
+    user: User!
+    spaces: [SpaceTypes]!
+    items: [ItemTypes]!
+    state: SituationState!
+    exitCondition: SituationExit!
 }
 
 extend type Query {
     activeSituation: Situation
+    # TODO: other methods of selecting historical situations
+}
+
+input SelectEntitiesInput {
+    irns: [IRN!]!
+}
+
+type SelectEntitiesPayload {
+    success: Boolean!
+    object: Situation!
+}
+
+extend type Mutation {
+    selectEntities(input: SelectEntitiesInput!): SelectEntitiesPayload!
+    abandonSituation: Situation
 }

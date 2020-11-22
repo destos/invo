@@ -28,7 +28,6 @@ class SituationQuerySet(SafeDeleteQueryset):
             # Safe delete all users situations and set as abandoned
             abandoned_ids = list(open_situ.values_list("id", flat=True))
             open_situ.update(exit_condition=self.model.Exit.ABANDONED)
-            # safe delete makes sure they no longer show up in default manager queries 
+            # safe delete makes sure they no longer show up in default manager queries
             self.model.objects.filter(id__in=abandoned_ids).delete()
             return None
-

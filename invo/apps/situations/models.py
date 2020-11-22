@@ -1,10 +1,15 @@
+from itertools import groupby
+
 from django.db import models
 from django.conf import settings
 from django_extensions.db.models import TimeStampedModel
 from django_fsm import FSMIntegerField, transition
 from safedelete.models import SafeDeleteModel, SOFT_DELETE_CASCADE
+from polymorphic.contrib.guardian import get_polymorphic_base_content_type
 
 from .managers import SituationManager
+from spaces.models import SpaceNode
+from items.models import Item
 
 
 class Situation(SafeDeleteModel, TimeStampedModel):
@@ -13,16 +18,19 @@ class Situation(SafeDeleteModel, TimeStampedModel):
     """
 
     _safedelete_policy = SOFT_DELETE_CASCADE
+
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    space = models.ForeignKey("spaces.SpaceNode", blank=True, null=True, on_delete=models.CASCADE)
-    item = models.ForeignKey("items.Item", blank=True, null=True, on_delete=models.CASCADE)
-    # TODO: can have many items
-    # item = models.ForeignKey("items.Item", blank=True, null=True, on_delete=models.CASCADE)
+
+    # TODO: through model that handles insertion order and handles manager sort?
+    spaces = models.ManyToManyField(SpaceNode, related_name="situations")
+    items = models.ManyToManyField(Item, related_name="situations")
+
+    # TODO: when two spaces are selected the move/swap state transition becomes available
 
     class States(models.IntegerChoices):
         # Starting state
         START = 0
-        # Selecting items or groups.
+        # Selecting items or spaces.
         SELECTING = 1
         # When you want to add a singular item
         ADDING = 2
@@ -57,18 +65,27 @@ class Situation(SafeDeleteModel, TimeStampedModel):
         return f"<Situation: {str(self)}>"
 
     def has_item(self):
-        return bool(self.item_id)
+        return bool(self.items.exists())
 
     def has_space(self):
-        return bool(self.space_id)
+        return bool(self.spaces.exists())
+
+    def _group_objects(self, *objects):
+        manager_map = {Item: self.items, SpaceNode: self.spaces}
+        for k, g in groupby(
+            objects, lambda obj: get_polymorphic_base_content_type(obj).model_class()
+        ):
+            yield (manager_map[k], list(g))
 
     @transition(field=state, source=(States.START, States.SELECTING), target=States.SELECTING)
-    def select_space(self, space):
-        self.space = space
+    def select(self, *selection):
+        for manager, objects in self._group_objects(*selection):
+            manager.add(*objects)
 
-    @transition(field=state, source=(States.START, States.SELECTING), target=States.SELECTING)
-    def select_item(self, item):
-        self.item = item
+    @transition(field=state, source=States.SELECTING, target=States.SELECTING)
+    def unselect(self, *selection):
+        for manager, objects in self._group_objects(*selection):
+            manager.remove(*objects)
 
     @transition(
         field=state, source=(States.SELECTING), target=States.ADDING, conditions=[has_space]
@@ -85,13 +102,13 @@ class Situation(SafeDeleteModel, TimeStampedModel):
         """Set situation state to placing when trying to place an item"""
         pass
 
-    def move_to_space(self):
-        self.item.space = space
-        self.item.save(update_fields=("space", "modified"))
+    # def move_to_space(self):
+    #     self.item.space = space
+    #     self.item.save(update_fields=("space", "modified"))
 
-    def remove_from_space(self):
-        self.item.space = None
-        self.item.save(update_fields=("space", "modified"))
+    # def remove_from_space(self):
+    #     self.item.space = None
+    #     self.item.save(update_fields=("space", "modified"))
 
 
 # Triggers that feed data into a situation

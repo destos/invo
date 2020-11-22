@@ -58,7 +58,7 @@ class TestGridSpaceNode(TestCase):
         self.grid.sync_children()
         children = self.grid.children.all()
         self.assertEqual(children.count(), 16)
-        self.assertIsInstance(children.last(), models.GridSpaceNode)
+        self.assertIsInstance(children.last(), models.SpaceNode)
         self.assertEqual(children[0].name, "0,0")
         self.assertEqual(children[15].name, "3,3")
 

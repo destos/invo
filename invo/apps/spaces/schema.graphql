@@ -6,9 +6,10 @@ input SpaceFilter {
 interface SpaceInterface {
     id: ID!
     name: String!
-    parent: Space
-    children(filter: SpaceFilter): [Space]
-    data: JSONData!
+    parent: SpaceTypes
+    children(filter: SpaceFilter): [SpaceTypes!]!
+    items(first: Int, last: Int, after: String, before: String): Connection!
+    data: JSONData
     itemCount: Int!
 }
 
@@ -17,9 +18,10 @@ type SpaceNode implements SpaceInterface & TimeStamped {
     created: DateTime!
     modified: DateTime!
     name: String!
-    parent: Space
-    children(filter: SpaceFilter): [Space]
-    data: JSONData!
+    parent: SpaceTypes
+    children(filter: SpaceFilter): [SpaceTypes!]!
+    items(first: Int, last: Int, after: String, before: String): Connection!
+    data: JSONData
     itemCount: Int!
 }
 
@@ -29,15 +31,16 @@ type GridSpaceNode implements SpaceInterface & TimeStamped {
     modified: DateTime!
     name: String!
     size: [Int]
-    parent: Space
-    children(filter: SpaceFilter): [Space]
-    data: JSONData!
+    parent: SpaceTypes
+    children(filter: SpaceFilter): [SpaceTypes!]!
+    items(first: Int, last: Int, after: String, before: String): Connection!
+    data: JSONData
     itemCount: Int!
 }
 
-union Space = SpaceNode | GridSpaceNode
+union SpaceTypes = SpaceNode | GridSpaceNode
 
 extend type Query {
-    space(id: ID!): Space
-    getSpaces(filter: SpaceFilter): [Space]
+    space(id: ID!): SpaceTypes
+    getSpaces(filter: SpaceFilter): [SpaceTypes!]!
 }
