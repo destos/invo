@@ -3,6 +3,7 @@ interface ItemInterface {
     name: String!
     data: JSONData
     space: SpaceTypes
+    spaceParents(depth: Int): [SpaceTypes]!
 }
 
 # Singular items
@@ -15,6 +16,7 @@ type Item implements Node & ItemInterface & TimeStamped & Protocol {
     name: String!
     data: JSONData
     space: SpaceTypes
+    spaceParents(depth: Int): [SpaceTypes]!
 }
 
 type Tool implements Node & ItemInterface & TimeStamped & Protocol {
@@ -25,6 +27,7 @@ type Tool implements Node & ItemInterface & TimeStamped & Protocol {
     name: String!
     data: JSONData
     space: SpaceTypes
+    spaceParents(depth: Int): [SpaceTypes]!
 }
 
 # Consumables
@@ -47,6 +50,7 @@ type Consumable implements Node & ItemInterface & ConsumableInterface & TimeStam
     name: String!
     data: JSONData
     space: SpaceTypes
+    spaceParents(depth: Int): [SpaceTypes]!
     count: Int!
     warningEnabled: Boolean!
     warningCount: Float!
@@ -66,6 +70,7 @@ type TrackedConsumable implements Node & ItemInterface & ConsumableInterface & T
     name: String!
     data: JSONData
     space: SpaceTypes
+    spaceParents(depth: Int): [SpaceTypes]!
     count: Int!
     warningEnabled: Boolean!
     warningCount: Float!
