@@ -24,8 +24,10 @@ class IRN(NamedTuple):
     "irn:<app_namespace>:<entity_identifier_nid:<nss>"
     """
 
+    # TODO: namespace instance validation
+
     name: str = "irn"
-    ins: str = ""  # invo app namespace (instance), distinguish app instance, can be blank
+    instance: str = ""  # invo app namespace (instance), distinguish app instance, can be blank
     etype: str = ""  # entity type, used for lookup
     nss: Union[int, str] = None  # entity PK, used for lookup
 
@@ -36,8 +38,8 @@ class IRN(NamedTuple):
 
     @classmethod
     def build(cls, *args, **kwargs):
-        ins = getattr(settings, "INVO_APP_IRN_NAMESPACE", None)
-        return cls("irn", ins, *args, **kwargs)
+        instance = getattr(settings, "INVO_APP_IRN_NAMESPACE", None)
+        return cls("irn", instance, *args, **kwargs)
 
     def __str__(self):
         return ":".join([str(v) for v in self._asdict().values()])

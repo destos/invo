@@ -17,7 +17,7 @@ def test_irn_parse():
     irn = IRN.parse("irn:test:items.item:456")
 
     assert irn.name == "irn"
-    assert irn.ins == "test"
+    assert irn.instance == "test"
     assert irn.etype == "items.item"
     assert irn.nss == "456"
 

@@ -1,4 +1,6 @@
 from ariadne import InterfaceType, ScalarType
+from ariadne_extended.cursor_pagination.types import resolve_node_type
+
 
 from .models import IRN
 
@@ -20,3 +22,6 @@ def serialize_irn(value):
 @irn_scalar.value_parser
 def parse_irn(value):
     return IRN.parse(value)
+
+
+protocol_interface.set_type_resolver(resolve_node_type)

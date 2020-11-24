@@ -11,20 +11,20 @@ type Item implements Node & ItemInterface & TimeStamped & Protocol {
     id: ID!
     created: DateTime!
     modified: DateTime!
+    irn: IRN!
     name: String!
     data: JSONData
     space: SpaceTypes
-    irn: IRN!
 }
 
 type Tool implements Node & ItemInterface & TimeStamped & Protocol {
     id: ID!
     created: DateTime!
     modified: DateTime!
+    irn: IRN!
     name: String!
     data: JSONData
     space: SpaceTypes
-    irn: IRN!
 }
 
 # Consumables
@@ -43,6 +43,7 @@ type Consumable implements Node & ItemInterface & ConsumableInterface & TimeStam
     id: ID!
     created: DateTime!
     modified: DateTime!
+    irn: IRN!
     name: String!
     data: JSONData
     space: SpaceTypes
@@ -50,7 +51,6 @@ type Consumable implements Node & ItemInterface & ConsumableInterface & TimeStam
     warningEnabled: Boolean!
     warningCount: Float!
     warning: Boolean!
-    irn: IRN!
 }
 
 """
@@ -62,6 +62,7 @@ type TrackedConsumable implements Node & ItemInterface & ConsumableInterface & T
     id: ID!
     created: DateTime!
     modified: DateTime!
+    irn: IRN!
     name: String!
     data: JSONData
     space: SpaceTypes
@@ -69,7 +70,6 @@ type TrackedConsumable implements Node & ItemInterface & ConsumableInterface & T
     warningEnabled: Boolean!
     warningCount: Float!
     warning: Boolean!
-    irn: IRN!
 }
 
 "All the different Item types"

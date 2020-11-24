@@ -4,3 +4,7 @@ scalar IRN
 interface Protocol {
   irn: IRN!
 }
+
+extend type Query {
+  getIrnEntity(irn: IRN!): Protocol
+}

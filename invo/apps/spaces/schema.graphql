@@ -13,10 +13,11 @@ interface SpaceInterface {
     itemCount: Int!
 }
 
-type SpaceNode implements SpaceInterface & TimeStamped {
+type SpaceNode implements SpaceInterface & TimeStamped & Protocol {
     id: ID!
     created: DateTime!
     modified: DateTime!
+    irn: IRN!
     name: String!
     parent: SpaceTypes
     children(filter: SpaceFilter): [SpaceTypes!]!
@@ -25,10 +26,11 @@ type SpaceNode implements SpaceInterface & TimeStamped {
     itemCount: Int!
 }
 
-type GridSpaceNode implements SpaceInterface & TimeStamped {
+type GridSpaceNode implements SpaceInterface & TimeStamped & Protocol {
     id: ID!
     created: DateTime!
     modified: DateTime!
+    irn: IRN!
     name: String!
     size: [Int]
     parent: SpaceTypes
