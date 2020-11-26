@@ -8,11 +8,33 @@ interface TimeStamped {
   modified: DateTime!
 }
 
+# User app types
+
+type Group implements Node {
+  id: ID!
+  name: String
+  permissions: [Permission]
+}
+
+type Permission implements Node {
+  id: ID!
+  name: String
+  contentType: String
+  codename: String
+}
+
 type User implements Node {
   id: ID!
   username: String
   firstName: String
-  listName: String
+  lastName: String
+  email: String!
+  isStaff: Boolean!
+  isActive: Boolean!
+  groups: [Group]!
+  userPermissions: [Permission]!
+  allPermissions: [String]!
+  groupPermissions: [String]!
 }
 
 # Extend Waffle items with TimeStamped interface
@@ -31,8 +53,10 @@ extend type WaffleSample implements TimeStamped {
   modified: DateTime!
 }
 
-type Query
+type Query {
+  currentUser: User
+}
 
 type Mutation {
-    root: Boolean
+  root: Boolean
 }
