@@ -1,4 +1,5 @@
 input SpaceFilter {
+    level: Int
     name: String
     name__icontains: String
 }
