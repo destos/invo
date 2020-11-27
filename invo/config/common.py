@@ -16,12 +16,13 @@ from pathlib import Path
 import sys
 
 from configurations import Configuration, values
+import dj_search_url
 
+dj_search_url.SCHEMES["elasticsearch"] = "haystack.backends.elasticsearch5_backend.Elasticsearch5SearchEngine"
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 sys.path.append(join(BASE_DIR, "apps"))
 
-# print(BASE_DIR)
 
 
 class Common(Configuration):
@@ -67,6 +68,7 @@ class Common(Configuration):
         "ariadne_extended.cursor_pagination",
         # "ariadne_extended.payload",
         "ariadne_extended.contrib.waffle_graph",
+        "haystack",
     )
 
     LOCAL_APPS = (
@@ -75,6 +77,7 @@ class Common(Configuration):
         "graph",
         "spaces",
         "items",
+        "entity_search",
     )
 
     # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -252,6 +255,10 @@ class Common(Configuration):
     WAFFLE_FLAG_DEFAULT = values.BooleanValue(False)
     WAFFLE_SWITCH_DEFAULT = values.BooleanValue(False)
     WAFFLE_SAMPLE_DEFAULT = values.BooleanValue(False)
+
+    HAYSTACK_CONNECTIONS = values.SearchURLValue('elasticsearch://127.0.0.1:9200/invo')
+    HAYSTACK_FUZZY_MIN_SIM = 0.2
+    HAYSTACK_FUZZY_MAX_EXPANSIONS = 50
 
     # INVO APP SETTINGS
 

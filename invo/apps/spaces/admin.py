@@ -25,7 +25,7 @@ class BaseSpaceNodeAdmin(PolymorphicMPTTChildModelAdmin):
     )
     list_display = (
         "name",
-        "urn",
+        "irn",
         "item_count",
     )
 
@@ -52,7 +52,7 @@ class TreeNodeParentAdmin(PolymorphicMPTTParentModelAdmin):
         "name",
         # There appears to be JS that doesn't take into account the extra list items when making the draggable interface
         # "item_count",
-        "urn",
+        "irn",
         # "actions_column",
     )
 

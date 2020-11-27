@@ -64,8 +64,6 @@ class SpaceNode(Protocol, TimeStampedModel, PolymorphicMPTTModel):
 class GridSpaceNode(SpaceNode):
     """
     A type of Space that manages the spaces below it into a grid,
-    A Grid can be terminated, WHAT?!?!
-
     """
 
     # Orientation? to other grids
@@ -119,3 +117,13 @@ class GridSpaceNode(SpaceNode):
 
 # class RackNode(GridSpaceNode):
 # Vertical rack with the units marked out. Items can fill multiple units?
+
+# Room
+# Wall
+# Shelving
+# ToolBox
+# HardwareBox
+
+# Grid layout templates for common space kinds. ki
+
+# TODO: the concept of a space "home" or items "home", the place where

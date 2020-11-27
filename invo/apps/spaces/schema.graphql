@@ -14,7 +14,7 @@ interface SpaceInterface {
     itemCount: Int!
 }
 
-type SpaceNode implements SpaceInterface & TimeStamped & Protocol {
+type SpaceNode implements Node & SpaceInterface & TimeStamped & Protocol {
     id: ID!
     created: DateTime!
     modified: DateTime!
@@ -27,7 +27,7 @@ type SpaceNode implements SpaceInterface & TimeStamped & Protocol {
     itemCount: Int!
 }
 
-type GridSpaceNode implements SpaceInterface & TimeStamped & Protocol {
+type GridSpaceNode implements Node & SpaceInterface & TimeStamped & Protocol {
     id: ID!
     created: DateTime!
     modified: DateTime!

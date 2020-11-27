@@ -1,0 +1,14 @@
+# Entity search
+type SearchResult {
+  score: Float!
+  irn: IRN!
+  object: Node!
+}
+
+input SearchInput {
+  text: String
+}
+
+extend type Query {
+  entitySearch(search: SearchInput!): [SearchResult]!
+}

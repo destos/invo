@@ -28,6 +28,8 @@ django-cors-headers = "^3.5.0"
 
 glom = "^20.11.0"
 django-configurations = {version = "^2.2", extras = ["cache", "database", "email", "search"]}
+django-haystack = "^3.0.0"
+elasticsearch = "^5.0.0"
 
 [tool.poetry.dev-dependencies]
 black = {version = "^20.8b1", allow-prereleases = true}

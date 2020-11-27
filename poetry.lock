@@ -298,6 +298,17 @@ version = "2.7.1"
 
 [[package]]
 category = "main"
+description = "Pluggable search for Django."
+name = "django-haystack"
+optional = false
+python-versions = "*"
+version = "3.0"
+
+[package.dependencies]
+Django = ">=2.2"
+
+[[package]]
+category = "main"
 description = "script tag with additional attributes for django.forms.Media"
 name = "django-js-asset"
 optional = false
@@ -409,6 +420,20 @@ name = "docopt"
 optional = false
 python-versions = "*"
 version = "0.6.2"
+
+[[package]]
+category = "main"
+description = "Python client for Elasticsearch"
+name = "elasticsearch"
+optional = false
+python-versions = "*"
+version = "5.5.3"
+
+[package.dependencies]
+urllib3 = ">=1.21.1"
+
+[package.extras]
+develop = ["requests (>=2.0.0,<3.0.0)", "nose", "coverage", "mock", "pyaml", "nosexcover", "sphinx", "sphinx-rtd-theme"]
 
 [[package]]
 category = "main"
@@ -877,6 +902,19 @@ python-versions = "*"
 version = "3.7.4.3"
 
 [[package]]
+category = "main"
+description = "HTTP library with thread-safe connection pooling, file post, and more."
+name = "urllib3"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, <4"
+version = "1.26.2"
+
+[package.extras]
+brotli = ["brotlipy (>=0.6.0)"]
+secure = ["pyOpenSSL (>=0.14)", "cryptography (>=1.3.4)", "idna (>=2.0.0)", "certifi", "ipaddress"]
+socks = ["PySocks (>=1.5.6,<1.5.7 || >1.5.7,<2.0)"]
+
+[[package]]
 category = "dev"
 description = "Filesystem events monitoring"
 name = "watchdog"
@@ -900,7 +938,7 @@ python-versions = "*"
 version = "0.2.5"
 
 [metadata]
-content-hash = "89701340972935108bf3d303be03402b80c9961bb50b56ecda3c85059faa736a"
+content-hash = "cf1503ae0bdfe533987103a6a7dcb39f51bc6b0b56e1ca3a60df1e0a116d0f43"
 lock-version = "1.0"
 python-versions = "^3.9"
 
@@ -1000,6 +1038,9 @@ django-fsm = [
     {file = "django-fsm-2.7.1.tar.gz", hash = "sha256:219b204777a932720d8583cb1f34713bd08b4713e1beb39ab2e674810e21d5e9"},
     {file = "django_fsm-2.7.1-py2.py3-none-any.whl", hash = "sha256:c96a844853de0f5dc67791b64beb367b5d56f992dff7c00f9b88c483e09f15ec"},
 ]
+django-haystack = [
+    {file = "django-haystack-3.0.tar.gz", hash = "sha256:d490f920afa85471dd1fa5000bc8eff4b704daacbe09aee1a64e75cbc426f3be"},
+]
 django-js-asset = [
     {file = "django-js-asset-1.2.2.tar.gz", hash = "sha256:c163ae80d2e0b22d8fb598047cd0dcef31f81830e127cfecae278ad574167260"},
     {file = "django_js_asset-1.2.2-py2.py3-none-any.whl", hash = "sha256:8ec12017f26eec524cab436c64ae73033368a372970af4cf42d9354fcb166bdd"},
@@ -1043,6 +1084,10 @@ djangorestframework = [
 ]
 docopt = [
     {file = "docopt-0.6.2.tar.gz", hash = "sha256:49b3a825280bd66b3aa83585ef59c4a8c82f2c8a522dbe754a8bc8d08c85c491"},
+]
+elasticsearch = [
+    {file = "elasticsearch-5.5.3-py2.py3-none-any.whl", hash = "sha256:658380fd60bdaf746fef12958f0abc49063218ce93ee1ae4ca1fe6291c896433"},
+    {file = "elasticsearch-5.5.3.tar.gz", hash = "sha256:ae91b089f2f2b5b3daa04297949e5f805ab12d187218cb587273f472656fd250"},
 ]
 face = [
     {file = "face-20.1.1-py2-none-any.whl", hash = "sha256:3790311a7329e4b0d90baee346eecad54b337629576edf3a246683a5f0d24446"},
@@ -1292,6 +1337,10 @@ typing-extensions = [
     {file = "typing_extensions-3.7.4.3-py2-none-any.whl", hash = "sha256:dafc7639cde7f1b6e1acc0f457842a83e722ccca8eef5270af2d74792619a89f"},
     {file = "typing_extensions-3.7.4.3-py3-none-any.whl", hash = "sha256:7cb407020f00f7bfc3cb3e7881628838e69d8f3fcab2f64742a5e76b2f841918"},
     {file = "typing_extensions-3.7.4.3.tar.gz", hash = "sha256:99d4073b617d30288f569d3f13d2bd7548c3a7e4c8de87db09a9d29bb3a4a60c"},
+]
+urllib3 = [
+    {file = "urllib3-1.26.2-py2.py3-none-any.whl", hash = "sha256:d8ff90d979214d7b4f8ce956e80f4028fc6860e4431f731ea4a8c08f23f99473"},
+    {file = "urllib3-1.26.2.tar.gz", hash = "sha256:19188f96923873c92ccb987120ec4acaa12f0461fa9ce5d3d0772bc965a39e08"},
 ]
 watchdog = [
     {file = "watchdog-0.10.3.tar.gz", hash = "sha256:4214e1379d128b0588021880ccaf40317ee156d4603ac388b9adcf29165e0c04"},
