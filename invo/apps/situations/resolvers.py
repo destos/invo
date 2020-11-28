@@ -25,26 +25,24 @@ class SituationResolver(ModelResolver):
     def active(self, info, **kwargs):
         return self.get_active()
 
-    def select_entities(self, into, **kwargs):
+    def select_entities(self, into, irns=list(), **kwargs):
         active = self.get_active()
         entities = []
         if active is not None:
-            irns = self.get_input_data()["irns"]
             entities = [i.get_instance() for i in irns]
             active.select(*entities)
-            active.refresh_from_db()
+            active.save()
             return dict(object=active, entities=entities, success=True)
 
         return dict(object=active, entities=entities, success=False)
 
-    def unselect_entities(self, into, **kwargs):
+    def unselect_entities(self, into, irns=list(), **kwargs):
         active = self.get_active()
         entities = []
         if active is not None:
-            irns = self.get_input_data()["irns"]
             entities = [i.get_instance() for i in irns]
             active.unselect(*entities)
-            active.refresh_from_db()
+            active.save()
             return dict(object=active, entities=entities, success=True)
 
         return dict(object=active, entities=entities, success=False)

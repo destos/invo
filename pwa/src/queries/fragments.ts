@@ -1,33 +1,49 @@
-import { gql } from "@apollo/client";
+import { gql } from "@apollo/client"
 
 const fragments = gql`
-fragment Times on TimeStamped {
+  fragment Times on TimeStamped {
     created
     modified
-}
-fragment SituationBit on Situation {
+  }
+  fragment SituationBit on Situation {
     id
     ...Times
     state
     items {
-        ...ItemBit
+      ...ItemBit
     }
     spaces {
-        ...SpaceBit
+      ...SpaceBit
     }
-}
-fragment ItemBit on ItemInterface {
+  }
+  fragment ItemBit on ItemInterface {
     id
     ...Times
     name
     data
-}
-fragment SpaceBit on SpaceInterface {
+    ... on Protocol {
+      irn
+    }
+    space {
+      ... on SpaceInterface {
+        name
+      }
+    }
+    spaceParents {
+      ... on SpaceInterface {
+        name
+      }
+    }
+  }
+  fragment SpaceBit on SpaceInterface {
     id
     ...Times
     name
     data
     itemCount
-}
+    ... on Protocol {
+      irn
+    }
+  }
 `
 export default fragments

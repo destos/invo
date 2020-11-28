@@ -2,7 +2,8 @@
 type SearchResult {
   score: Float!
   irn: IRN!
-  object: Node!
+  # TODO: indexed value display type? maybe a json field?
+  object: Protocol!
 }
 
 input SearchInput {
@@ -10,5 +11,5 @@ input SearchInput {
 }
 
 extend type Query {
-  entitySearch(search: SearchInput!): [SearchResult]!
+  entitySearch(search: SearchInput!): [SearchResult!]!
 }

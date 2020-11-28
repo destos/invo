@@ -1,5 +1,17 @@
 {
   "possibleTypes": {
+    "Node": [
+      "User",
+      "Group",
+      "Permission",
+      "Situation",
+      "SpaceNode",
+      "GridSpaceNode",
+      "Item",
+      "Tool",
+      "Consumable",
+      "TrackedConsumable"
+    ],
     "WaffleItem": [
       "WaffleFlag",
       "WaffleSwitch",
@@ -17,14 +29,6 @@
       "Consumable",
       "TrackedConsumable"
     ],
-    "Node": [
-      "Situation",
-      "User",
-      "Item",
-      "Tool",
-      "Consumable",
-      "TrackedConsumable"
-    ],
     "SpaceTypes": [
       "SpaceNode",
       "GridSpaceNode"
@@ -36,6 +40,14 @@
     "ListPageInfo": [
       "Connection"
     ],
+    "Protocol": [
+      "SpaceNode",
+      "GridSpaceNode",
+      "Item",
+      "Tool",
+      "Consumable",
+      "TrackedConsumable"
+    ],
     "ItemTypes": [
       "Item",
       "Tool",
@@ -43,12 +55,6 @@
       "TrackedConsumable"
     ],
     "ItemInterface": [
-      "Item",
-      "Tool",
-      "Consumable",
-      "TrackedConsumable"
-    ],
-    "Protocol": [
       "Item",
       "Tool",
       "Consumable",

@@ -1,16 +1,16 @@
 enum SituationState {
     "Just started and not interacted with"
-    START 
+    START
     "User is selecting entities"
-    SELECTING 
+    SELECTING
     "User decided to add new items?"
-    ADDING 
+    ADDING
     "User decided to place items in a space"
-    PLACING 
+    PLACING
     "User added more inventory"
-    INCREMENT 
+    INCREMENT
     "User consumed some inventory"
-    CONSUMING 
+    CONSUMING
 }
 
 enum SituationExit {
@@ -35,10 +35,6 @@ extend type Query {
     # TODO: other methods of selecting historical situations
 }
 
-input SelectEntitiesInput {
-    irns: [IRN!]!
-}
-
 type SituationPayload {
     success: Boolean!
     object: Situation!
@@ -46,7 +42,7 @@ type SituationPayload {
 }
 
 extend type Mutation {
-    selectEntities(input: SelectEntitiesInput!): SituationPayload!
-    unselectEntities(input: SelectEntitiesInput!): SituationPayload!
+    selectEntities(irns: [IRN!]!): SituationPayload!
+    unselectEntities(irns: [IRN!]!): SituationPayload!
     abandonSituation: Situation
 }

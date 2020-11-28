@@ -19,10 +19,16 @@ export type Query = {
   __typename?: 'Query';
   waffle?: Maybe<Waffle>;
   activeSituation?: Maybe<Situation>;
+  getIrnEntity?: Maybe<Protocol>;
   space?: Maybe<SpaceTypes>;
   getSpaces: Array<SpaceTypes>;
   item?: Maybe<ItemTypes>;
   items: Connection;
+};
+
+
+export type QueryGetIrnEntityArgs = {
+  irn: Scalars['IRN'];
 };
 
 
@@ -149,11 +155,12 @@ export type User = Node & {
 
 export type SpaceTypes = SpaceNode | GridSpaceNode;
 
-export type SpaceNode = SpaceInterface & TimeStamped & {
+export type SpaceNode = SpaceInterface & TimeStamped & Protocol & {
   __typename?: 'SpaceNode';
   id: Scalars['ID'];
   created: Scalars['DateTime'];
   modified: Scalars['DateTime'];
+  irn: Scalars['IRN'];
   name: Scalars['String'];
   parent?: Maybe<SpaceTypes>;
   children: Array<SpaceTypes>;
@@ -229,11 +236,17 @@ export type Edge = {
 };
 
 
-export type GridSpaceNode = SpaceInterface & TimeStamped & {
+export type Protocol = {
+  irn: Scalars['IRN'];
+};
+
+
+export type GridSpaceNode = SpaceInterface & TimeStamped & Protocol & {
   __typename?: 'GridSpaceNode';
   id: Scalars['ID'];
   created: Scalars['DateTime'];
   modified: Scalars['DateTime'];
+  irn: Scalars['IRN'];
   name: Scalars['String'];
   size?: Maybe<Array<Maybe<Scalars['Int']>>>;
   parent?: Maybe<SpaceTypes>;
@@ -264,10 +277,16 @@ export type Item = Node & ItemInterface & TimeStamped & Protocol & {
   id: Scalars['ID'];
   created: Scalars['DateTime'];
   modified: Scalars['DateTime'];
+  irn: Scalars['IRN'];
   name: Scalars['String'];
   data?: Maybe<Scalars['JSONData']>;
   space?: Maybe<SpaceTypes>;
-  irn: Scalars['IRN'];
+  spaceParents: Array<Maybe<SpaceTypes>>;
+};
+
+
+export type ItemSpaceParentsArgs = {
+  depth?: Maybe<Scalars['Int']>;
 };
 
 export type ItemInterface = {
@@ -275,22 +294,29 @@ export type ItemInterface = {
   name: Scalars['String'];
   data?: Maybe<Scalars['JSONData']>;
   space?: Maybe<SpaceTypes>;
+  spaceParents: Array<Maybe<SpaceTypes>>;
 };
 
-export type Protocol = {
-  irn: Scalars['IRN'];
-};
 
+export type ItemInterfaceSpaceParentsArgs = {
+  depth?: Maybe<Scalars['Int']>;
+};
 
 export type Tool = Node & ItemInterface & TimeStamped & Protocol & {
   __typename?: 'Tool';
   id: Scalars['ID'];
   created: Scalars['DateTime'];
   modified: Scalars['DateTime'];
+  irn: Scalars['IRN'];
   name: Scalars['String'];
   data?: Maybe<Scalars['JSONData']>;
   space?: Maybe<SpaceTypes>;
-  irn: Scalars['IRN'];
+  spaceParents: Array<Maybe<SpaceTypes>>;
+};
+
+
+export type ToolSpaceParentsArgs = {
+  depth?: Maybe<Scalars['Int']>;
 };
 
 /** Consumables are items that consist of multiple physically similar objects, like screws. */
@@ -299,14 +325,21 @@ export type Consumable = Node & ItemInterface & ConsumableInterface & TimeStampe
   id: Scalars['ID'];
   created: Scalars['DateTime'];
   modified: Scalars['DateTime'];
+  irn: Scalars['IRN'];
   name: Scalars['String'];
   data?: Maybe<Scalars['JSONData']>;
   space?: Maybe<SpaceTypes>;
+  spaceParents: Array<Maybe<SpaceTypes>>;
   count: Scalars['Int'];
   warningEnabled: Scalars['Boolean'];
   warningCount: Scalars['Float'];
   warning: Scalars['Boolean'];
-  irn: Scalars['IRN'];
+};
+
+
+/** Consumables are items that consist of multiple physically similar objects, like screws. */
+export type ConsumableSpaceParentsArgs = {
+  depth?: Maybe<Scalars['Int']>;
 };
 
 export type ConsumableInterface = {
@@ -326,22 +359,39 @@ export type TrackedConsumable = Node & ItemInterface & ConsumableInterface & Tim
   id: Scalars['ID'];
   created: Scalars['DateTime'];
   modified: Scalars['DateTime'];
+  irn: Scalars['IRN'];
   name: Scalars['String'];
   data?: Maybe<Scalars['JSONData']>;
   space?: Maybe<SpaceTypes>;
+  spaceParents: Array<Maybe<SpaceTypes>>;
   count: Scalars['Int'];
   warningEnabled: Scalars['Boolean'];
   warningCount: Scalars['Float'];
   warning: Scalars['Boolean'];
-  irn: Scalars['IRN'];
+};
+
+
+/**
+ * Tracked consumables hold a reference to identifiable information.
+ * Like a bar code or item number, consuming Tracked items requires you pass 
+ * the reference that you are consuming.
+ */
+export type TrackedConsumableSpaceParentsArgs = {
+  depth?: Maybe<Scalars['Int']>;
 };
 
 export enum SituationState {
+  /** Just started and not interacted with */
   Start = 'START',
+  /** User is selecting entities */
   Selecting = 'SELECTING',
+  /** User decided to add new items? */
   Adding = 'ADDING',
+  /** User decided to place items in a space */
   Placing = 'PLACING',
+  /** User added more inventory */
   Increment = 'INCREMENT',
+  /** User consumed some inventory */
   Consuming = 'CONSUMING'
 }
 
@@ -377,6 +427,7 @@ export type SituationPayload = {
   __typename?: 'SituationPayload';
   success: Scalars['Boolean'];
   object: Situation;
+  entities: Array<Maybe<Protocol>>;
 };
 
 
@@ -461,24 +512,76 @@ export type SituationBitFragment = (
 type ItemBit_Item_Fragment = (
   { __typename?: 'Item' }
   & Pick<Item, 'id' | 'name' | 'data'>
+  & { space?: Maybe<(
+    { __typename?: 'SpaceNode' }
+    & Pick<SpaceNode, 'name'>
+  ) | (
+    { __typename?: 'GridSpaceNode' }
+    & Pick<GridSpaceNode, 'name'>
+  )>, spaceParents: Array<Maybe<(
+    { __typename?: 'SpaceNode' }
+    & Pick<SpaceNode, 'name'>
+  ) | (
+    { __typename?: 'GridSpaceNode' }
+    & Pick<GridSpaceNode, 'name'>
+  )>> }
   & Times_Item_Fragment
 );
 
 type ItemBit_Tool_Fragment = (
   { __typename?: 'Tool' }
   & Pick<Tool, 'id' | 'name' | 'data'>
+  & { space?: Maybe<(
+    { __typename?: 'SpaceNode' }
+    & Pick<SpaceNode, 'name'>
+  ) | (
+    { __typename?: 'GridSpaceNode' }
+    & Pick<GridSpaceNode, 'name'>
+  )>, spaceParents: Array<Maybe<(
+    { __typename?: 'SpaceNode' }
+    & Pick<SpaceNode, 'name'>
+  ) | (
+    { __typename?: 'GridSpaceNode' }
+    & Pick<GridSpaceNode, 'name'>
+  )>> }
   & Times_Tool_Fragment
 );
 
 type ItemBit_Consumable_Fragment = (
   { __typename?: 'Consumable' }
   & Pick<Consumable, 'id' | 'name' | 'data'>
+  & { space?: Maybe<(
+    { __typename?: 'SpaceNode' }
+    & Pick<SpaceNode, 'name'>
+  ) | (
+    { __typename?: 'GridSpaceNode' }
+    & Pick<GridSpaceNode, 'name'>
+  )>, spaceParents: Array<Maybe<(
+    { __typename?: 'SpaceNode' }
+    & Pick<SpaceNode, 'name'>
+  ) | (
+    { __typename?: 'GridSpaceNode' }
+    & Pick<GridSpaceNode, 'name'>
+  )>> }
   & Times_Consumable_Fragment
 );
 
 type ItemBit_TrackedConsumable_Fragment = (
   { __typename?: 'TrackedConsumable' }
   & Pick<TrackedConsumable, 'id' | 'name' | 'data'>
+  & { space?: Maybe<(
+    { __typename?: 'SpaceNode' }
+    & Pick<SpaceNode, 'name'>
+  ) | (
+    { __typename?: 'GridSpaceNode' }
+    & Pick<GridSpaceNode, 'name'>
+  )>, spaceParents: Array<Maybe<(
+    { __typename?: 'SpaceNode' }
+    & Pick<SpaceNode, 'name'>
+  ) | (
+    { __typename?: 'GridSpaceNode' }
+    & Pick<GridSpaceNode, 'name'>
+  )>> }
   & Times_TrackedConsumable_Fragment
 );
 
@@ -526,25 +629,19 @@ export type AddToActiveSituationMutation = (
   ) }
 );
 
+export type RemoveFromActiveSituationMutationVariables = Exact<{
+  input: SelectEntitiesInput;
+}>;
 
-declare module '*/fragments.ts' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const Times: DocumentNode;
-export const SituationBit: DocumentNode;
-export const ItemBit: DocumentNode;
-export const SpaceBit: DocumentNode;
 
-  export default defaultDocument;
-}
-    
-
-declare module '*/situations.ts' {
-  import { DocumentNode } from 'graphql';
-  const defaultDocument: DocumentNode;
-  export const getActiveSituation: DocumentNode;
-export const addToActiveSituation: DocumentNode;
-
-  export default defaultDocument;
-}
-    
+export type RemoveFromActiveSituationMutation = (
+  { __typename?: 'Mutation' }
+  & { unselectEntities: (
+    { __typename?: 'SituationPayload' }
+    & Pick<SituationPayload, 'success'>
+    & { object: (
+      { __typename?: 'Situation' }
+      & SituationBitFragment
+    ) }
+  ) }
+);

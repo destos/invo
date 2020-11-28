@@ -1,18 +1,17 @@
-import React from 'react';
-import './App.css'
-import { ApolloProvider } from '@apollo/client'
-import client from './client'
-import {Container } from "@material-ui/core"
-import Situations from './views/Situations';
+import { ApolloProvider } from "@apollo/client"
+import React from "react"
+import { renderRoutes } from "react-router-config"
+import { BrowserRouter as Router } from "react-router-dom"
+import "./App.css"
+import client from "./client"
+import routes from "./routes"
 
 function App() {
   return (
     <ApolloProvider client={client}>
-      <Container>
-        <Situations/>
-      </Container>
+      <Router>{renderRoutes(routes)}</Router>
     </ApolloProvider>
-  );
+  )
 }
 
-export default App;
+export default App

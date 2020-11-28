@@ -1,15 +1,23 @@
 overwrite: true
 schema: "http://localhost:8000/graphql"
 # documents: "src/**/*.graphql"
-documents: 
+documents:
   # - ./src/fragments/*.{ts,tsx,js}
   - ./src/queries/*.{ts,tsx,js}
 generates:
-  src/generated/.d.ts:
+  src/generated/apollo-helpers.ts:
+    plugins:
+      - typescript-apollo-client-helpers
+  src/client/types.ts:
     plugins:
       - "typescript"
       - "typescript-operations"
-      - "typescript-graphql-files-modules"
+      # - "typescript-graphql-files-modules"
+    config:
+      avoidOptionals: true
+      # flattenGeneratedTypes: true
+      # addOperationExport: true
+      # exportFragmentSpreadSubTypes: true
   # src/generated/apollo.ts:
   #     - typescript
   #     - typescript-operations
