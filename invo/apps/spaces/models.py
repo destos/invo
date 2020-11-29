@@ -8,6 +8,8 @@ moving the hierarchy with it.
 When looking For an item you can request different levels of grids to narrow down where an items may be.
 """
 
+from copy import copy
+
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
@@ -19,6 +21,10 @@ from polymorphic_tree.models import PolymorphicMPTTModel, PolymorphicTreeForeign
 from protocol.models import Protocol
 
 
+def default_data(*args):
+    return dict(layout=None)
+
+
 class SpaceNode(Protocol, TimeStampedModel, PolymorphicMPTTModel):
     """
     A space that items can be organized under
@@ -28,7 +34,7 @@ class SpaceNode(Protocol, TimeStampedModel, PolymorphicMPTTModel):
     parent = TreeForeignKey(
         "self", on_delete=models.CASCADE, null=True, blank=True, related_name="children"
     )
-    data = models.JSONField(null=True, blank=True)
+    data = models.JSONField(default=default_data, null=False, blank=True)
 
     class MPTTMeta:
         order_insertion_by = ("name",)
@@ -55,6 +61,24 @@ class SpaceNode(Protocol, TimeStampedModel, PolymorphicMPTTModel):
 
     def add_item(self, item):
         return self.items.add(item)
+
+    default_layout = dict(x=0, y=0, w=10, h=10)
+
+    @property
+    def layout(self):
+        layout = self.data.get("layout", None)
+        return layout if layout is not None else self.default_layout
+
+    @layout.setter
+    def layout(self, value):
+        layout = self.data.get("layout", None)
+        new_layout = copy(self.default_layout)
+        if layout is not None:
+            new_layout.update(layout)
+        new_layout.update(value)
+        self.data["layout"] = new_layout
+        print(new_layout)
+        return new_layout
 
     # TODO: smart item lookup with left/right bounds in item or space queryset?
     # If you want to query or filter all items that are contained within a parent node

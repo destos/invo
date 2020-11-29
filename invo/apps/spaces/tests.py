@@ -46,6 +46,27 @@ class TestSpaceNode(TestCase):
         # # self.space.refresh_from_db()
         # self.assertEqual(self.space.item_count, 2)
 
+    def test_layout_property(self):
+        # Default layout value is stored as None
+        self.assertEqual(self.space.data, dict(layout=None))
+        # Default layout values
+        self.assertEqual(self.space.default_layout, dict(x=0, y=0, w=10, h=10))
+        # The unset value of layout should use these values
+        self.assertEqual(self.space.layout, dict(x=0, y=0, w=10, h=10))
+
+        # Setting a value should merge it
+        setattr(self.space, "layout", dict(w=100))
+        self.assertEqual(self.space.layout, dict(x=0, y=0, w=100, h=10))
+
+        # should also set the layout in the json data
+        self.assertEqual(self.space.data["layout"], dict(x=0, y=0, w=100, h=10))
+
+        self.space.save()
+
+        # Values should persist after a save
+        self.assertEqual(self.space.layout, dict(x=0, y=0, w=100, h=10))
+        self.assertEqual(self.space.data["layout"], dict(x=0, y=0, w=100, h=10))
+
 
 class TestGridSpaceNode(TestCase):
     def setUp(self):

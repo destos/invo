@@ -1,49 +1,70 @@
 input SpaceFilter {
-    level: Int
-    name: String
-    name__icontains: String
+  level: Int
+  name: String
+  name__icontains: String
+}
+
+input LayoutInput {
+  x: Int!
+  y: Int!
+  w: Int!
+  h: Int!
+}
+
+type Layout {
+  x: Int!
+  y: Int!
+  w: Int!
+  h: Int!
 }
 
 interface SpaceInterface {
-    id: ID!
-    name: String!
-    parent: SpaceTypes
-    children(filter: SpaceFilter): [SpaceTypes!]!
-    items(first: Int, last: Int, after: String, before: String): Connection!
-    data: JSONData
-    itemCount: Int!
+  id: ID!
+  name: String!
+  parent: SpaceTypes
+  children(filter: SpaceFilter): [SpaceTypes!]!
+  items(first: Int, last: Int, after: String, before: String): Connection!
+  data: JSONData
+  itemCount: Int!
+  layout: Layout
 }
 
 type SpaceNode implements Node & SpaceInterface & TimeStamped & Protocol {
-    id: ID!
-    created: DateTime!
-    modified: DateTime!
-    irn: IRN!
-    name: String!
-    parent: SpaceTypes
-    children(filter: SpaceFilter): [SpaceTypes!]!
-    items(first: Int, last: Int, after: String, before: String): Connection!
-    data: JSONData
-    itemCount: Int!
+  id: ID!
+  created: DateTime!
+  modified: DateTime!
+  irn: IRN!
+  name: String!
+  parent: SpaceTypes
+  children(filter: SpaceFilter): [SpaceTypes!]!
+  items(first: Int, last: Int, after: String, before: String): Connection!
+  data: JSONData
+  itemCount: Int!
+  layout: Layout
 }
 
 type GridSpaceNode implements Node & SpaceInterface & TimeStamped & Protocol {
-    id: ID!
-    created: DateTime!
-    modified: DateTime!
-    irn: IRN!
-    name: String!
-    size: [Int]
-    parent: SpaceTypes
-    children(filter: SpaceFilter): [SpaceTypes!]!
-    items(first: Int, last: Int, after: String, before: String): Connection!
-    data: JSONData
-    itemCount: Int!
+  id: ID!
+  created: DateTime!
+  modified: DateTime!
+  irn: IRN!
+  name: String!
+  size: [Int]
+  parent: SpaceTypes
+  children(filter: SpaceFilter): [SpaceTypes!]!
+  items(first: Int, last: Int, after: String, before: String): Connection!
+  data: JSONData
+  itemCount: Int!
+  layout: Layout
 }
 
 union SpaceTypes = SpaceNode | GridSpaceNode
 
 extend type Query {
-    space(id: ID!): SpaceTypes
-    getSpaces(filter: SpaceFilter): [SpaceTypes!]!
+  space(id: ID!): SpaceTypes
+  getSpaces(filter: SpaceFilter): [SpaceTypes!]!
+}
+
+extend type Mutation {
+  updateSpaceLayout(id: ID!, layout: LayoutInput!): SpaceTypes!
 }

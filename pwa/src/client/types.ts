@@ -196,6 +196,7 @@ export type SpaceNode = Node & SpaceInterface & TimeStamped & Protocol & {
   items: Connection;
   data: Maybe<Scalars['JSONData']>;
   itemCount: Scalars['Int'];
+  layout: Maybe<Layout>;
 };
 
 
@@ -219,6 +220,7 @@ export type SpaceInterface = {
   items: Connection;
   data: Maybe<Scalars['JSONData']>;
   itemCount: Scalars['Int'];
+  layout: Maybe<Layout>;
 };
 
 
@@ -266,6 +268,14 @@ export type Edge = {
 };
 
 
+export type Layout = {
+  __typename?: 'Layout';
+  x: Scalars['Int'];
+  y: Scalars['Int'];
+  w: Scalars['Int'];
+  h: Scalars['Int'];
+};
+
 export type Protocol = {
   irn: Scalars['IRN'];
 };
@@ -284,6 +294,7 @@ export type GridSpaceNode = Node & SpaceInterface & TimeStamped & Protocol & {
   items: Connection;
   data: Maybe<Scalars['JSONData']>;
   itemCount: Scalars['Int'];
+  layout: Maybe<Layout>;
 };
 
 
@@ -448,6 +459,7 @@ export type Mutation = {
   selectEntities: SituationPayload;
   unselectEntities: SituationPayload;
   abandonSituation: Maybe<Situation>;
+  updateSpaceLayout: SpaceTypes;
 };
 
 
@@ -460,6 +472,12 @@ export type MutationUnselectEntitiesArgs = {
   irns: Array<Scalars['IRN']>;
 };
 
+
+export type MutationUpdateSpaceLayoutArgs = {
+  id: Scalars['ID'];
+  layout: LayoutInput;
+};
+
 export type SituationPayload = {
   __typename?: 'SituationPayload';
   success: Scalars['Boolean'];
@@ -467,8 +485,11 @@ export type SituationPayload = {
   entities: Array<Maybe<Protocol>>;
 };
 
-export type SelectEntitiesInput = {
-  irns: Array<Scalars['IRN']>;
+export type LayoutInput = {
+  x: Scalars['Int'];
+  y: Scalars['Int'];
+  w: Scalars['Int'];
+  h: Scalars['Int'];
 };
 
 
@@ -751,5 +772,61 @@ export type RemoveFromActiveSituationMutation = (
       { __typename?: 'Situation' }
       & SituationBitFragment
     ) }
+  ) }
+);
+
+export type LayoutBitFragment = (
+  { __typename?: 'Layout' }
+  & Pick<Layout, 'x' | 'y' | 'w' | 'h'>
+);
+
+type SpaceGrid_SpaceNode_Fragment = (
+  { __typename?: 'SpaceNode' }
+  & Pick<SpaceNode, 'irn' | 'id' | 'name' | 'itemCount'>
+  & { layout: Maybe<(
+    { __typename?: 'Layout' }
+    & LayoutBitFragment
+  )> }
+);
+
+type SpaceGrid_GridSpaceNode_Fragment = (
+  { __typename?: 'GridSpaceNode' }
+  & Pick<GridSpaceNode, 'irn' | 'id' | 'name' | 'itemCount'>
+  & { layout: Maybe<(
+    { __typename?: 'Layout' }
+    & LayoutBitFragment
+  )> }
+);
+
+export type SpaceGridFragment = SpaceGrid_SpaceNode_Fragment | SpaceGrid_GridSpaceNode_Fragment;
+
+export type GetRootSpacesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetRootSpacesQuery = (
+  { __typename?: 'Query' }
+  & { spaces: Array<(
+    { __typename?: 'SpaceNode' }
+    & SpaceGrid_SpaceNode_Fragment
+  ) | (
+    { __typename?: 'GridSpaceNode' }
+    & SpaceGrid_GridSpaceNode_Fragment
+  )> }
+);
+
+export type UpdateSpaceLayoutMutationVariables = Exact<{
+  id: Scalars['ID'];
+  layout: LayoutInput;
+}>;
+
+
+export type UpdateSpaceLayoutMutation = (
+  { __typename?: 'Mutation' }
+  & { space: (
+    { __typename?: 'SpaceNode' }
+    & SpaceGrid_SpaceNode_Fragment
+  ) | (
+    { __typename?: 'GridSpaceNode' }
+    & SpaceGrid_GridSpaceNode_Fragment
   ) }
 );

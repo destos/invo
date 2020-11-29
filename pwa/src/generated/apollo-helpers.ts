@@ -105,7 +105,7 @@ export type SituationFieldPolicy = {
 	state?: FieldPolicy<any> | FieldReadFunction<any>,
 	exitCondition?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type SpaceNodeKeySpecifier = ('id' | 'created' | 'modified' | 'irn' | 'name' | 'parent' | 'children' | 'items' | 'data' | 'itemCount' | SpaceNodeKeySpecifier)[];
+export type SpaceNodeKeySpecifier = ('id' | 'created' | 'modified' | 'irn' | 'name' | 'parent' | 'children' | 'items' | 'data' | 'itemCount' | 'layout' | SpaceNodeKeySpecifier)[];
 export type SpaceNodeFieldPolicy = {
 	id?: FieldPolicy<any> | FieldReadFunction<any>,
 	created?: FieldPolicy<any> | FieldReadFunction<any>,
@@ -116,9 +116,10 @@ export type SpaceNodeFieldPolicy = {
 	children?: FieldPolicy<any> | FieldReadFunction<any>,
 	items?: FieldPolicy<any> | FieldReadFunction<any>,
 	data?: FieldPolicy<any> | FieldReadFunction<any>,
-	itemCount?: FieldPolicy<any> | FieldReadFunction<any>
+	itemCount?: FieldPolicy<any> | FieldReadFunction<any>,
+	layout?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type SpaceInterfaceKeySpecifier = ('id' | 'name' | 'parent' | 'children' | 'items' | 'data' | 'itemCount' | SpaceInterfaceKeySpecifier)[];
+export type SpaceInterfaceKeySpecifier = ('id' | 'name' | 'parent' | 'children' | 'items' | 'data' | 'itemCount' | 'layout' | SpaceInterfaceKeySpecifier)[];
 export type SpaceInterfaceFieldPolicy = {
 	id?: FieldPolicy<any> | FieldReadFunction<any>,
 	name?: FieldPolicy<any> | FieldReadFunction<any>,
@@ -126,7 +127,8 @@ export type SpaceInterfaceFieldPolicy = {
 	children?: FieldPolicy<any> | FieldReadFunction<any>,
 	items?: FieldPolicy<any> | FieldReadFunction<any>,
 	data?: FieldPolicy<any> | FieldReadFunction<any>,
-	itemCount?: FieldPolicy<any> | FieldReadFunction<any>
+	itemCount?: FieldPolicy<any> | FieldReadFunction<any>,
+	layout?: FieldPolicy<any> | FieldReadFunction<any>
 };
 export type ConnectionKeySpecifier = ('pageInfo' | 'edges' | ConnectionKeySpecifier)[];
 export type ConnectionFieldPolicy = {
@@ -150,11 +152,18 @@ export type EdgeFieldPolicy = {
 	cursor?: FieldPolicy<any> | FieldReadFunction<any>,
 	node?: FieldPolicy<any> | FieldReadFunction<any>
 };
+export type LayoutKeySpecifier = ('x' | 'y' | 'w' | 'h' | LayoutKeySpecifier)[];
+export type LayoutFieldPolicy = {
+	x?: FieldPolicy<any> | FieldReadFunction<any>,
+	y?: FieldPolicy<any> | FieldReadFunction<any>,
+	w?: FieldPolicy<any> | FieldReadFunction<any>,
+	h?: FieldPolicy<any> | FieldReadFunction<any>
+};
 export type ProtocolKeySpecifier = ('irn' | ProtocolKeySpecifier)[];
 export type ProtocolFieldPolicy = {
 	irn?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type GridSpaceNodeKeySpecifier = ('id' | 'created' | 'modified' | 'irn' | 'name' | 'size' | 'parent' | 'children' | 'items' | 'data' | 'itemCount' | GridSpaceNodeKeySpecifier)[];
+export type GridSpaceNodeKeySpecifier = ('id' | 'created' | 'modified' | 'irn' | 'name' | 'size' | 'parent' | 'children' | 'items' | 'data' | 'itemCount' | 'layout' | GridSpaceNodeKeySpecifier)[];
 export type GridSpaceNodeFieldPolicy = {
 	id?: FieldPolicy<any> | FieldReadFunction<any>,
 	created?: FieldPolicy<any> | FieldReadFunction<any>,
@@ -166,7 +175,8 @@ export type GridSpaceNodeFieldPolicy = {
 	children?: FieldPolicy<any> | FieldReadFunction<any>,
 	items?: FieldPolicy<any> | FieldReadFunction<any>,
 	data?: FieldPolicy<any> | FieldReadFunction<any>,
-	itemCount?: FieldPolicy<any> | FieldReadFunction<any>
+	itemCount?: FieldPolicy<any> | FieldReadFunction<any>,
+	layout?: FieldPolicy<any> | FieldReadFunction<any>
 };
 export type ItemKeySpecifier = ('id' | 'created' | 'modified' | 'irn' | 'name' | 'data' | 'space' | 'spaceParents' | ItemKeySpecifier)[];
 export type ItemFieldPolicy = {
@@ -241,12 +251,13 @@ export type SearchResultFieldPolicy = {
 	irn?: FieldPolicy<any> | FieldReadFunction<any>,
 	object?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type MutationKeySpecifier = ('root' | 'selectEntities' | 'unselectEntities' | 'abandonSituation' | MutationKeySpecifier)[];
+export type MutationKeySpecifier = ('root' | 'selectEntities' | 'unselectEntities' | 'abandonSituation' | 'updateSpaceLayout' | MutationKeySpecifier)[];
 export type MutationFieldPolicy = {
 	root?: FieldPolicy<any> | FieldReadFunction<any>,
 	selectEntities?: FieldPolicy<any> | FieldReadFunction<any>,
 	unselectEntities?: FieldPolicy<any> | FieldReadFunction<any>,
-	abandonSituation?: FieldPolicy<any> | FieldReadFunction<any>
+	abandonSituation?: FieldPolicy<any> | FieldReadFunction<any>,
+	updateSpaceLayout?: FieldPolicy<any> | FieldReadFunction<any>
 };
 export type SituationPayloadKeySpecifier = ('success' | 'object' | 'entities' | SituationPayloadKeySpecifier)[];
 export type SituationPayloadFieldPolicy = {
@@ -380,6 +391,13 @@ export type TypedTypePolicies = TypePolicies & {
 		mutationType?: true,
 		subscriptionType?: true,
 		fields?: EdgeFieldPolicy,
+	},
+	Layout?: {
+		keyFields?: false | LayoutKeySpecifier | (() => undefined | LayoutKeySpecifier),
+		queryType?: true,
+		mutationType?: true,
+		subscriptionType?: true,
+		fields?: LayoutFieldPolicy,
 	},
 	Protocol?: {
 		keyFields?: false | ProtocolKeySpecifier | (() => undefined | ProtocolKeySpecifier),
