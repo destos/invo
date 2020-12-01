@@ -84,7 +84,38 @@ type TrackedConsumable implements Node & ItemInterface & ConsumableInterface & T
 "All the different Item types"
 union ItemTypes = Item | Tool | Consumable | TrackedConsumable
 
+# Waiting for input unions or something similar
+input ItemInput {
+  name: String
+}
+
+input ToolInput {
+  name: String
+}
+
+input ConsumableInput {
+  name: String
+  count: Float = 1
+  warningEnabled: Boolean = false
+  warningCount: Float = 1
+}
+
+type ItemPayload implements Payload {
+  success: Boolean!
+  errors: [FieldError!]!
+  object: ItemTypes
+}
+
 extend type Query {
   item(id: ID!): ItemTypes
   items(first: Int, last: Int, after: String, before: String): Connection!
+}
+
+extend type Mutation {
+  addItem(input: ItemInput!): ItemPayload
+  addTool(input: ToolInput!): ItemPayload
+  addConsumable(input: ConsumableInput!): ItemPayload
+  updateItem(id: ID!, input: ItemInput!): ItemPayload
+  updateTool(id: ID!, input: ToolInput!): ItemPayload
+  updateConsumable(id: ID!, input: ConsumableInput!): ItemPayload
 }

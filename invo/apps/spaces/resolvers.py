@@ -29,6 +29,7 @@ mutation.set_field("updateSpaceLayout", SpaceNodeResolver.as_resolver(method="up
 space_interface.set_field("children", SpaceNodeResolver.as_nested_resolver(method="list"))
 space_interface.set_field("items", ItemResolver.as_nested_resolver(method="list"))
 
+
 @space_interface.field("parents")
 def resolve_ancestors(space, info, **kwargs):
     return space.get_ancestors(ascending=True, include_self=False).all()

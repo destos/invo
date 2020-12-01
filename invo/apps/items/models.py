@@ -39,7 +39,7 @@ class Consumable(Item):
     # What about Units? What about non-integer amounts?
     count = models.DecimalField(default=D("0"), max_digits=13, decimal_places=4)
     warning_enabled = models.BooleanField(default=False)
-    warning_count = models.DecimalField(default=D("10"), max_digits=13, decimal_places=4)
+    warning_count = models.DecimalField(default=D("1"), max_digits=13, decimal_places=4)
 
     def consume(self, amount=1, save=True):
         self.count -= amount

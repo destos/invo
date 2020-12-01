@@ -1,9 +1,5 @@
 from typing import NamedTuple, Union
-from base64 import b64encode
 
-import humps
-# from qr_code.qrcode.maker import make_qr
-# from qr_code.qrcode.utils import QRCodeOptions
 import segno
 from django.apps import apps
 from django.conf import settings

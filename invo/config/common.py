@@ -24,7 +24,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 sys.path.append(join(BASE_DIR, "apps"))
 
 
-
 class Common(Configuration):
 
     BASE_DIR = BASE_DIR
@@ -65,7 +64,7 @@ class Common(Configuration):
         "ariadne.contrib.django",
         "ariadne_extended.graph_loader",
         "ariadne_extended.cursor_pagination",
-        # "ariadne_extended.payload",
+        "ariadne_extended.payload",
         "ariadne_extended.contrib.waffle_graph",
         "haystack",
     )
