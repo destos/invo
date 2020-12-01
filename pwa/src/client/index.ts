@@ -4,7 +4,7 @@ import {
   createHttpLink,
   InMemoryCache,
 } from "@apollo/client"
-import { withScalars } from "apollo-link-scalars"
+// import { withScalars } from "apollo-link-scalars"
 import { irn } from "../utils/urns"
 import { possibleTypes } from "../generated/possibleTypes.json"
 import introspectionResult from "../generated/graphql.schema.json"

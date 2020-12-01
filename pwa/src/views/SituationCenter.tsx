@@ -72,9 +72,7 @@ const SituationCenter: FC<SituationCenterProps> = ({ reload = false }) => {
           size="small"
           autoFocus
         />
-        {/* <pre>
-                {JSON.stringify(situation, null, 2)}
-                </pre> */}
+        {/* If items/spaces are empty, show a large select area for each type */}
         <List>
           {situation.spaces.map((space) => (
             // @ts-ignore

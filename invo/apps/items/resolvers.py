@@ -11,6 +11,7 @@ class ItemResolver(RelayModelMixin, ModelResolver):
     queryset = Item.objects.all()
 
 
+# TODO: just use space.parents
 @item_interface.field("spaceParents")
 def resolve_space_parents(item, info, **kwargs):
     depth = kwargs.get("depth", 100)

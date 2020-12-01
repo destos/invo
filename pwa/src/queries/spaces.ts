@@ -9,7 +9,7 @@ const layoutBit = gql`
   }
 `
 
-const spaceBit = gql`
+const spaceGrid = gql`
   fragment SpaceGrid on SpaceTypes {
     ... on Protocol {
       irn
@@ -32,7 +32,32 @@ export const GET_ROOT_SPACES = gql`
       ...SpaceGrid
     }
   }
-  ${spaceBit}
+  ${spaceGrid}
+`
+
+export const GET_NAVIGATION_SPACE = gql`
+  query getNavigationSpace($id: ID!) {
+    space(id: $id) {
+      ...SpaceGrid
+      ... on SpaceInterface {
+        parents @connection(key: "spaceBreadcrumbs") {
+          ... on SpaceInterface {
+            id
+            name
+          }
+        }
+        children {
+          ...SpaceGrid
+        }
+      }
+    }
+  }
+  ${spaceGrid}
+  # fragment ChildSpaces on SpaceTypes {
+  #   children {
+  #     ...SpaceGrid
+  #   }
+  # }
 `
 
 export const UPDATE_SPACE_LAYOUT = gql`
@@ -41,5 +66,5 @@ export const UPDATE_SPACE_LAYOUT = gql`
       ...SpaceGrid
     }
   }
-  ${spaceBit}
+  ${spaceGrid}
 `

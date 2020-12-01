@@ -105,25 +105,28 @@ export type SituationFieldPolicy = {
 	state?: FieldPolicy<any> | FieldReadFunction<any>,
 	exitCondition?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type SpaceNodeKeySpecifier = ('id' | 'created' | 'modified' | 'irn' | 'name' | 'parent' | 'children' | 'items' | 'data' | 'itemCount' | 'layout' | SpaceNodeKeySpecifier)[];
+export type SpaceNodeKeySpecifier = ('id' | 'created' | 'modified' | 'irn' | 'qr' | 'name' | 'parent' | 'parents' | 'children' | 'items' | 'data' | 'itemCount' | 'layout' | SpaceNodeKeySpecifier)[];
 export type SpaceNodeFieldPolicy = {
 	id?: FieldPolicy<any> | FieldReadFunction<any>,
 	created?: FieldPolicy<any> | FieldReadFunction<any>,
 	modified?: FieldPolicy<any> | FieldReadFunction<any>,
 	irn?: FieldPolicy<any> | FieldReadFunction<any>,
+	qr?: FieldPolicy<any> | FieldReadFunction<any>,
 	name?: FieldPolicy<any> | FieldReadFunction<any>,
 	parent?: FieldPolicy<any> | FieldReadFunction<any>,
+	parents?: FieldPolicy<any> | FieldReadFunction<any>,
 	children?: FieldPolicy<any> | FieldReadFunction<any>,
 	items?: FieldPolicy<any> | FieldReadFunction<any>,
 	data?: FieldPolicy<any> | FieldReadFunction<any>,
 	itemCount?: FieldPolicy<any> | FieldReadFunction<any>,
 	layout?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type SpaceInterfaceKeySpecifier = ('id' | 'name' | 'parent' | 'children' | 'items' | 'data' | 'itemCount' | 'layout' | SpaceInterfaceKeySpecifier)[];
+export type SpaceInterfaceKeySpecifier = ('id' | 'name' | 'parent' | 'parents' | 'children' | 'items' | 'data' | 'itemCount' | 'layout' | SpaceInterfaceKeySpecifier)[];
 export type SpaceInterfaceFieldPolicy = {
 	id?: FieldPolicy<any> | FieldReadFunction<any>,
 	name?: FieldPolicy<any> | FieldReadFunction<any>,
 	parent?: FieldPolicy<any> | FieldReadFunction<any>,
+	parents?: FieldPolicy<any> | FieldReadFunction<any>,
 	children?: FieldPolicy<any> | FieldReadFunction<any>,
 	items?: FieldPolicy<any> | FieldReadFunction<any>,
 	data?: FieldPolicy<any> | FieldReadFunction<any>,
@@ -159,31 +162,35 @@ export type LayoutFieldPolicy = {
 	w?: FieldPolicy<any> | FieldReadFunction<any>,
 	h?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type ProtocolKeySpecifier = ('irn' | ProtocolKeySpecifier)[];
+export type ProtocolKeySpecifier = ('irn' | 'qr' | ProtocolKeySpecifier)[];
 export type ProtocolFieldPolicy = {
-	irn?: FieldPolicy<any> | FieldReadFunction<any>
+	irn?: FieldPolicy<any> | FieldReadFunction<any>,
+	qr?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type GridSpaceNodeKeySpecifier = ('id' | 'created' | 'modified' | 'irn' | 'name' | 'size' | 'parent' | 'children' | 'items' | 'data' | 'itemCount' | 'layout' | GridSpaceNodeKeySpecifier)[];
+export type GridSpaceNodeKeySpecifier = ('id' | 'created' | 'modified' | 'irn' | 'qr' | 'name' | 'size' | 'parent' | 'parents' | 'children' | 'items' | 'data' | 'itemCount' | 'layout' | GridSpaceNodeKeySpecifier)[];
 export type GridSpaceNodeFieldPolicy = {
 	id?: FieldPolicy<any> | FieldReadFunction<any>,
 	created?: FieldPolicy<any> | FieldReadFunction<any>,
 	modified?: FieldPolicy<any> | FieldReadFunction<any>,
 	irn?: FieldPolicy<any> | FieldReadFunction<any>,
+	qr?: FieldPolicy<any> | FieldReadFunction<any>,
 	name?: FieldPolicy<any> | FieldReadFunction<any>,
 	size?: FieldPolicy<any> | FieldReadFunction<any>,
 	parent?: FieldPolicy<any> | FieldReadFunction<any>,
+	parents?: FieldPolicy<any> | FieldReadFunction<any>,
 	children?: FieldPolicy<any> | FieldReadFunction<any>,
 	items?: FieldPolicy<any> | FieldReadFunction<any>,
 	data?: FieldPolicy<any> | FieldReadFunction<any>,
 	itemCount?: FieldPolicy<any> | FieldReadFunction<any>,
 	layout?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type ItemKeySpecifier = ('id' | 'created' | 'modified' | 'irn' | 'name' | 'data' | 'space' | 'spaceParents' | ItemKeySpecifier)[];
+export type ItemKeySpecifier = ('id' | 'created' | 'modified' | 'irn' | 'qr' | 'name' | 'data' | 'space' | 'spaceParents' | ItemKeySpecifier)[];
 export type ItemFieldPolicy = {
 	id?: FieldPolicy<any> | FieldReadFunction<any>,
 	created?: FieldPolicy<any> | FieldReadFunction<any>,
 	modified?: FieldPolicy<any> | FieldReadFunction<any>,
 	irn?: FieldPolicy<any> | FieldReadFunction<any>,
+	qr?: FieldPolicy<any> | FieldReadFunction<any>,
 	name?: FieldPolicy<any> | FieldReadFunction<any>,
 	data?: FieldPolicy<any> | FieldReadFunction<any>,
 	space?: FieldPolicy<any> | FieldReadFunction<any>,
@@ -197,23 +204,25 @@ export type ItemInterfaceFieldPolicy = {
 	space?: FieldPolicy<any> | FieldReadFunction<any>,
 	spaceParents?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type ToolKeySpecifier = ('id' | 'created' | 'modified' | 'irn' | 'name' | 'data' | 'space' | 'spaceParents' | ToolKeySpecifier)[];
+export type ToolKeySpecifier = ('id' | 'created' | 'modified' | 'irn' | 'qr' | 'name' | 'data' | 'space' | 'spaceParents' | ToolKeySpecifier)[];
 export type ToolFieldPolicy = {
 	id?: FieldPolicy<any> | FieldReadFunction<any>,
 	created?: FieldPolicy<any> | FieldReadFunction<any>,
 	modified?: FieldPolicy<any> | FieldReadFunction<any>,
 	irn?: FieldPolicy<any> | FieldReadFunction<any>,
+	qr?: FieldPolicy<any> | FieldReadFunction<any>,
 	name?: FieldPolicy<any> | FieldReadFunction<any>,
 	data?: FieldPolicy<any> | FieldReadFunction<any>,
 	space?: FieldPolicy<any> | FieldReadFunction<any>,
 	spaceParents?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type ConsumableKeySpecifier = ('id' | 'created' | 'modified' | 'irn' | 'name' | 'data' | 'space' | 'spaceParents' | 'count' | 'warningEnabled' | 'warningCount' | 'warning' | ConsumableKeySpecifier)[];
+export type ConsumableKeySpecifier = ('id' | 'created' | 'modified' | 'irn' | 'qr' | 'name' | 'data' | 'space' | 'spaceParents' | 'count' | 'warningEnabled' | 'warningCount' | 'warning' | ConsumableKeySpecifier)[];
 export type ConsumableFieldPolicy = {
 	id?: FieldPolicy<any> | FieldReadFunction<any>,
 	created?: FieldPolicy<any> | FieldReadFunction<any>,
 	modified?: FieldPolicy<any> | FieldReadFunction<any>,
 	irn?: FieldPolicy<any> | FieldReadFunction<any>,
+	qr?: FieldPolicy<any> | FieldReadFunction<any>,
 	name?: FieldPolicy<any> | FieldReadFunction<any>,
 	data?: FieldPolicy<any> | FieldReadFunction<any>,
 	space?: FieldPolicy<any> | FieldReadFunction<any>,
@@ -230,12 +239,13 @@ export type ConsumableInterfaceFieldPolicy = {
 	warningCount?: FieldPolicy<any> | FieldReadFunction<any>,
 	warning?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type TrackedConsumableKeySpecifier = ('id' | 'created' | 'modified' | 'irn' | 'name' | 'data' | 'space' | 'spaceParents' | 'count' | 'warningEnabled' | 'warningCount' | 'warning' | TrackedConsumableKeySpecifier)[];
+export type TrackedConsumableKeySpecifier = ('id' | 'created' | 'modified' | 'irn' | 'qr' | 'name' | 'data' | 'space' | 'spaceParents' | 'count' | 'warningEnabled' | 'warningCount' | 'warning' | TrackedConsumableKeySpecifier)[];
 export type TrackedConsumableFieldPolicy = {
 	id?: FieldPolicy<any> | FieldReadFunction<any>,
 	created?: FieldPolicy<any> | FieldReadFunction<any>,
 	modified?: FieldPolicy<any> | FieldReadFunction<any>,
 	irn?: FieldPolicy<any> | FieldReadFunction<any>,
+	qr?: FieldPolicy<any> | FieldReadFunction<any>,
 	name?: FieldPolicy<any> | FieldReadFunction<any>,
 	data?: FieldPolicy<any> | FieldReadFunction<any>,
 	space?: FieldPolicy<any> | FieldReadFunction<any>,

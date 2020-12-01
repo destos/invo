@@ -1,3 +1,4 @@
+import { ListItemSecondaryAction } from "@material-ui/core"
 import ListItem, { ListItemProps } from "@material-ui/core/ListItem"
 import ListItemIcon from "@material-ui/core/ListItemIcon"
 import ListItemText from "@material-ui/core/ListItemText"
@@ -21,7 +22,7 @@ const SpaceListItem: React.FunctionComponent<SpaceListItemProps> = ({
   children,
   ...listItemProps
 }) => {
-  const { id, irn, name, __typename } = entity
+  const { id, irn, name, __typename, qr } = entity
   const labelId = `space-list-label-${id}`
   const Icon = typeIconMap[__typename ?? "fallback"]
 
@@ -33,6 +34,9 @@ const SpaceListItem: React.FunctionComponent<SpaceListItemProps> = ({
       </ListItemIcon>
       <ListItemText id={labelId} primary={name} secondary={irn} />
       {children}
+      <ListItemSecondaryAction>
+        <img src={qr} width={80}/>
+      </ListItemSecondaryAction>
     </ListItem>
   )
 }

@@ -5,13 +5,12 @@ import { renderRoutes, RouteConfig } from "react-router-config"
 import Header from "./Header"
 import {
   usePopupState,
-  bindTrigger,
   bindPopover
 } from "material-ui-popup-state/hooks"
 import SearchDialog from "../components/SearchDialog"
 import { ActiveSituProvider } from "../context/SituationContext"
 import ShortcutDialog from "../components/ShortcutDialog"
-import globalKeyMap from "../globalKeyMap"
+// import globalKeyMap from "../globalKeyMap"
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -51,7 +50,7 @@ const Root: React.FC<IDashboardProps> = ({ route }) => {
     <ActiveSituProvider searchPopupState={searchPopupState}>
       <CssBaseline />
       <Header />
-      <Container className={classes.root}>
+      <Container className={classes.root} maxWidth="xl" fixed>
         {renderRoutes(route?.routes)}
       </Container>
       <SearchDialog {...bindPopover(searchPopupState)} title="Search" />

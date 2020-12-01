@@ -1,8 +1,10 @@
 from typing import NamedTuple, Union
+from base64 import b64encode
 
 import humps
-from qr_code.qrcode.maker import make_embedded_qr_code
-from qr_code.qrcode.utils import QRCodeOptions
+# from qr_code.qrcode.maker import make_qr
+# from qr_code.qrcode.utils import QRCodeOptions
+import segno
 from django.apps import apps
 from django.conf import settings
 
@@ -58,7 +60,7 @@ class Protocol:
     # def urn_nid(self):
     #     """The urn invo namespace id, identifies the type of entity we're working with"""
 
-    # memoize per instance?
+    # TODO: memoize per model type?
     @property
     def urn_etype(self):
         # Only works on polymorphic models right now
@@ -72,6 +74,11 @@ class Protocol:
     def irn(self):
         return str(self.urn)
 
-    def qr(self, options=QRCodeOptions(error_correction="Q")):
-        # TODO: add "qr" as frag to identify source?
-        return make_embedded_qr_code(self.urn, qr_code_options=options)
+    def make_qr(self):
+        return segno.make(self.irn, error="H")
+
+    # TODO: memoize
+    @property
+    def qr(self):
+        qr = self.make_qr()
+        return qr.svg_data_uri()

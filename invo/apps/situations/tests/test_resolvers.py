@@ -21,8 +21,8 @@ active_query = """
 """
 
 select_entities = """
-    mutation doSelectEntities($input: SelectEntitiesInput!) {
-        selectEntities(input: $input) {
+    mutation doSelectEntities($irns: [IRN!]!) {
+        selectEntities(irns: $irns) {
             success
             object {
                 ... on Node {
@@ -44,8 +44,8 @@ select_entities = """
 """
 
 unselect_entities = """
-    mutation doUnselectEntities($input: SelectEntitiesInput!) {
-        unselectEntities(input: $input) {
+    mutation doUnselectEntities($irns: [IRN!]!) {
+        unselectEntities(irns: $irns) {
             success
             object {
                 ... on Node {
@@ -104,7 +104,7 @@ class TestSituationResolver(TestCase):
 
         data = dict(
             query=select_entities,
-            variables=dict(input=dict(irns=[item.irn, space.irn])),
+            variables=dict(irns=[item.irn, space.irn]),
             operationName="doSelectEntities",
         )
         success, result = graphql_sync(schema, data, context_value=self.context)
@@ -125,7 +125,7 @@ class TestSituationResolver(TestCase):
 
         data = dict(
             query=unselect_entities,
-            variables=dict(input=dict(irns=[item.irn, space.irn])),
+            variables=dict(irns=[item.irn, space.irn]),
             operationName="doUnselectEntities",
         )
         success, result = graphql_sync(schema, data, context_value=self.context)

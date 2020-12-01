@@ -190,8 +190,10 @@ export type SpaceNode = Node & SpaceInterface & TimeStamped & Protocol & {
   created: Scalars['DateTime'];
   modified: Scalars['DateTime'];
   irn: Scalars['IRN'];
+  qr: Scalars['String'];
   name: Scalars['String'];
   parent: Maybe<SpaceTypes>;
+  parents: Array<SpaceTypes>;
   children: Array<SpaceTypes>;
   items: Connection;
   data: Maybe<Scalars['JSONData']>;
@@ -216,6 +218,7 @@ export type SpaceInterface = {
   id: Scalars['ID'];
   name: Scalars['String'];
   parent: Maybe<SpaceTypes>;
+  parents: Array<SpaceTypes>;
   children: Array<SpaceTypes>;
   items: Connection;
   data: Maybe<Scalars['JSONData']>;
@@ -278,6 +281,7 @@ export type Layout = {
 
 export type Protocol = {
   irn: Scalars['IRN'];
+  qr: Scalars['String'];
 };
 
 
@@ -287,9 +291,11 @@ export type GridSpaceNode = Node & SpaceInterface & TimeStamped & Protocol & {
   created: Scalars['DateTime'];
   modified: Scalars['DateTime'];
   irn: Scalars['IRN'];
+  qr: Scalars['String'];
   name: Scalars['String'];
   size: Maybe<Array<Maybe<Scalars['Int']>>>;
   parent: Maybe<SpaceTypes>;
+  parents: Array<SpaceTypes>;
   children: Array<SpaceTypes>;
   items: Connection;
   data: Maybe<Scalars['JSONData']>;
@@ -319,6 +325,7 @@ export type Item = Node & ItemInterface & TimeStamped & Protocol & {
   created: Scalars['DateTime'];
   modified: Scalars['DateTime'];
   irn: Scalars['IRN'];
+  qr: Scalars['String'];
   name: Scalars['String'];
   data: Maybe<Scalars['JSONData']>;
   space: Maybe<SpaceTypes>;
@@ -349,6 +356,7 @@ export type Tool = Node & ItemInterface & TimeStamped & Protocol & {
   created: Scalars['DateTime'];
   modified: Scalars['DateTime'];
   irn: Scalars['IRN'];
+  qr: Scalars['String'];
   name: Scalars['String'];
   data: Maybe<Scalars['JSONData']>;
   space: Maybe<SpaceTypes>;
@@ -367,6 +375,7 @@ export type Consumable = Node & ItemInterface & ConsumableInterface & TimeStampe
   created: Scalars['DateTime'];
   modified: Scalars['DateTime'];
   irn: Scalars['IRN'];
+  qr: Scalars['String'];
   name: Scalars['String'];
   data: Maybe<Scalars['JSONData']>;
   space: Maybe<SpaceTypes>;
@@ -392,7 +401,7 @@ export type ConsumableInterface = {
 
 /**
  * Tracked consumables hold a reference to identifiable information.
- * Like a bar code or item number, consuming Tracked items requires you pass 
+ * Like a bar code or item number, consuming Tracked items requires you pass
  * the reference that you are consuming.
  */
 export type TrackedConsumable = Node & ItemInterface & ConsumableInterface & TimeStamped & Protocol & {
@@ -401,6 +410,7 @@ export type TrackedConsumable = Node & ItemInterface & ConsumableInterface & Tim
   created: Scalars['DateTime'];
   modified: Scalars['DateTime'];
   irn: Scalars['IRN'];
+  qr: Scalars['String'];
   name: Scalars['String'];
   data: Maybe<Scalars['JSONData']>;
   space: Maybe<SpaceTypes>;
@@ -414,7 +424,7 @@ export type TrackedConsumable = Node & ItemInterface & ConsumableInterface & Tim
 
 /**
  * Tracked consumables hold a reference to identifiable information.
- * Like a bar code or item number, consuming Tracked items requires you pass 
+ * Like a bar code or item number, consuming Tracked items requires you pass
  * the reference that you are consuming.
  */
 export type TrackedConsumableSpaceParentsArgs = {
@@ -573,7 +583,7 @@ export type SituationBitFragment = (
 
 type ItemBit_Item_Fragment = (
   { __typename?: 'Item' }
-  & Pick<Item, 'irn' | 'id' | 'name' | 'data'>
+  & Pick<Item, 'irn' | 'qr' | 'id' | 'name' | 'data'>
   & { space: Maybe<(
     { __typename?: 'SpaceNode' }
     & Pick<SpaceNode, 'name'>
@@ -592,7 +602,7 @@ type ItemBit_Item_Fragment = (
 
 type ItemBit_Tool_Fragment = (
   { __typename?: 'Tool' }
-  & Pick<Tool, 'irn' | 'id' | 'name' | 'data'>
+  & Pick<Tool, 'irn' | 'qr' | 'id' | 'name' | 'data'>
   & { space: Maybe<(
     { __typename?: 'SpaceNode' }
     & Pick<SpaceNode, 'name'>
@@ -611,7 +621,7 @@ type ItemBit_Tool_Fragment = (
 
 type ItemBit_Consumable_Fragment = (
   { __typename?: 'Consumable' }
-  & Pick<Consumable, 'irn' | 'id' | 'name' | 'data'>
+  & Pick<Consumable, 'irn' | 'qr' | 'id' | 'name' | 'data'>
   & { space: Maybe<(
     { __typename?: 'SpaceNode' }
     & Pick<SpaceNode, 'name'>
@@ -630,7 +640,7 @@ type ItemBit_Consumable_Fragment = (
 
 type ItemBit_TrackedConsumable_Fragment = (
   { __typename?: 'TrackedConsumable' }
-  & Pick<TrackedConsumable, 'irn' | 'id' | 'name' | 'data'>
+  & Pick<TrackedConsumable, 'irn' | 'qr' | 'id' | 'name' | 'data'>
   & { space: Maybe<(
     { __typename?: 'SpaceNode' }
     & Pick<SpaceNode, 'name'>
@@ -651,13 +661,13 @@ export type ItemBitFragment = ItemBit_Item_Fragment | ItemBit_Tool_Fragment | It
 
 type SpaceBit_SpaceNode_Fragment = (
   { __typename?: 'SpaceNode' }
-  & Pick<SpaceNode, 'irn' | 'id' | 'name' | 'data' | 'itemCount'>
+  & Pick<SpaceNode, 'irn' | 'qr' | 'id' | 'name' | 'data' | 'itemCount'>
   & Times_SpaceNode_Fragment
 );
 
 type SpaceBit_GridSpaceNode_Fragment = (
   { __typename?: 'GridSpaceNode' }
-  & Pick<GridSpaceNode, 'irn' | 'id' | 'name' | 'data' | 'itemCount'>
+  & Pick<GridSpaceNode, 'irn' | 'qr' | 'id' | 'name' | 'data' | 'itemCount'>
   & Times_GridSpaceNode_Fragment
 );
 
@@ -810,6 +820,48 @@ export type GetRootSpacesQuery = (
     & SpaceGrid_SpaceNode_Fragment
   ) | (
     { __typename?: 'GridSpaceNode' }
+    & SpaceGrid_GridSpaceNode_Fragment
+  )> }
+);
+
+export type GetNavigationSpaceQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type GetNavigationSpaceQuery = (
+  { __typename?: 'Query' }
+  & { space: Maybe<(
+    { __typename?: 'SpaceNode' }
+    & { parents: Array<(
+      { __typename?: 'SpaceNode' }
+      & Pick<SpaceNode, 'id' | 'name'>
+    ) | (
+      { __typename?: 'GridSpaceNode' }
+      & Pick<GridSpaceNode, 'id' | 'name'>
+    )>, children: Array<(
+      { __typename?: 'SpaceNode' }
+      & SpaceGrid_SpaceNode_Fragment
+    ) | (
+      { __typename?: 'GridSpaceNode' }
+      & SpaceGrid_GridSpaceNode_Fragment
+    )> }
+    & SpaceGrid_SpaceNode_Fragment
+  ) | (
+    { __typename?: 'GridSpaceNode' }
+    & { parents: Array<(
+      { __typename?: 'SpaceNode' }
+      & Pick<SpaceNode, 'id' | 'name'>
+    ) | (
+      { __typename?: 'GridSpaceNode' }
+      & Pick<GridSpaceNode, 'id' | 'name'>
+    )>, children: Array<(
+      { __typename?: 'SpaceNode' }
+      & SpaceGrid_SpaceNode_Fragment
+    ) | (
+      { __typename?: 'GridSpaceNode' }
+      & SpaceGrid_GridSpaceNode_Fragment
+    )> }
     & SpaceGrid_GridSpaceNode_Fragment
   )> }
 );

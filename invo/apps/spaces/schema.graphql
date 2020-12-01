@@ -22,6 +22,7 @@ interface SpaceInterface {
   id: ID!
   name: String!
   parent: SpaceTypes
+  parents: [SpaceTypes!]!
   children(filter: SpaceFilter): [SpaceTypes!]!
   items(first: Int, last: Int, after: String, before: String): Connection!
   data: JSONData
@@ -34,8 +35,10 @@ type SpaceNode implements Node & SpaceInterface & TimeStamped & Protocol {
   created: DateTime!
   modified: DateTime!
   irn: IRN!
+  qr: String!
   name: String!
   parent: SpaceTypes
+  parents: [SpaceTypes!]!
   children(filter: SpaceFilter): [SpaceTypes!]!
   items(first: Int, last: Int, after: String, before: String): Connection!
   data: JSONData
@@ -48,9 +51,11 @@ type GridSpaceNode implements Node & SpaceInterface & TimeStamped & Protocol {
   created: DateTime!
   modified: DateTime!
   irn: IRN!
+  qr: String!
   name: String!
   size: [Int]
   parent: SpaceTypes
+  parents: [SpaceTypes!]!
   children(filter: SpaceFilter): [SpaceTypes!]!
   items(first: Int, last: Int, after: String, before: String): Connection!
   data: JSONData

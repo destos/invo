@@ -133,3 +133,7 @@ class SelectedItem(TimeStampedModel):
 
 # Triggers that feed data into a situation
 # queryset that returns the most recent situation for acting/adding to
+
+# When selecting multiple spaces, you're given the option to consolidate all items under those spaces
+# into another space
+# Confirm action showing all items that are to be moved.

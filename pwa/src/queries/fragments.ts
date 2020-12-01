@@ -23,6 +23,7 @@ const fragments = gql`
     data
     ... on Protocol {
       irn
+      qr
     }
     space {
       ... on SpaceInterface {
@@ -43,6 +44,7 @@ const fragments = gql`
     itemCount
     ... on Protocol {
       irn
+      qr
     }
   }
 `

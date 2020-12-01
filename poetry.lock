@@ -144,7 +144,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 version = "7.1.2"
 
 [[package]]
-category = "main"
+category = "dev"
 description = "Cross-platform colored terminal text."
 name = "colorama"
 optional = false
@@ -362,18 +362,6 @@ django-mptt = ">=0.8.0"
 django-polymorphic = ">=1.3"
 django-tag-parser = ">=2.1"
 future = ">=0.12.2"
-
-[[package]]
-category = "main"
-description = "An application that provides tools for displaying QR codes on your Django site."
-name = "django-qr-code"
-optional = false
-python-versions = ">=3"
-version = "1.3.1"
-
-[package.dependencies]
-django = "*"
-qrcode = "*"
 
 [[package]]
 category = "main"
@@ -810,30 +798,20 @@ python-versions = "*"
 version = "2020.4"
 
 [[package]]
-category = "main"
-description = "QR Code image generator"
-name = "qrcode"
-optional = false
-python-versions = "*"
-version = "6.1"
-
-[package.dependencies]
-colorama = "*"
-six = "*"
-
-[package.extras]
-dev = ["tox", "pytest", "mock"]
-maintainer = ["zest.releaser"]
-pil = ["pillow"]
-test = ["pytest", "pytest-cov", "mock"]
-
-[[package]]
 category = "dev"
 description = "Alternative regular expression module, to replace re."
 name = "regex"
 optional = false
 python-versions = "*"
 version = "2020.11.13"
+
+[[package]]
+category = "main"
+description = "QR Code and Micro QR Code generator for Python 2 and Python 3"
+name = "segno"
+optional = false
+python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,>=2.7"
+version = "1.3.1"
 
 [[package]]
 category = "main"
@@ -938,7 +916,7 @@ python-versions = "*"
 version = "0.2.5"
 
 [metadata]
-content-hash = "cf1503ae0bdfe533987103a6a7dcb39f51bc6b0b56e1ca3a60df1e0a116d0f43"
+content-hash = "3dcd4efc55ef94ea8027623be37409b4537db7cf4876e1bc147028c788d15df4"
 lock-version = "1.0"
 python-versions = "^3.9"
 
@@ -1061,10 +1039,6 @@ django-polymorphic = [
 django-polymorphic-tree = [
     {file = "django-polymorphic-tree-1.5.1.tar.gz", hash = "sha256:0d113886d88c31c68a304c8ae7e9af8493b177e12cc431f8135645408c9de58c"},
     {file = "django_polymorphic_tree-1.5.1-py2.py3-none-any.whl", hash = "sha256:270388a711d43d0813af78cd8d702958eeb33d63e3948d93b40a78d43f879852"},
-]
-django-qr-code = [
-    {file = "django-qr-code-1.3.1.tar.gz", hash = "sha256:cea1b1f220f317b9ddde60b434e701ca3c3df6f301585a58f4051cbef237b959"},
-    {file = "django_qr_code-1.3.1-py3-none-any.whl", hash = "sha256:068cd737dad7296e18736f7e5c14376603ba89b3d4e8881a4e7b8913a7e3dc31"},
 ]
 django-safedelete = [
     {file = "django-safedelete-0.5.6.tar.gz", hash = "sha256:b829e8a3abae3e00aa04461263c812d3444ebd7ae57aa0fa1ca3cdc7c414a82a"},
@@ -1243,10 +1217,6 @@ pytz = [
     {file = "pytz-2020.4-py2.py3-none-any.whl", hash = "sha256:5c55e189b682d420be27c6995ba6edce0c0a77dd67bfbe2ae6607134d5851ffd"},
     {file = "pytz-2020.4.tar.gz", hash = "sha256:3e6b7dd2d1e0a59084bcee14a17af60c5c562cdc16d828e8eba2e683d3a7e268"},
 ]
-qrcode = [
-    {file = "qrcode-6.1-py2.py3-none-any.whl", hash = "sha256:3996ee560fc39532910603704c82980ff6d4d5d629f9c3f25f34174ce8606cf5"},
-    {file = "qrcode-6.1.tar.gz", hash = "sha256:505253854f607f2abf4d16092c61d4e9d511a3b4392e60bff957a68592b04369"},
-]
 regex = [
     {file = "regex-2020.11.13-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:8b882a78c320478b12ff024e81dc7d43c1462aa4a3341c754ee65d857a521f85"},
     {file = "regex-2020.11.13-cp36-cp36m-manylinux1_i686.whl", hash = "sha256:a63f1a07932c9686d2d416fb295ec2c01ab246e89b4d58e5fa468089cab44b70"},
@@ -1289,6 +1259,10 @@ regex = [
     {file = "regex-2020.11.13-cp39-cp39-win32.whl", hash = "sha256:f8f295db00ef5f8bae530fc39af0b40486ca6068733fb860b42115052206466f"},
     {file = "regex-2020.11.13-cp39-cp39-win_amd64.whl", hash = "sha256:a15f64ae3a027b64496a71ab1f722355e570c3fac5ba2801cafce846bf5af01d"},
     {file = "regex-2020.11.13.tar.gz", hash = "sha256:83d6b356e116ca119db8e7c6fc2983289d87b27b3fac238cfe5dca529d884562"},
+]
+segno = [
+    {file = "segno-1.3.1-py2.py3-none-any.whl", hash = "sha256:51634ea16d2104e0a8f9309beb785abfdbc1b8c0fffef5d74c80522eec7490d6"},
+    {file = "segno-1.3.1.tar.gz", hash = "sha256:309281263ba820e49ce44556a27779709b86769b8f2161f94641a3119684dc4e"},
 ]
 six = [
     {file = "six-1.15.0-py2.py3-none-any.whl", hash = "sha256:8b74bedcbbbaca38ff6d7491d76f2b06b3592611af620f8426e82dddb04a5ced"},

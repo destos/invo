@@ -3,6 +3,7 @@ scalar IRN
 
 interface Protocol {
   irn: IRN!
+  qr: String!
 }
 
 extend type Query {

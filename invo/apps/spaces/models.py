@@ -77,12 +77,13 @@ class SpaceNode(Protocol, TimeStampedModel, PolymorphicMPTTModel):
             new_layout.update(layout)
         new_layout.update(value)
         self.data["layout"] = new_layout
-        print(new_layout)
         return new_layout
 
     # TODO: smart item lookup with left/right bounds in item or space queryset?
     # If you want to query or filter all items that are contained within a parent node
     # Could do a query where all items are searched based on their space left/right value.
+
+    # How to solve space sizing orientation and dimensions
 
 
 class GridSpaceNode(SpaceNode):

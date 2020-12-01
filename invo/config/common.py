@@ -62,7 +62,6 @@ class Common(Configuration):
         "mptt",
         "waffle",
         "corsheaders",
-        "qr_code",
         "ariadne.contrib.django",
         "ariadne_extended.graph_loader",
         "ariadne_extended.cursor_pagination",

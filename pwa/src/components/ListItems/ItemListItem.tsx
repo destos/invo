@@ -1,3 +1,4 @@
+import { ListItemSecondaryAction, SvgIcon } from "@material-ui/core"
 import ListItem, { ListItemProps } from "@material-ui/core/ListItem"
 import ListItemIcon from "@material-ui/core/ListItemIcon"
 import ListItemText from "@material-ui/core/ListItemText"
@@ -25,7 +26,7 @@ const ItemListItem: React.FunctionComponent<ItemListItemProps> = ({
   children,
   ...listItemProps
 }) => {
-  const { id, irn, name, spaceParents, __typename } = entity
+  const { id, irn, name, spaceParents, __typename, qr } = entity
   const labelId = `item-list-label-${id}`
   const Icon = typeIconMap[__typename ?? "fallback"]
 
@@ -40,6 +41,9 @@ const ItemListItem: React.FunctionComponent<ItemListItemProps> = ({
       </ListItemIcon>
       <ListItemText id={labelId} primary={name} secondary={bread} />
       {children}
+      <ListItemSecondaryAction>
+        <img src={qr} width={80}/>
+      </ListItemSecondaryAction>
     </ListItem>
   )
 }
