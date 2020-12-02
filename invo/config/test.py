@@ -8,7 +8,7 @@ class Test(Common):
     INVO_APP_IRN_NAMESPACE = values.Value("test")
 
     HAYSTACK_CONNECTIONS = {
-        'default': {
-            'ENGINE': 'haystack.backends.simple_backend.SimpleEngine',
+        "default": {
+            "ENGINE": "haystack.backends.simple_backend.SimpleEngine",
         },
     }

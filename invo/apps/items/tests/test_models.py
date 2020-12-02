@@ -74,9 +74,10 @@ class TestConsumable(TestCase):
     def test_default_state(self):
         self.assertEqual(self.item.count, 0)
         self.assertEqual(self.item.warning_enabled, False)
-        self.assertEqual(self.item.warning_count, 10)
+        self.assertEqual(self.item.warning_count, 1)
 
     def test_warning(self):
+        self.item.warning_count = 10
         self.assertFalse(self.item.warning, "Warning should not be on by default")
         self.item.count = 20
         self.assertFalse(self.item.warning, "Warning should not be on by default with high count")

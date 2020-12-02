@@ -18,7 +18,9 @@ import sys
 from configurations import Configuration, values
 import dj_search_url
 
-dj_search_url.SCHEMES["elasticsearch"] = "haystack.backends.elasticsearch5_backend.Elasticsearch5SearchEngine"
+dj_search_url.SCHEMES[
+    "elasticsearch"
+] = "haystack.backends.elasticsearch5_backend.Elasticsearch5SearchEngine"
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 sys.path.append(join(BASE_DIR, "apps"))
@@ -254,9 +256,10 @@ class Common(Configuration):
     WAFFLE_SWITCH_DEFAULT = values.BooleanValue(False)
     WAFFLE_SAMPLE_DEFAULT = values.BooleanValue(False)
 
-    HAYSTACK_CONNECTIONS = values.SearchURLValue('elasticsearch://127.0.0.1:9200/invo')
+    HAYSTACK_CONNECTIONS = values.SearchURLValue("elasticsearch://127.0.0.1:9200/invo")
     HAYSTACK_FUZZY_MIN_SIM = 0.2
     HAYSTACK_FUZZY_MAX_EXPANSIONS = 50
+    HAYSTACK_SIGNAL_PROCESSOR = "haystack.signals.RealtimeSignalProcessor"
 
     # INVO APP SETTINGS
 
