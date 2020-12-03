@@ -41,6 +41,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "gen": "graphql-codegen --config codegen.yml",
+    "gen-watch": "graphql-codegen -w --config codegen.yml",
     "lint": "prettier -w src"
   },
   "eslintConfig": {
