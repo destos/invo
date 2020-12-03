@@ -21,6 +21,10 @@ class ItemResolver(RelayModelMixin, ModelResolver):
         model = self.config.get("model", models.Item)
         return self.type_serializers[model]
 
+    def perform_destroy(self, instance):
+        # FIX: in extended, graphql.error.graphql_error.GraphQLError: cannot unpack non-iterable NoneType object
+        return 1, instance.delete()
+
 
 # TODO: just use space.parents
 @item_interface.field("spaceParents")
@@ -44,3 +48,6 @@ mutation.set_field("updateTool", ItemResolver.as_resolver(method="update", model
 mutation.set_field(
     "updateConsumable", ItemResolver.as_resolver(method="update", model=models.Consumable)
 )
+
+mutation.set_field("deleteItem", ItemResolver.as_resolver(method="destroy"))
+# TODO: moveItem, removeItem, putBackItem

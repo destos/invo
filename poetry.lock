@@ -46,7 +46,7 @@ develop = true
 name = "ariadne-extended"
 optional = false
 python-versions = "^3.7"
-version = "0.1.12"
+version = "0.1.11"
 
 [package.dependencies]
 ariadne = "^0.12.0"
