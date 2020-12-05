@@ -4,6 +4,8 @@ input SpaceFilter {
   name__icontains: String
 }
 
+scalar Distance
+
 input LayoutInput {
   x: Int!
   y: Int!
@@ -18,6 +20,18 @@ type Layout {
   h: Int!
 }
 
+input DimensionsInput {
+  x: Distance!
+  y: Distance!
+  z: Distance!
+}
+
+type Dimensions {
+  x: Distance!
+  y: Distance!
+  z: Distance!
+}
+
 interface SpaceInterface {
   id: ID!
   name: String!
@@ -27,7 +41,9 @@ interface SpaceInterface {
   items(first: Int, last: Int, after: String, before: String): Connection!
   data: JSONData
   itemCount: Int!
-  layout: Layout
+  layout: Layout!
+  dimensions: Dimensions!
+  volume: Float!
 }
 
 type SpaceNode implements Node & SpaceInterface & TimeStamped & Protocol {
@@ -43,7 +59,9 @@ type SpaceNode implements Node & SpaceInterface & TimeStamped & Protocol {
   items(first: Int, last: Int, after: String, before: String): Connection!
   data: JSONData
   itemCount: Int!
-  layout: Layout
+  layout: Layout!
+  dimensions: Dimensions!
+  volume: Float!
 }
 
 type GridSpaceNode implements Node & SpaceInterface & TimeStamped & Protocol {
@@ -60,7 +78,9 @@ type GridSpaceNode implements Node & SpaceInterface & TimeStamped & Protocol {
   items(first: Int, last: Int, after: String, before: String): Connection!
   data: JSONData
   itemCount: Int!
-  layout: Layout
+  layout: Layout!
+  dimensions: Dimensions!
+  volume: Float!
 }
 
 union SpaceTypes = SpaceNode | GridSpaceNode
@@ -68,8 +88,26 @@ union SpaceTypes = SpaceNode | GridSpaceNode
 extend type Query {
   space(id: ID!): SpaceTypes
   getSpaces(filter: SpaceFilter): [SpaceTypes!]!
+  test: Distance
+}
+
+# TODO: make all these new mutations work.
+input SpaceInput {
+  name: String
+  parent: ID
+  layout: LayoutInput
+  dimensions: DimensionsInput
+}
+
+type SpacePayload implements Payload{
+  success: Boolean!
+  errors: [FieldError!]!
+  object: SpaceTypes
 }
 
 extend type Mutation {
+  addSpace(input: SpaceInput!): SpacePayload!
   updateSpaceLayout(id: ID!, layout: LayoutInput!): SpaceTypes!
+  updateSpace(id: ID!, input: SpaceInput!): SpacePayload!
+  removeSpace(id: ID!): SpacePayload!
 }

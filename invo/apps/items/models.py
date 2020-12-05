@@ -69,6 +69,7 @@ class Consumable(Item):
 class TrackedConsumable(Consumable):
     """Serialized consumable consumption for tracking"""
 
+    # Notes:
     # Tracked items and consumables maybe need to exist in multiple spaces?
     # that is outside the nesting scheme, how to handle that?
     # Do tracked consumables have a single instance per item?
@@ -85,5 +86,5 @@ class TrackedConsumable(Consumable):
 class Tool(Item):
     """Tools allow you to store """
 
-    # TODO: tools taxonomy system, mqtt yo!
+    # TODO: toolhub tool taxonomy system, mqtt yo! make it better this time.
     pass
