@@ -6,10 +6,8 @@ from measurement.measures import Distance, Volume
 
 # @distance_scalar.serializer
 def serialize_measure(value):
-    return dict(
-        value=float(value.si_value),
-        unit=value.unit.name
-    )
+    return dict(value=float(value.si_value), unit=value.unit.name)
+
 
 # @distance_scalar.value_parser
 def parse_distance(value):

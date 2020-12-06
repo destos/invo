@@ -207,7 +207,7 @@ class GridSpaceNode(SpaceNode):
                             active.add(child.id)
 
         # Safe delete the spaces that are orphaned
-        children.filter(id__in=(remaining-active)).delete()
+        children.filter(id__in=(remaining - active)).delete()
 
     @property
     def grid_basis(self):

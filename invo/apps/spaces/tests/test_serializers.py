@@ -11,10 +11,7 @@ def test_serializer_success():
     SpaceNode.objects.rebuild()
     ser = SpaceNodeSerializer(
         space,
-        data=dict(
-            dimensions=dict(x=Distance(m=2), y=Distance(m=2), z=Distance(m=4)),
-            name="bob"
-        )
+        data=dict(dimensions=dict(x=Distance(m=2), y=Distance(m=2), z=Distance(m=4)), name="bob"),
     )
     valid = ser.is_valid()
     assert valid == True
