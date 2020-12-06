@@ -104,6 +104,7 @@ class SpaceNode(Protocol, TimeStampedModel, PolymorphicMPTTModel, SafeDeleteMode
     def save(self, **kwargs):
         # TODO: only update volume when size changes
         self.update_volume()
+        # TODO: reset layout when parent changes.
         return super().save(**kwargs)
 
     @property
@@ -138,7 +139,6 @@ class SpaceNode(Protocol, TimeStampedModel, PolymorphicMPTTModel, SafeDeleteMode
     def update_volume(self):
         # Change once we upgrade measures to 4.0
         # This doesn't work
-        # Maybe use the beta version of django-measurements 4.0
         self.volume = reduce((lambda i, e: i * e), self.size)
 
     # TODO: when deleting spaces with attached items what should we do?

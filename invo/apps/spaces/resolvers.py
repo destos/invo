@@ -37,4 +37,5 @@ space_interface.set_field("items", ItemResolver.as_nested_resolver(method="list"
 
 @space_interface.field("parents")
 def resolve_ancestors(space, info, **kwargs):
-    return space.get_ancestors(ascending=True, include_self=False).all()
+    return space.get_ancestors(ascending=False, include_self=False).all()
+

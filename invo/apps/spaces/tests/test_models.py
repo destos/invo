@@ -4,7 +4,7 @@ import mock
 
 # from mock import Mock
 
-from . import models
+from spaces import models
 
 
 class TestSpaceNode(TestCase):

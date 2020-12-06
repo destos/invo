@@ -4,8 +4,6 @@ input SpaceFilter {
   name__icontains: String
 }
 
-scalar Distance
-
 input LayoutInput {
   x: Int!
   y: Int!
@@ -43,7 +41,7 @@ interface SpaceInterface {
   itemCount: Int!
   layout: Layout!
   dimensions: Dimensions!
-  volume: Float!
+  volume: Volume!
 }
 
 type SpaceNode implements Node & SpaceInterface & TimeStamped & Protocol {
@@ -61,7 +59,7 @@ type SpaceNode implements Node & SpaceInterface & TimeStamped & Protocol {
   itemCount: Int!
   layout: Layout!
   dimensions: Dimensions!
-  volume: Float!
+  volume: Volume!
 }
 
 type GridSpaceNode implements Node & SpaceInterface & TimeStamped & Protocol {
@@ -71,7 +69,6 @@ type GridSpaceNode implements Node & SpaceInterface & TimeStamped & Protocol {
   irn: IRN!
   qr: String!
   name: String!
-  size: [Int]
   parent: SpaceTypes
   parents: [SpaceTypes!]!
   children(filter: SpaceFilter): [SpaceTypes!]!
@@ -80,7 +77,7 @@ type GridSpaceNode implements Node & SpaceInterface & TimeStamped & Protocol {
   itemCount: Int!
   layout: Layout!
   dimensions: Dimensions!
-  volume: Float!
+  volume: Volume!
 }
 
 union SpaceTypes = SpaceNode | GridSpaceNode
@@ -88,7 +85,6 @@ union SpaceTypes = SpaceNode | GridSpaceNode
 extend type Query {
   space(id: ID!): SpaceTypes
   getSpaces(filter: SpaceFilter): [SpaceTypes!]!
-  test: Distance
 }
 
 # TODO: make all these new mutations work.
