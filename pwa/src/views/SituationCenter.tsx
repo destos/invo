@@ -1,31 +1,15 @@
-import React, { FC, useState } from "react"
 import {
-  Button,
   Card,
   CardContent,
   CardHeader,
-  TextField,
-  Box,
   List,
+  ListItem,
+  TextField
 } from "@material-ui/core"
-import { irn } from "../utils/urns"
-import useSitu from "../hooks/useSitu"
-import ItemListItem from "../components/ListItems/ItemListItem"
-import SpaceListItem from "../components/ListItems/SpaceListItem"
-// import IRNListItem from "../../holding/EntityListItem"
-
-interface TestButtonProps {
-  irn: string
-  doEntry: (urnString: string) => void
-}
-
-const TestButton: FC<TestButtonProps> = ({ irn, doEntry }) => {
-  return (
-    <Button variant="contained" onClick={() => doEntry(irn)}>
-      {irn}
-    </Button>
-  )
-}
+import ItemListContent from "components/listItems/ItemListContent"
+import SpaceListContent from "components/listItems/SpaceListContent"
+import useSitu from "hooks/useSitu"
+import React, { FC, useState } from "react"
 
 interface SituationCenterProps {
   reload?: boolean
@@ -75,27 +59,16 @@ const SituationCenter: FC<SituationCenterProps> = ({ reload = false }) => {
         {/* If items/spaces are empty, show a large select area for each type */}
         <List>
           {situation.spaces.map((space) => (
-            // @ts-ignore
-            <SpaceListItem key={space.irn} entity={space} />
+            <ListItem key={space.irn}>
+              <SpaceListContent key={space.irn} entity={space} />
+            </ListItem>
           ))}
           {situation.items.map((item) => (
-            // @ts-ignore
-            <ItemListItem key={item.irn} entity={item} />
+            <ListItem key={item.irn}>
+              <ItemListContent entity={item} />
+            </ListItem>
           ))}
         </List>
-        <Box m={3}>
-          <TestButton
-            doEntry={doEntry}
-            irn="irn:stage:spaces.gridspacenode:54"
-          />
-          <TestButton doEntry={doEntry} irn="irn:stage:items.tool:2" />
-          <TestButton doEntry={doEntry} irn="irn:stage:items.consumable:5" />
-          <TestButton
-            doEntry={doEntry}
-            irn="irn:stage:items.trackedconsumable:4"
-          />
-          <TestButton doEntry={doEntry} irn="irn:stage:spaces.spacenode:71" />
-        </Box>
       </CardContent>
     </Card>
   )

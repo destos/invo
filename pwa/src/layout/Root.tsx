@@ -7,10 +7,10 @@ import {
   usePopupState,
   bindPopover
 } from "material-ui-popup-state/hooks"
-import SearchDialog from "../components/SearchDialog"
-import { ActiveSituProvider } from "../context/SituationContext"
-import ShortcutDialog from "../components/ShortcutDialog"
-// import globalKeyMap from "../globalKeyMap"
+import SearchDialog from "components/dialogs/SearchDialog"
+import { ActiveSituProvider } from "context/SituationContext"
+import ShortcutDialog from "components/dialogs/ShortcutDialog"
+// import globalKeyMap from "globalKeyMap"
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

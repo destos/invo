@@ -1,4 +1,5 @@
 import { gql } from "@apollo/client"
+import { itemListContent } from "./fragments"
 
 const layoutBit = gql`
   fragment LayoutBit on Layout {
@@ -49,15 +50,19 @@ export const GET_NAVIGATION_SPACE = gql`
         children {
           ...SpaceGrid
         }
+        items(first: 100) {
+          edges {
+            cursor
+            node {
+              ...ItemListContent
+            }
+          }
+        }
       }
     }
   }
+  ${itemListContent}
   ${spaceGrid}
-  # fragment ChildSpaces on SpaceTypes {
-  #   children {
-  #     ...SpaceGrid
-  #   }
-  # }
 `
 
 export const UPDATE_SPACE_LAYOUT = gql`

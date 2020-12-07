@@ -1,6 +1,6 @@
 overwrite: true
 schema: "http://localhost:8000/graphql"
-# documents: "src/**/*.graphql"
+# schema: ""../invo/apps/**/*.graphql"
 documents:
   # - ./src/fragments/*.{ts,tsx,js}
   - ./src/queries/*.{ts,tsx,js}

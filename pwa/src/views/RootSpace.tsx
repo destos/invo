@@ -2,18 +2,18 @@
 import { useMutation, useQuery } from "@apollo/client"
 import { Card, CardContent, CardHeader, Theme } from "@material-ui/core"
 import { makeStyles } from "@material-ui/styles"
-import _ from "lodash"
-import React, { FC } from "react"
-import GridLayout, { ReactGridLayoutProps } from "react-grid-layout"
-import { Link } from "react-router-dom"
 import {
   GetRootSpacesQuery,
   GetRootSpacesQueryVariables,
   UpdateSpaceLayoutMutation,
   UpdateSpaceLayoutMutationVariables
-} from "../client/types"
-import { GET_ROOT_SPACES, UPDATE_SPACE_LAYOUT } from "../queries/spaces"
-import { spaceDetailUrl } from "../routes"
+} from "client/types"
+import _ from "lodash"
+import { GET_ROOT_SPACES, UPDATE_SPACE_LAYOUT } from "queries/spaces"
+import React, { FC } from "react"
+import GridLayout, { ReactGridLayoutProps } from "react-grid-layout"
+import { Link } from "react-router-dom"
+import { spaceDetailUrl } from "routes"
 
 const useStyles = makeStyles((theme: Theme) => ({
   rootSpaces: { width: "100%" },
@@ -74,7 +74,11 @@ const RootSpace: FC<RootSpaceProps> = () => {
         return (
           <div key={space.id}>
             <Card elevation={3} className={classes.card}>
-              <CardHeader title={space.name} to={spaceDetailUrl(space.id)} component={Link}/>
+              <CardHeader
+                title={space.name}
+                to={spaceDetailUrl(space.id)}
+                component={Link}
+              />
               <CardContent>{space.itemCount}</CardContent>
             </Card>
           </div>

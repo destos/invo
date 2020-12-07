@@ -16,22 +16,26 @@ import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction"
 import CloseIcon from "@material-ui/icons/Close"
 import SearchIcon from "@material-ui/icons/Search"
 import { makeStyles } from "@material-ui/styles"
+import {
+  EntitySearchQuery,
+  EntitySearchQueryVariables,
+  SearchObjectFragment
+} from "client/types"
+import ItemListContent from "components/listItems/ItemListContent"
+import SpaceListContent from "components/listItems/SpaceListContent"
+import possibleTypes from "generated/possibleTypes.json"
+import useSitu from "hooks/useSitu"
+import { ENTITY_SEARCH } from "queries/search"
 import React, { useState } from "react"
-import { EntitySearchQuery, EntitySearchQueryVariables, SearchObjectFragment } from "../client/types"
-import ItemListItem from "../components/ListItems/ItemListItem"
-import SpaceListItem from "../components/ListItems/SpaceListItem"
-import possibleTypes from "../generated/possibleTypes.json"
-import useSitu from "../hooks/useSitu"
-import { ENTITY_SEARCH } from "../queries/search"
 
 const itemTypes = possibleTypes.possibleTypes.ItemTypes
 // const spaceTypes = possibleTypes.possibleTypes.SpaceTypes
 
 const listItemType = (type: string) => {
   if (itemTypes.indexOf(type) !== -1) {
-    return ItemListItem
+    return ItemListContent
   } else {
-    return SpaceListItem
+    return SpaceListContent
   }
 }
 
@@ -127,7 +131,7 @@ const SearchDialog: React.FunctionComponent<SearchDialogProps> = ({
               <ListItem
                 key={result.irn}
                 // @ts-ignore
-                entity={(result.object as never as SearchObjectFragment)}
+                entity={(result.object as never) as SearchObjectFragment}
                 dense
                 button={true}
                 onClick={() => select(result.irn)}

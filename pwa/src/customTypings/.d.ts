@@ -351,7 +351,7 @@ export type ConsumableInterface = {
 
 /**
  * Tracked consumables hold a reference to identifiable information.
- * Like a bar code or item number, consuming Tracked items requires you pass 
+ * Like a bar code or item number, consuming Tracked items requires you pass
  * the reference that you are consuming.
  */
 export type TrackedConsumable = Node & ItemInterface & ConsumableInterface & TimeStamped & Protocol & {
@@ -373,7 +373,7 @@ export type TrackedConsumable = Node & ItemInterface & ConsumableInterface & Tim
 
 /**
  * Tracked consumables hold a reference to identifiable information.
- * Like a bar code or item number, consuming Tracked items requires you pass 
+ * Like a bar code or item number, consuming Tracked items requires you pass
  * the reference that you are consuming.
  */
 export type TrackedConsumableSpaceParentsArgs = {
@@ -501,10 +501,10 @@ export type SituationBitFragment = (
     & ItemBit_TrackedConsumable_Fragment
   )>>, spaces: Array<Maybe<(
     { __typename?: 'SpaceNode' }
-    & SpaceBit_SpaceNode_Fragment
+    & SpaceListContent_SpaceNode_Fragment
   ) | (
     { __typename?: 'GridSpaceNode' }
-    & SpaceBit_GridSpaceNode_Fragment
+    & SpaceListContent_GridSpaceNode_Fragment
   )>> }
   & Times_Situation_Fragment
 );
@@ -585,21 +585,21 @@ type ItemBit_TrackedConsumable_Fragment = (
   & Times_TrackedConsumable_Fragment
 );
 
-export type ItemBitFragment = ItemBit_Item_Fragment | ItemBit_Tool_Fragment | ItemBit_Consumable_Fragment | ItemBit_TrackedConsumable_Fragment;
+export type ItemListItemFragment = ItemBit_Item_Fragment | ItemBit_Tool_Fragment | ItemBit_Consumable_Fragment | ItemBit_TrackedConsumable_Fragment;
 
-type SpaceBit_SpaceNode_Fragment = (
+type SpaceListContent_SpaceNode_Fragment = (
   { __typename?: 'SpaceNode' }
   & Pick<SpaceNode, 'id' | 'name' | 'data' | 'itemCount'>
   & Times_SpaceNode_Fragment
 );
 
-type SpaceBit_GridSpaceNode_Fragment = (
+type SpaceListContent_GridSpaceNode_Fragment = (
   { __typename?: 'GridSpaceNode' }
   & Pick<GridSpaceNode, 'id' | 'name' | 'data' | 'itemCount'>
   & Times_GridSpaceNode_Fragment
 );
 
-export type SpaceBitFragment = SpaceBit_SpaceNode_Fragment | SpaceBit_GridSpaceNode_Fragment;
+export type SpaceListContentFragment = SpaceListContent_SpaceNode_Fragment | SpaceListContent_GridSpaceNode_Fragment;
 
 export type GetActiveSituationQueryVariables = Exact<{ [key: string]: never; }>;
 

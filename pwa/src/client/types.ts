@@ -9,6 +9,8 @@ export type Scalars = {
   Float: number;
   DateTime: any;
   JSONData: any;
+  Distance: any;
+  Volume: any;
   /** IRN, the invo URN scalar that can be used to differentiate entities and for entity lookup. */
   IRN: any;
   Date: any;
@@ -176,8 +178,8 @@ export type Situation = Node & TimeStamped & {
   created: Scalars['DateTime'];
   modified: Scalars['DateTime'];
   user: User;
-  spaces: Array<Maybe<SpaceTypes>>;
-  items: Array<Maybe<ItemTypes>>;
+  spaces: Array<SpaceTypes>;
+  items: Array<ItemTypes>;
   state: SituationState;
   exitCondition: SituationExit;
 };
@@ -198,7 +200,9 @@ export type SpaceNode = Node & SpaceInterface & TimeStamped & Protocol & {
   items: Connection;
   data: Maybe<Scalars['JSONData']>;
   itemCount: Scalars['Int'];
-  layout: Maybe<Layout>;
+  layout: Layout;
+  dimensions: Dimensions;
+  volume: Scalars['Volume'];
 };
 
 
@@ -212,6 +216,7 @@ export type SpaceNodeItemsArgs = {
   last: Maybe<Scalars['Int']>;
   after: Maybe<Scalars['String']>;
   before: Maybe<Scalars['String']>;
+  childItems?: Maybe<Scalars['Boolean']>;
 };
 
 export type SpaceInterface = {
@@ -223,7 +228,9 @@ export type SpaceInterface = {
   items: Connection;
   data: Maybe<Scalars['JSONData']>;
   itemCount: Scalars['Int'];
-  layout: Maybe<Layout>;
+  layout: Layout;
+  dimensions: Dimensions;
+  volume: Scalars['Volume'];
 };
 
 
@@ -237,6 +244,7 @@ export type SpaceInterfaceItemsArgs = {
   last: Maybe<Scalars['Int']>;
   after: Maybe<Scalars['String']>;
   before: Maybe<Scalars['String']>;
+  childItems?: Maybe<Scalars['Boolean']>;
 };
 
 export type SpaceFilter = {
@@ -279,6 +287,15 @@ export type Layout = {
   h: Scalars['Int'];
 };
 
+export type Dimensions = {
+  __typename?: 'Dimensions';
+  x: Scalars['Distance'];
+  y: Scalars['Distance'];
+  z: Scalars['Distance'];
+};
+
+
+
 export type Protocol = {
   irn: Scalars['IRN'];
   qr: Scalars['String'];
@@ -293,14 +310,15 @@ export type GridSpaceNode = Node & SpaceInterface & TimeStamped & Protocol & {
   irn: Scalars['IRN'];
   qr: Scalars['String'];
   name: Scalars['String'];
-  size: Maybe<Array<Maybe<Scalars['Int']>>>;
   parent: Maybe<SpaceTypes>;
   parents: Array<SpaceTypes>;
   children: Array<SpaceTypes>;
   items: Connection;
   data: Maybe<Scalars['JSONData']>;
   itemCount: Scalars['Int'];
-  layout: Maybe<Layout>;
+  layout: Layout;
+  dimensions: Dimensions;
+  volume: Scalars['Volume'];
 };
 
 
@@ -314,6 +332,7 @@ export type GridSpaceNodeItemsArgs = {
   last: Maybe<Scalars['Int']>;
   after: Maybe<Scalars['String']>;
   before: Maybe<Scalars['String']>;
+  childItems?: Maybe<Scalars['Boolean']>;
 };
 
 /** All the different Item types */
@@ -469,7 +488,21 @@ export type Mutation = {
   selectEntities: SituationPayload;
   unselectEntities: SituationPayload;
   abandonSituation: Maybe<Situation>;
+  addSpace: SpacePayload;
   updateSpaceLayout: SpaceTypes;
+  updateSpace: SpacePayload;
+  removeSpace: SpacePayload;
+  addItem: Maybe<ItemPayload>;
+  addTool: Maybe<ItemPayload>;
+  addConsumable: Maybe<ItemPayload>;
+  updateItem: Maybe<ItemPayload>;
+  updateTool: Maybe<ItemPayload>;
+  updateConsumable: Maybe<ItemPayload>;
+  deleteItem: Maybe<ItemPayload>;
+  /** Move an item to a new space, removes from previous */
+  moveItem: Maybe<ItemPayload>;
+  /** Removes an item from a space */
+  removeItem: Maybe<ItemPayload>;
 };
 
 
@@ -483,9 +516,74 @@ export type MutationUnselectEntitiesArgs = {
 };
 
 
+export type MutationAddSpaceArgs = {
+  input: SpaceInput;
+};
+
+
 export type MutationUpdateSpaceLayoutArgs = {
   id: Scalars['ID'];
   layout: LayoutInput;
+};
+
+
+export type MutationUpdateSpaceArgs = {
+  id: Scalars['ID'];
+  input: SpaceInput;
+};
+
+
+export type MutationRemoveSpaceArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationAddItemArgs = {
+  input: ItemInput;
+};
+
+
+export type MutationAddToolArgs = {
+  input: ToolInput;
+};
+
+
+export type MutationAddConsumableArgs = {
+  input: ConsumableInput;
+};
+
+
+export type MutationUpdateItemArgs = {
+  id: Scalars['ID'];
+  input: ItemInput;
+};
+
+
+export type MutationUpdateToolArgs = {
+  id: Scalars['ID'];
+  input: ToolInput;
+};
+
+
+export type MutationUpdateConsumableArgs = {
+  id: Scalars['ID'];
+  input: ConsumableInput;
+};
+
+
+export type MutationDeleteItemArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationMoveItemArgs = {
+  id: Scalars['ID'];
+  spaceId: Scalars['ID'];
+};
+
+
+export type MutationRemoveItemArgs = {
+  id: Scalars['ID'];
 };
 
 export type SituationPayload = {
@@ -495,11 +593,73 @@ export type SituationPayload = {
   entities: Array<Maybe<Protocol>>;
 };
 
+export type SpaceInput = {
+  name: Maybe<Scalars['String']>;
+  parent: Maybe<Scalars['ID']>;
+  layout: Maybe<LayoutInput>;
+  dimensions: Maybe<DimensionsInput>;
+};
+
 export type LayoutInput = {
   x: Scalars['Int'];
   y: Scalars['Int'];
   w: Scalars['Int'];
   h: Scalars['Int'];
+};
+
+export type DimensionsInput = {
+  x: Scalars['Distance'];
+  y: Scalars['Distance'];
+  z: Scalars['Distance'];
+};
+
+export type SpacePayload = Payload & {
+  __typename?: 'SpacePayload';
+  success: Scalars['Boolean'];
+  errors: Array<FieldError>;
+  object: Maybe<SpaceTypes>;
+};
+
+export type Payload = {
+  success: Maybe<Scalars['Boolean']>;
+  errors: Maybe<Array<Maybe<FieldError>>>;
+};
+
+export type FieldError = {
+  __typename?: 'FieldError';
+  name: Maybe<Scalars['String']>;
+  values: Maybe<Array<Maybe<ErrorDetail>>>;
+};
+
+export type ErrorDetail = {
+  __typename?: 'ErrorDetail';
+  error: Maybe<Scalars['String']>;
+  code: Maybe<Scalars['String']>;
+};
+
+export type ItemInput = {
+  name: Maybe<Scalars['String']>;
+  spaceId: Maybe<Scalars['ID']>;
+};
+
+export type ItemPayload = Payload & {
+  __typename?: 'ItemPayload';
+  success: Scalars['Boolean'];
+  errors: Array<FieldError>;
+  object: Maybe<ItemTypes>;
+};
+
+export type ToolInput = {
+  name: Maybe<Scalars['String']>;
+  spaceId: Maybe<Scalars['ID']>;
+};
+
+export type ConsumableInput = {
+  name: Maybe<Scalars['String']>;
+  spaceId: Maybe<Scalars['ID']>;
+  count: Maybe<Scalars['Float']>;
+  warningEnabled: Maybe<Scalars['Boolean']>;
+  warningCount: Maybe<Scalars['Float']>;
 };
 
 
@@ -556,32 +716,7 @@ type Times_TrackedConsumable_Fragment = (
 
 export type TimesFragment = Times_WaffleFlag_Fragment | Times_WaffleSwitch_Fragment | Times_WaffleSample_Fragment | Times_Situation_Fragment | Times_SpaceNode_Fragment | Times_GridSpaceNode_Fragment | Times_Item_Fragment | Times_Tool_Fragment | Times_Consumable_Fragment | Times_TrackedConsumable_Fragment;
 
-export type SituationBitFragment = (
-  { __typename?: 'Situation' }
-  & Pick<Situation, 'id' | 'state'>
-  & { items: Array<Maybe<(
-    { __typename?: 'Item' }
-    & ItemBit_Item_Fragment
-  ) | (
-    { __typename?: 'Tool' }
-    & ItemBit_Tool_Fragment
-  ) | (
-    { __typename?: 'Consumable' }
-    & ItemBit_Consumable_Fragment
-  ) | (
-    { __typename?: 'TrackedConsumable' }
-    & ItemBit_TrackedConsumable_Fragment
-  )>>, spaces: Array<Maybe<(
-    { __typename?: 'SpaceNode' }
-    & SpaceBit_SpaceNode_Fragment
-  ) | (
-    { __typename?: 'GridSpaceNode' }
-    & SpaceBit_GridSpaceNode_Fragment
-  )>> }
-  & Times_Situation_Fragment
-);
-
-type ItemBit_Item_Fragment = (
+type ItemListContent_Item_Fragment = (
   { __typename?: 'Item' }
   & Pick<Item, 'irn' | 'qr' | 'id' | 'name' | 'data'>
   & { space: Maybe<(
@@ -600,7 +735,7 @@ type ItemBit_Item_Fragment = (
   & Times_Item_Fragment
 );
 
-type ItemBit_Tool_Fragment = (
+type ItemListContent_Tool_Fragment = (
   { __typename?: 'Tool' }
   & Pick<Tool, 'irn' | 'qr' | 'id' | 'name' | 'data'>
   & { space: Maybe<(
@@ -619,7 +754,7 @@ type ItemBit_Tool_Fragment = (
   & Times_Tool_Fragment
 );
 
-type ItemBit_Consumable_Fragment = (
+type ItemListContent_Consumable_Fragment = (
   { __typename?: 'Consumable' }
   & Pick<Consumable, 'irn' | 'qr' | 'id' | 'name' | 'data'>
   & { space: Maybe<(
@@ -638,7 +773,7 @@ type ItemBit_Consumable_Fragment = (
   & Times_Consumable_Fragment
 );
 
-type ItemBit_TrackedConsumable_Fragment = (
+type ItemListContent_TrackedConsumable_Fragment = (
   { __typename?: 'TrackedConsumable' }
   & Pick<TrackedConsumable, 'irn' | 'qr' | 'id' | 'name' | 'data'>
   & { space: Maybe<(
@@ -657,21 +792,153 @@ type ItemBit_TrackedConsumable_Fragment = (
   & Times_TrackedConsumable_Fragment
 );
 
-export type ItemBitFragment = ItemBit_Item_Fragment | ItemBit_Tool_Fragment | ItemBit_Consumable_Fragment | ItemBit_TrackedConsumable_Fragment;
+export type ItemListContentFragment = ItemListContent_Item_Fragment | ItemListContent_Tool_Fragment | ItemListContent_Consumable_Fragment | ItemListContent_TrackedConsumable_Fragment;
 
-type SpaceBit_SpaceNode_Fragment = (
+type SpaceListContent_SpaceNode_Fragment = (
   { __typename?: 'SpaceNode' }
   & Pick<SpaceNode, 'irn' | 'qr' | 'id' | 'name' | 'data' | 'itemCount'>
   & Times_SpaceNode_Fragment
 );
 
-type SpaceBit_GridSpaceNode_Fragment = (
+type SpaceListContent_GridSpaceNode_Fragment = (
   { __typename?: 'GridSpaceNode' }
   & Pick<GridSpaceNode, 'irn' | 'qr' | 'id' | 'name' | 'data' | 'itemCount'>
   & Times_GridSpaceNode_Fragment
 );
 
-export type SpaceBitFragment = SpaceBit_SpaceNode_Fragment | SpaceBit_GridSpaceNode_Fragment;
+export type SpaceListContentFragment = SpaceListContent_SpaceNode_Fragment | SpaceListContent_GridSpaceNode_Fragment;
+
+export type SituationBitFragment = (
+  { __typename?: 'Situation' }
+  & Pick<Situation, 'id' | 'state'>
+  & { items: Array<(
+    { __typename?: 'Item' }
+    & ItemListContent_Item_Fragment
+  ) | (
+    { __typename?: 'Tool' }
+    & ItemListContent_Tool_Fragment
+  ) | (
+    { __typename?: 'Consumable' }
+    & ItemListContent_Consumable_Fragment
+  ) | (
+    { __typename?: 'TrackedConsumable' }
+    & ItemListContent_TrackedConsumable_Fragment
+  )>, spaces: Array<(
+    { __typename?: 'SpaceNode' }
+    & SpaceListContent_SpaceNode_Fragment
+  ) | (
+    { __typename?: 'GridSpaceNode' }
+    & SpaceListContent_GridSpaceNode_Fragment
+  )> }
+  & Times_Situation_Fragment
+);
+
+type AddItemFrag_Item_Fragment = (
+  { __typename?: 'Item' }
+  & Pick<Item, 'name' | 'irn' | 'qr'>
+);
+
+type AddItemFrag_Tool_Fragment = (
+  { __typename?: 'Tool' }
+  & Pick<Tool, 'name' | 'irn' | 'qr'>
+);
+
+type AddItemFrag_Consumable_Fragment = (
+  { __typename?: 'Consumable' }
+  & Pick<Consumable, 'name' | 'irn' | 'qr' | 'count' | 'warningEnabled' | 'warningCount' | 'warning'>
+);
+
+type AddItemFrag_TrackedConsumable_Fragment = (
+  { __typename?: 'TrackedConsumable' }
+  & Pick<TrackedConsumable, 'name' | 'irn' | 'qr' | 'count' | 'warningEnabled' | 'warningCount' | 'warning'>
+);
+
+export type AddItemFragFragment = AddItemFrag_Item_Fragment | AddItemFrag_Tool_Fragment | AddItemFrag_Consumable_Fragment | AddItemFrag_TrackedConsumable_Fragment;
+
+export type AddItemMutationVariables = Exact<{
+  input: ItemInput;
+}>;
+
+
+export type AddItemMutation = (
+  { __typename?: 'Mutation' }
+  & { addItem: Maybe<(
+    { __typename?: 'ItemPayload' }
+    & Pick<ItemPayload, 'success'>
+    & { errors: Array<(
+      { __typename?: 'FieldError' }
+      & Pick<FieldError, 'name'>
+      & { values: Maybe<Array<Maybe<(
+        { __typename?: 'ErrorDetail' }
+        & Pick<ErrorDetail, 'error' | 'code'>
+      )>>> }
+    )>, object: Maybe<(
+      { __typename?: 'Item' }
+      & AddItemFrag_Item_Fragment
+    ) | (
+      { __typename?: 'Tool' }
+      & AddItemFrag_Tool_Fragment
+    ) | (
+      { __typename?: 'Consumable' }
+      & AddItemFrag_Consumable_Fragment
+    ) | (
+      { __typename?: 'TrackedConsumable' }
+      & AddItemFrag_TrackedConsumable_Fragment
+    )> }
+  )> }
+);
+
+export type AddToolMutationVariables = Exact<{
+  input: ToolInput;
+}>;
+
+
+export type AddToolMutation = (
+  { __typename?: 'Mutation' }
+  & { addTool: Maybe<(
+    { __typename?: 'ItemPayload' }
+    & Pick<ItemPayload, 'success'>
+    & { object: Maybe<(
+      { __typename?: 'Item' }
+      & AddItemFrag_Item_Fragment
+    ) | (
+      { __typename?: 'Tool' }
+      & AddItemFrag_Tool_Fragment
+    ) | (
+      { __typename?: 'Consumable' }
+      & AddItemFrag_Consumable_Fragment
+    ) | (
+      { __typename?: 'TrackedConsumable' }
+      & AddItemFrag_TrackedConsumable_Fragment
+    )> }
+  )> }
+);
+
+export type AddConsumableMutationVariables = Exact<{
+  input: ConsumableInput;
+}>;
+
+
+export type AddConsumableMutation = (
+  { __typename?: 'Mutation' }
+  & { addConsumable: Maybe<(
+    { __typename?: 'ItemPayload' }
+    & Pick<ItemPayload, 'success'>
+    & { object: Maybe<(
+      { __typename?: 'Item' }
+      & AddItemFrag_Item_Fragment
+    ) | (
+      { __typename?: 'Tool' }
+      & AddItemFrag_Tool_Fragment
+    ) | (
+      { __typename?: 'Consumable' }
+      & AddItemFrag_Consumable_Fragment
+    ) | (
+      { __typename?: 'TrackedConsumable' }
+      & AddItemFrag_TrackedConsumable_Fragment
+    )> }
+  )> }
+);
 
 export type EntitySearchQueryVariables = Exact<{
   text: Scalars['String'];
@@ -793,19 +1060,19 @@ export type LayoutBitFragment = (
 type SpaceGrid_SpaceNode_Fragment = (
   { __typename?: 'SpaceNode' }
   & Pick<SpaceNode, 'irn' | 'id' | 'name' | 'itemCount'>
-  & { layout: Maybe<(
+  & { layout: (
     { __typename?: 'Layout' }
     & LayoutBitFragment
-  )> }
+  ) }
 );
 
 type SpaceGrid_GridSpaceNode_Fragment = (
   { __typename?: 'GridSpaceNode' }
   & Pick<GridSpaceNode, 'irn' | 'id' | 'name' | 'itemCount'>
-  & { layout: Maybe<(
+  & { layout: (
     { __typename?: 'Layout' }
     & LayoutBitFragment
-  )> }
+  ) }
 );
 
 export type SpaceGridFragment = SpaceGrid_SpaceNode_Fragment | SpaceGrid_GridSpaceNode_Fragment;
@@ -845,7 +1112,26 @@ export type GetNavigationSpaceQuery = (
     ) | (
       { __typename?: 'GridSpaceNode' }
       & SpaceGrid_GridSpaceNode_Fragment
-    )> }
+    )>, items: (
+      { __typename?: 'Connection' }
+      & { edges: Maybe<Array<Maybe<(
+        { __typename?: 'Edge' }
+        & Pick<Edge, 'cursor'>
+        & { node: Maybe<{ __typename?: 'User' } | { __typename?: 'Group' } | { __typename?: 'Permission' } | { __typename?: 'Situation' } | { __typename?: 'SpaceNode' } | { __typename?: 'GridSpaceNode' } | (
+          { __typename?: 'Item' }
+          & ItemListContent_Item_Fragment
+        ) | (
+          { __typename?: 'Tool' }
+          & ItemListContent_Tool_Fragment
+        ) | (
+          { __typename?: 'Consumable' }
+          & ItemListContent_Consumable_Fragment
+        ) | (
+          { __typename?: 'TrackedConsumable' }
+          & ItemListContent_TrackedConsumable_Fragment
+        )> }
+      )>>> }
+    ) }
     & SpaceGrid_SpaceNode_Fragment
   ) | (
     { __typename?: 'GridSpaceNode' }
@@ -861,7 +1147,26 @@ export type GetNavigationSpaceQuery = (
     ) | (
       { __typename?: 'GridSpaceNode' }
       & SpaceGrid_GridSpaceNode_Fragment
-    )> }
+    )>, items: (
+      { __typename?: 'Connection' }
+      & { edges: Maybe<Array<Maybe<(
+        { __typename?: 'Edge' }
+        & Pick<Edge, 'cursor'>
+        & { node: Maybe<{ __typename?: 'User' } | { __typename?: 'Group' } | { __typename?: 'Permission' } | { __typename?: 'Situation' } | { __typename?: 'SpaceNode' } | { __typename?: 'GridSpaceNode' } | (
+          { __typename?: 'Item' }
+          & ItemListContent_Item_Fragment
+        ) | (
+          { __typename?: 'Tool' }
+          & ItemListContent_Tool_Fragment
+        ) | (
+          { __typename?: 'Consumable' }
+          & ItemListContent_Consumable_Fragment
+        ) | (
+          { __typename?: 'TrackedConsumable' }
+          & ItemListContent_TrackedConsumable_Fragment
+        )> }
+      )>>> }
+    ) }
     & SpaceGrid_GridSpaceNode_Fragment
   )> }
 );

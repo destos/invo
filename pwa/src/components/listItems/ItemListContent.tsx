@@ -1,13 +1,12 @@
-import { ListItemSecondaryAction, SvgIcon } from "@material-ui/core"
-import ListItem, { ListItemProps } from "@material-ui/core/ListItem"
+import { ListItemSecondaryAction } from "@material-ui/core"
 import ListItemIcon from "@material-ui/core/ListItemIcon"
 import ListItemText from "@material-ui/core/ListItemText"
 import BuildIcon from "@material-ui/icons/Build"
 import LocalOfferIcon from "@material-ui/icons/LocalOffer"
 import RemoveCircleIcon from "@material-ui/icons/RemoveCircle"
 import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline"
+import { ItemListContentFragment } from "client/types"
 import React from "react"
-import { ItemBitFragment } from "../../client/types"
 
 const typeIconMap = {
   Item: LocalOfferIcon,
@@ -17,14 +16,13 @@ const typeIconMap = {
   fallback: LocalOfferIcon
 }
 
-export type ItemListItemProps = ListItemProps & {
-  entity: ItemBitFragment
+export type ItemListContentProps = {
+  entity: ItemListContentFragment
 }
 
-const ItemListItem: React.FunctionComponent<ItemListItemProps> = ({
+const ItemListContent: React.FC<ItemListContentProps> = ({
   entity,
-  children,
-  ...listItemProps
+  children
 }) => {
   const { id, irn, name, spaceParents, __typename, qr } = entity
   const labelId = `item-list-label-${id}`
@@ -34,18 +32,17 @@ const ItemListItem: React.FunctionComponent<ItemListItemProps> = ({
     spaceParents?.map((space) => space?.name ?? "Space").join(" > ") ?? null
 
   return (
-    // @ts-ignore
-    <ListItem {...listItemProps}>
+    <>
       <ListItemIcon>
         <Icon />
       </ListItemIcon>
       <ListItemText id={labelId} primary={name} secondary={bread} />
       {children}
       <ListItemSecondaryAction>
-        <img src={qr} width={80}/>
+        <img src={qr} width={80} alt="qr code" />
       </ListItemSecondaryAction>
-    </ListItem>
+    </>
   )
 }
 
-export default ItemListItem
+export default ItemListContent

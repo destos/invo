@@ -1,22 +1,15 @@
 import { gql } from "@apollo/client"
 
-const fragments = gql`
+export const timeStamped = gql`
   fragment Times on TimeStamped {
     created
     modified
   }
-  fragment SituationBit on Situation {
-    id
-    ...Times
-    state
-    items {
-      ...ItemBit
-    }
-    spaces {
-      ...SpaceBit
-    }
-  }
-  fragment ItemBit on ItemInterface {
+`
+
+// Used when an item is used inside a ItemListItem component
+export const itemListContent = gql`
+  fragment ItemListContent on ItemInterface {
     id
     ...Times
     name
@@ -36,7 +29,10 @@ const fragments = gql`
       }
     }
   }
-  fragment SpaceBit on SpaceInterface {
+  ${timeStamped}
+  `
+export const spaceListContent = gql`
+  fragment SpaceListContent on SpaceInterface {
     id
     ...Times
     name
@@ -47,5 +43,23 @@ const fragments = gql`
       qr
     }
   }
+  ${timeStamped}
+`
+
+const fragments = gql`
+  fragment SituationBit on Situation {
+    id
+    ...Times
+    state
+    items {
+      ...ItemListContent
+    }
+    spaces {
+      ...SpaceListContent
+    }
+  }
+  ${spaceListContent}
+  ${timeStamped}
+  ${itemListContent}
 `
 export default fragments

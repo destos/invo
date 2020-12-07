@@ -1,6 +1,6 @@
 import { ListItem, ListItemText } from "@material-ui/core"
-import SpaceListItem from "../src/components/ListItems/SpaceListItem"
-import ItemListItem from "../src/components/ListItems/ItemListItem"
+import SpaceListContent from "../src/components/ListItems/SpaceListContent"
+import ItemListContent from "../src/components/ListItems/ItemListContent"
 import React from "react"
 import possibleTypes from "../src/generated/possibleTypes.json"
 

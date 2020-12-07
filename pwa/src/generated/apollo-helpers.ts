@@ -105,7 +105,7 @@ export type SituationFieldPolicy = {
 	state?: FieldPolicy<any> | FieldReadFunction<any>,
 	exitCondition?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type SpaceNodeKeySpecifier = ('id' | 'created' | 'modified' | 'irn' | 'qr' | 'name' | 'parent' | 'parents' | 'children' | 'items' | 'data' | 'itemCount' | 'layout' | SpaceNodeKeySpecifier)[];
+export type SpaceNodeKeySpecifier = ('id' | 'created' | 'modified' | 'irn' | 'qr' | 'name' | 'parent' | 'parents' | 'children' | 'items' | 'data' | 'itemCount' | 'layout' | 'dimensions' | 'volume' | SpaceNodeKeySpecifier)[];
 export type SpaceNodeFieldPolicy = {
 	id?: FieldPolicy<any> | FieldReadFunction<any>,
 	created?: FieldPolicy<any> | FieldReadFunction<any>,
@@ -119,9 +119,11 @@ export type SpaceNodeFieldPolicy = {
 	items?: FieldPolicy<any> | FieldReadFunction<any>,
 	data?: FieldPolicy<any> | FieldReadFunction<any>,
 	itemCount?: FieldPolicy<any> | FieldReadFunction<any>,
-	layout?: FieldPolicy<any> | FieldReadFunction<any>
+	layout?: FieldPolicy<any> | FieldReadFunction<any>,
+	dimensions?: FieldPolicy<any> | FieldReadFunction<any>,
+	volume?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type SpaceInterfaceKeySpecifier = ('id' | 'name' | 'parent' | 'parents' | 'children' | 'items' | 'data' | 'itemCount' | 'layout' | SpaceInterfaceKeySpecifier)[];
+export type SpaceInterfaceKeySpecifier = ('id' | 'name' | 'parent' | 'parents' | 'children' | 'items' | 'data' | 'itemCount' | 'layout' | 'dimensions' | 'volume' | SpaceInterfaceKeySpecifier)[];
 export type SpaceInterfaceFieldPolicy = {
 	id?: FieldPolicy<any> | FieldReadFunction<any>,
 	name?: FieldPolicy<any> | FieldReadFunction<any>,
@@ -131,7 +133,9 @@ export type SpaceInterfaceFieldPolicy = {
 	items?: FieldPolicy<any> | FieldReadFunction<any>,
 	data?: FieldPolicy<any> | FieldReadFunction<any>,
 	itemCount?: FieldPolicy<any> | FieldReadFunction<any>,
-	layout?: FieldPolicy<any> | FieldReadFunction<any>
+	layout?: FieldPolicy<any> | FieldReadFunction<any>,
+	dimensions?: FieldPolicy<any> | FieldReadFunction<any>,
+	volume?: FieldPolicy<any> | FieldReadFunction<any>
 };
 export type ConnectionKeySpecifier = ('pageInfo' | 'edges' | ConnectionKeySpecifier)[];
 export type ConnectionFieldPolicy = {
@@ -162,12 +166,18 @@ export type LayoutFieldPolicy = {
 	w?: FieldPolicy<any> | FieldReadFunction<any>,
 	h?: FieldPolicy<any> | FieldReadFunction<any>
 };
+export type DimensionsKeySpecifier = ('x' | 'y' | 'z' | DimensionsKeySpecifier)[];
+export type DimensionsFieldPolicy = {
+	x?: FieldPolicy<any> | FieldReadFunction<any>,
+	y?: FieldPolicy<any> | FieldReadFunction<any>,
+	z?: FieldPolicy<any> | FieldReadFunction<any>
+};
 export type ProtocolKeySpecifier = ('irn' | 'qr' | ProtocolKeySpecifier)[];
 export type ProtocolFieldPolicy = {
 	irn?: FieldPolicy<any> | FieldReadFunction<any>,
 	qr?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type GridSpaceNodeKeySpecifier = ('id' | 'created' | 'modified' | 'irn' | 'qr' | 'name' | 'size' | 'parent' | 'parents' | 'children' | 'items' | 'data' | 'itemCount' | 'layout' | GridSpaceNodeKeySpecifier)[];
+export type GridSpaceNodeKeySpecifier = ('id' | 'created' | 'modified' | 'irn' | 'qr' | 'name' | 'parent' | 'parents' | 'children' | 'items' | 'data' | 'itemCount' | 'layout' | 'dimensions' | 'volume' | GridSpaceNodeKeySpecifier)[];
 export type GridSpaceNodeFieldPolicy = {
 	id?: FieldPolicy<any> | FieldReadFunction<any>,
 	created?: FieldPolicy<any> | FieldReadFunction<any>,
@@ -175,14 +185,15 @@ export type GridSpaceNodeFieldPolicy = {
 	irn?: FieldPolicy<any> | FieldReadFunction<any>,
 	qr?: FieldPolicy<any> | FieldReadFunction<any>,
 	name?: FieldPolicy<any> | FieldReadFunction<any>,
-	size?: FieldPolicy<any> | FieldReadFunction<any>,
 	parent?: FieldPolicy<any> | FieldReadFunction<any>,
 	parents?: FieldPolicy<any> | FieldReadFunction<any>,
 	children?: FieldPolicy<any> | FieldReadFunction<any>,
 	items?: FieldPolicy<any> | FieldReadFunction<any>,
 	data?: FieldPolicy<any> | FieldReadFunction<any>,
 	itemCount?: FieldPolicy<any> | FieldReadFunction<any>,
-	layout?: FieldPolicy<any> | FieldReadFunction<any>
+	layout?: FieldPolicy<any> | FieldReadFunction<any>,
+	dimensions?: FieldPolicy<any> | FieldReadFunction<any>,
+	volume?: FieldPolicy<any> | FieldReadFunction<any>
 };
 export type ItemKeySpecifier = ('id' | 'created' | 'modified' | 'irn' | 'qr' | 'name' | 'data' | 'space' | 'spaceParents' | ItemKeySpecifier)[];
 export type ItemFieldPolicy = {
@@ -261,19 +272,58 @@ export type SearchResultFieldPolicy = {
 	irn?: FieldPolicy<any> | FieldReadFunction<any>,
 	object?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type MutationKeySpecifier = ('root' | 'selectEntities' | 'unselectEntities' | 'abandonSituation' | 'updateSpaceLayout' | MutationKeySpecifier)[];
+export type MutationKeySpecifier = ('root' | 'selectEntities' | 'unselectEntities' | 'abandonSituation' | 'addSpace' | 'updateSpaceLayout' | 'updateSpace' | 'removeSpace' | 'addItem' | 'addTool' | 'addConsumable' | 'updateItem' | 'updateTool' | 'updateConsumable' | 'deleteItem' | 'moveItem' | 'removeItem' | MutationKeySpecifier)[];
 export type MutationFieldPolicy = {
 	root?: FieldPolicy<any> | FieldReadFunction<any>,
 	selectEntities?: FieldPolicy<any> | FieldReadFunction<any>,
 	unselectEntities?: FieldPolicy<any> | FieldReadFunction<any>,
 	abandonSituation?: FieldPolicy<any> | FieldReadFunction<any>,
-	updateSpaceLayout?: FieldPolicy<any> | FieldReadFunction<any>
+	addSpace?: FieldPolicy<any> | FieldReadFunction<any>,
+	updateSpaceLayout?: FieldPolicy<any> | FieldReadFunction<any>,
+	updateSpace?: FieldPolicy<any> | FieldReadFunction<any>,
+	removeSpace?: FieldPolicy<any> | FieldReadFunction<any>,
+	addItem?: FieldPolicy<any> | FieldReadFunction<any>,
+	addTool?: FieldPolicy<any> | FieldReadFunction<any>,
+	addConsumable?: FieldPolicy<any> | FieldReadFunction<any>,
+	updateItem?: FieldPolicy<any> | FieldReadFunction<any>,
+	updateTool?: FieldPolicy<any> | FieldReadFunction<any>,
+	updateConsumable?: FieldPolicy<any> | FieldReadFunction<any>,
+	deleteItem?: FieldPolicy<any> | FieldReadFunction<any>,
+	moveItem?: FieldPolicy<any> | FieldReadFunction<any>,
+	removeItem?: FieldPolicy<any> | FieldReadFunction<any>
 };
 export type SituationPayloadKeySpecifier = ('success' | 'object' | 'entities' | SituationPayloadKeySpecifier)[];
 export type SituationPayloadFieldPolicy = {
 	success?: FieldPolicy<any> | FieldReadFunction<any>,
 	object?: FieldPolicy<any> | FieldReadFunction<any>,
 	entities?: FieldPolicy<any> | FieldReadFunction<any>
+};
+export type SpacePayloadKeySpecifier = ('success' | 'errors' | 'object' | SpacePayloadKeySpecifier)[];
+export type SpacePayloadFieldPolicy = {
+	success?: FieldPolicy<any> | FieldReadFunction<any>,
+	errors?: FieldPolicy<any> | FieldReadFunction<any>,
+	object?: FieldPolicy<any> | FieldReadFunction<any>
+};
+export type PayloadKeySpecifier = ('success' | 'errors' | PayloadKeySpecifier)[];
+export type PayloadFieldPolicy = {
+	success?: FieldPolicy<any> | FieldReadFunction<any>,
+	errors?: FieldPolicy<any> | FieldReadFunction<any>
+};
+export type FieldErrorKeySpecifier = ('name' | 'values' | FieldErrorKeySpecifier)[];
+export type FieldErrorFieldPolicy = {
+	name?: FieldPolicy<any> | FieldReadFunction<any>,
+	values?: FieldPolicy<any> | FieldReadFunction<any>
+};
+export type ErrorDetailKeySpecifier = ('error' | 'code' | ErrorDetailKeySpecifier)[];
+export type ErrorDetailFieldPolicy = {
+	error?: FieldPolicy<any> | FieldReadFunction<any>,
+	code?: FieldPolicy<any> | FieldReadFunction<any>
+};
+export type ItemPayloadKeySpecifier = ('success' | 'errors' | 'object' | ItemPayloadKeySpecifier)[];
+export type ItemPayloadFieldPolicy = {
+	success?: FieldPolicy<any> | FieldReadFunction<any>,
+	errors?: FieldPolicy<any> | FieldReadFunction<any>,
+	object?: FieldPolicy<any> | FieldReadFunction<any>
 };
 export type TypedTypePolicies = TypePolicies & {
 	Query?: {
@@ -409,6 +459,13 @@ export type TypedTypePolicies = TypePolicies & {
 		subscriptionType?: true,
 		fields?: LayoutFieldPolicy,
 	},
+	Dimensions?: {
+		keyFields?: false | DimensionsKeySpecifier | (() => undefined | DimensionsKeySpecifier),
+		queryType?: true,
+		mutationType?: true,
+		subscriptionType?: true,
+		fields?: DimensionsFieldPolicy,
+	},
 	Protocol?: {
 		keyFields?: false | ProtocolKeySpecifier | (() => undefined | ProtocolKeySpecifier),
 		queryType?: true,
@@ -485,5 +542,40 @@ export type TypedTypePolicies = TypePolicies & {
 		mutationType?: true,
 		subscriptionType?: true,
 		fields?: SituationPayloadFieldPolicy,
+	},
+	SpacePayload?: {
+		keyFields?: false | SpacePayloadKeySpecifier | (() => undefined | SpacePayloadKeySpecifier),
+		queryType?: true,
+		mutationType?: true,
+		subscriptionType?: true,
+		fields?: SpacePayloadFieldPolicy,
+	},
+	Payload?: {
+		keyFields?: false | PayloadKeySpecifier | (() => undefined | PayloadKeySpecifier),
+		queryType?: true,
+		mutationType?: true,
+		subscriptionType?: true,
+		fields?: PayloadFieldPolicy,
+	},
+	FieldError?: {
+		keyFields?: false | FieldErrorKeySpecifier | (() => undefined | FieldErrorKeySpecifier),
+		queryType?: true,
+		mutationType?: true,
+		subscriptionType?: true,
+		fields?: FieldErrorFieldPolicy,
+	},
+	ErrorDetail?: {
+		keyFields?: false | ErrorDetailKeySpecifier | (() => undefined | ErrorDetailKeySpecifier),
+		queryType?: true,
+		mutationType?: true,
+		subscriptionType?: true,
+		fields?: ErrorDetailFieldPolicy,
+	},
+	ItemPayload?: {
+		keyFields?: false | ItemPayloadKeySpecifier | (() => undefined | ItemPayloadKeySpecifier),
+		queryType?: true,
+		mutationType?: true,
+		subscriptionType?: true,
+		fields?: ItemPayloadFieldPolicy,
 	}
 };

@@ -6,12 +6,12 @@ import {
   GetActiveSituationQueryVariables,
   Scalars,
   SituationBitFragment
-} from "../client/types"
+} from "client/types"
 import {
   SELECT_ENTITIES,
   SITU_QUERY,
   UNSELECT_ENTITIES
-} from "../queries/situations"
+} from "queries/situations"
 
 export type SituValue =
   | {

@@ -8,7 +8,7 @@ import MenuIcon from "@material-ui/icons/Menu"
 import SearchIcon from "@material-ui/icons/Search"
 import { Badge, Button, Chip } from "@material-ui/core"
 import { Link as RouterLink } from "react-router-dom"
-import useSitu from "../hooks/useSitu"
+import useSitu from "hooks/useSitu"
 
 const useStyles = makeStyles((theme) => ({
   menuButton: {

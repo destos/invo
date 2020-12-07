@@ -23,8 +23,12 @@ const routes: Array<RouteConfig> = [
         path: "/space/:id",
         component: SpaceView
       }
+      // TODO: tab route for view type selection and tab to drive tab state?
     ]
   }
+  // TODO:
+  // label Print page, how do labels werk?
+  // Do labels get printed from a django template/page?
 ]
 
 export const spaceDetailUrl = (id: Scalars["ID"]) => generatePath("/space/:id", {id})
