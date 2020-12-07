@@ -54,6 +54,8 @@ import { GET_NAVIGATION_SPACE, UPDATE_SPACE_LAYOUT } from "queries/spaces"
 import { spaceDetailUrl } from "routes"
 import ItemListContent from "components/listItems/ItemListContent"
 
+// TODO: when we detect the space is a leaf node, don't care about displaying layout
+
 const useStyles = makeStyles((theme: Theme) => ({
   gridLayout: { width: "100%" },
   card: { height: "100%" },
@@ -117,6 +119,7 @@ const BaseGridLayout: FC<LayoutProps> = ({ width, space, handleChange }) => {
                 title={space.name}
                 to={spaceDetailUrl(space.id)}
                 component={RouterLink}
+                color="textPrimary"
               />
               <CardContent>{space.itemCount}</CardContent>
             </Card>
@@ -280,7 +283,7 @@ const Space: FC<SpaceProps> = ({ match }) => {
       </Breadcrumbs>
       <Grid container>
         <Grid item>
-          <Typography variant="h2">{space?.name}</Typography>
+          <Typography variant="h3">{space?.name}</Typography>
         </Grid>
         <Grid item>
           <Button {...bindTrigger(addItemPopupState)}>Add Item</Button>

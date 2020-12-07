@@ -8,6 +8,7 @@ import {
   DialogTitle,
   InputAdornment,
   List,
+  ListItem,
   TextField,
   Theme
 } from "@material-ui/core"
@@ -126,25 +127,27 @@ const SearchDialog: React.FunctionComponent<SearchDialogProps> = ({
       <DialogContent className={classes.listSection}>
         <List>
           {results.map((result) => {
-            const ListItem = listItemType(result.object.__typename ?? "")
+            const ResultContent = listItemType(result.object.__typename ?? "")
             return (
-              <ListItem
-                key={result.irn}
-                // @ts-ignore
-                entity={(result.object as never) as SearchObjectFragment}
-                dense
-                button={true}
-                onClick={() => select(result.irn)}
-              >
-                <ListItemSecondaryAction>
-                  <IconButton
-                    edge="end"
-                    aria-label="comments"
-                    onClick={() => unselect([result.irn])}
-                  >
-                    <CloseIcon />
-                  </IconButton>
-                </ListItemSecondaryAction>
+              <ListItem key={result.irn}>
+                <ResultContent
+                  key={result.irn}
+                  // @ts-ignore
+                  entity={(result.object as never) as SearchObjectFragment}
+                  dense
+                  button={true}
+                  onClick={() => select(result.irn)}
+                >
+                  <ListItemSecondaryAction>
+                    <IconButton
+                      edge="end"
+                      aria-label="comments"
+                      onClick={() => unselect([result.irn])}
+                    >
+                      <CloseIcon />
+                    </IconButton>
+                  </ListItemSecondaryAction>
+                </ResultContent>
               </ListItem>
             )
           })}
