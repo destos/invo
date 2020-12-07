@@ -129,14 +129,15 @@ const SearchDialog: React.FunctionComponent<SearchDialogProps> = ({
           {results.map((result) => {
             const ResultContent = listItemType(result.object.__typename ?? "")
             return (
-              <ListItem key={result.irn}>
+              <ListItem
+                key={result.irn}
+                dense
+                button={true}
+                onClick={() => select(result.irn)}
+              >
                 <ResultContent
-                  key={result.irn}
                   // @ts-ignore
                   entity={(result.object as never) as SearchObjectFragment}
-                  dense
-                  button={true}
-                  onClick={() => select(result.irn)}
                 >
                   <ListItemSecondaryAction>
                     <IconButton

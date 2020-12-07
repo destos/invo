@@ -10,8 +10,6 @@ import {
   Divider,
   Grid,
   Link,
-  List,
-  ListItem,
   Tab,
   Theme,
   Typography
@@ -27,20 +25,6 @@ import {
   ToggleButtonGroup
 } from "@material-ui/lab"
 import { makeStyles } from "@material-ui/styles"
-import _ from "lodash"
-import {
-  bindPopover,
-  bindTrigger,
-  usePopupState
-} from "material-ui-popup-state/hooks"
-import React, { FC, useState } from "react"
-import GridLayout, {
-  ItemCallback,
-  ReactGridLayoutProps,
-  WidthProvider
-} from "react-grid-layout"
-import { Link as RouterLink, RouteComponentProps } from "react-router-dom"
-import { relayDeconstructor } from "relay-connections-deconstructor"
 import {
   GetNavigationSpaceQuery,
   GetNavigationSpaceQueryVariables,
@@ -50,9 +34,23 @@ import {
 } from "client/types"
 import AddItemDialog from "components/dialogs/AddItemDialog"
 import useSitu from "hooks/useSitu"
+import _ from "lodash"
+import {
+  bindPopover,
+  bindTrigger,
+  usePopupState
+} from "material-ui-popup-state/hooks"
 import { GET_NAVIGATION_SPACE, UPDATE_SPACE_LAYOUT } from "queries/spaces"
+import React, { FC, useState } from "react"
+import GridLayout, {
+  ItemCallback,
+  ReactGridLayoutProps,
+  WidthProvider
+} from "react-grid-layout"
+import { Link as RouterLink, RouteComponentProps } from "react-router-dom"
+import { relayDeconstructor } from "relay-connections-deconstructor"
 import { spaceDetailUrl } from "routes"
-import ItemListContent from "components/listItems/ItemListContent"
+import ItemsList from "./components/ItemsList"
 
 // TODO: when we detect the space is a leaf node, don't care about displaying layout
 
@@ -131,22 +129,6 @@ const BaseGridLayout: FC<LayoutProps> = ({ width, space, handleChange }) => {
 }
 
 const Layout = WidthProvider(BaseGridLayout)
-
-type ItemsProps = {
-  itemData: Array<ItemListContentFragment>
-}
-
-const ItemList: FC<ItemsProps> = ({ itemData }) => (
-  <List>
-    {itemData?.map((item) => (
-      <ListItem key={item.irn}>
-        <ItemListContent key={item.irn} entity={item} />
-      </ListItem>
-      // console.log(ItemListContent)
-      // return (<>Test</>)
-    ))}
-  </List>
-)
 
 const Space: FC<SpaceProps> = ({ match }) => {
   // TODO: leaf space nodes act differently.
@@ -236,7 +218,7 @@ const Space: FC<SpaceProps> = ({ match }) => {
           />
         </TabPanel>
         <TabPanel value="items" className={classes.fookingPanel}>
-          <ItemList itemData={itemData} />
+          <ItemsList itemData={itemData} />
         </TabPanel>
       </TabContext>
     ) : pageLayout === "split" ? (
@@ -249,11 +231,11 @@ const Space: FC<SpaceProps> = ({ match }) => {
           />
         </Grid>
         <Grid item xs={12} lg={2} md={3}>
-          <ItemList itemData={itemData} />
+          <ItemsList itemData={itemData} />
         </Grid>
       </Grid>
     ) : (
-      <ItemList itemData={itemData} />
+      <ItemsList itemData={itemData} />
       // <List>
       //   {itemData?.map((item) => (
       //     <ListItem key={item.irn}>
