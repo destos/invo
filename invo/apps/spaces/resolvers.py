@@ -32,6 +32,7 @@ mutation.set_field("updateSpace", SpaceNodeResolver.as_resolver(method="update")
 mutation.set_field("removeSpace", SpaceNodeResolver.as_resolver(method="destroy"))
 
 space_interface.set_field("children", SpaceNodeResolver.as_nested_resolver(method="list"))
+# TODO: distinquishing and quering direct and all child items on space
 space_interface.set_field("items", ItemResolver.as_nested_resolver(method="list"))
 
 

@@ -36,7 +36,13 @@ interface SpaceInterface {
   parent: SpaceTypes
   parents: [SpaceTypes!]!
   children(filter: SpaceFilter): [SpaceTypes!]!
-  items(first: Int, last: Int, after: String, before: String): Connection!
+  items(
+    first: Int
+    last: Int
+    after: String
+    before: String
+    childItems: Boolean = true
+  ): Connection!
   data: JSONData
   itemCount: Int!
   layout: Layout!
@@ -54,7 +60,13 @@ type SpaceNode implements Node & SpaceInterface & TimeStamped & Protocol {
   parent: SpaceTypes
   parents: [SpaceTypes!]!
   children(filter: SpaceFilter): [SpaceTypes!]!
-  items(first: Int, last: Int, after: String, before: String): Connection!
+  items(
+    first: Int
+    last: Int
+    after: String
+    before: String
+    childItems: Boolean = true
+  ): Connection!
   data: JSONData
   itemCount: Int!
   layout: Layout!
@@ -72,7 +84,13 @@ type GridSpaceNode implements Node & SpaceInterface & TimeStamped & Protocol {
   parent: SpaceTypes
   parents: [SpaceTypes!]!
   children(filter: SpaceFilter): [SpaceTypes!]!
-  items(first: Int, last: Int, after: String, before: String): Connection!
+  items(
+    first: Int
+    last: Int
+    after: String
+    before: String
+    childItems: Boolean = true
+  ): Connection!
   data: JSONData
   itemCount: Int!
   layout: Layout!
@@ -95,7 +113,7 @@ input SpaceInput {
   dimensions: DimensionsInput
 }
 
-type SpacePayload implements Payload{
+type SpacePayload implements Payload {
   success: Boolean!
   errors: [FieldError!]!
   object: SpaceTypes

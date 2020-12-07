@@ -24,8 +24,8 @@ type Situation implements Node & TimeStamped {
     created: DateTime!
     modified: DateTime!
     user: User!
-    spaces: [SpaceTypes]!
-    items: [ItemTypes]!
+    spaces: [SpaceTypes!]!
+    items: [ItemTypes!]!
     state: SituationState!
     exitCondition: SituationExit!
 }

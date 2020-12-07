@@ -25,6 +25,11 @@ class ItemResolver(RelayModelMixin, ModelResolver):
         # FIX: in extended, graphql.error.graphql_error.GraphQLError: cannot unpack non-iterable NoneType object
         return 1, instance.delete()
 
+    def filter_nested_queryset(self, queryset):
+        if self.operation_kwargs.get("childItems", False):
+            return super().filter_nested_queryset(queryset)
+        return queryset.in_space(self.parent)
+
 
 # TODO: just use space.parents
 @item_interface.field("spaceParents")
