@@ -13,6 +13,11 @@ import {
   UNSELECT_ENTITIES
 } from "queries/situations"
 
+// TODO:
+// Refresh every so often to check for any situation changes.
+// Track when the last time a situation was accessed
+// and refresh after a certain period when attempting to interact/select.
+
 export type SituValue =
   | {
       situation: SituationBitFragment | null
@@ -20,18 +25,22 @@ export type SituValue =
       select: (irns: any) => any
       unselect: (irns: any) => any
       searchPopup: PopupState
+      situDrawer: PopupState
     }
   | undefined
 
 export type SituProviderProps = {
-  searchPopupState: PopupState
+  interactions: {
+    searchPopupState: PopupState
+    situDrawerState: PopupState
+  }
   children: React.ReactNode
 }
 
 const ActiveSituContext = createContext<SituValue>(undefined)
 
 export const ActiveSituProvider: React.FC<SituProviderProps> = ({
-  searchPopupState,
+  interactions: { searchPopupState, situDrawerState },
   children
 }) => {
   const { data, loading, error } = useQuery<
@@ -54,12 +63,14 @@ export const ActiveSituProvider: React.FC<SituProviderProps> = ({
     situation,
     loading: loading || selectLoading || unselectLoading,
     select(irns: Array<Scalars["IRN"]>) {
+      // situDrawerState.open()
       return selectEntity({ variables: { irns } })
     },
     unselect(irns: Array<Scalars["IRN"]>) {
       return unselectEntity({ variables: { irns } })
     },
-    searchPopup: searchPopupState
+    searchPopup: searchPopupState,
+    situDrawer: situDrawerState
   }
 
   return (

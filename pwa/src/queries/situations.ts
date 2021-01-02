@@ -9,6 +9,7 @@ export const SITU_QUERY = gql`
       firstName
       lastName
     }
+    # TODO: Is a connection needed to invalidate cache when a new situation is active?
     activeSituation {
       ...SituationBit
     }

@@ -1,6 +1,16 @@
 // Show the top level spaces in your invo app
 import { useMutation, useQuery } from "@apollo/client"
-import { Card, CardContent, CardHeader, Theme } from "@material-ui/core"
+import {
+  Link,
+  Card,
+  CardContent,
+  CardHeader,
+  Theme,
+  Breadcrumbs,
+  Grid,
+  Typography,
+  Button
+} from "@material-ui/core"
 import { makeStyles } from "@material-ui/styles"
 import {
   GetRootSpacesQuery,
@@ -8,11 +18,14 @@ import {
   UpdateSpaceLayoutMutation,
   UpdateSpaceLayoutMutationVariables
 } from "client/types"
+import AddSpaceDialog from "components/dialogs/AddSpaceDialog"
 import _ from "lodash"
+import { bindTrigger, bindPopover } from "material-ui-popup-state/core"
+import { usePopupState } from "material-ui-popup-state/hooks"
 import { GET_ROOT_SPACES, UPDATE_SPACE_LAYOUT } from "queries/spaces"
 import React, { FC } from "react"
 import GridLayout, { ReactGridLayoutProps } from "react-grid-layout"
-import { Link } from "react-router-dom"
+import { Link as RouterLink } from "react-router-dom"
 import { spaceDetailUrl } from "routes"
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -24,6 +37,12 @@ type RootSpaceProps = {}
 
 const RootSpace: FC<RootSpaceProps> = () => {
   const classes = useStyles()
+
+  const addSpacePopupState = usePopupState({
+    variant: "popover",
+    popupId: "addSpaceDialog"
+  })
+
   const gridProps: ReactGridLayoutProps = {
     className: classes.rootSpaces,
     // items: 50,
@@ -62,29 +81,50 @@ const RootSpace: FC<RootSpaceProps> = () => {
   }
 
   return (
-    <GridLayout
-      {...gridProps}
-      // @ts-ignore
-      layout={layout}
-      onDragStop={handleChange}
-      onResizeStop={handleChange}
-      // onDrop={handleChange}
-    >
-      {data?.spaces.map((space) => {
-        return (
-          <div key={space.id}>
-            <Card elevation={3} className={classes.card}>
-              <CardHeader
-                title={space.name}
-                to={spaceDetailUrl(space.id)}
-                component={Link}
-              />
-              <CardContent>{space.itemCount}</CardContent>
-            </Card>
-          </div>
-        )
-      })}
-    </GridLayout>
+    <>
+      <Breadcrumbs
+        maxItems={5}
+        itemsAfterCollapse={3}
+        expandText="Show all spaces"
+        key="root"
+      >
+        <Link component={RouterLink} to="/">
+          Spaces
+        </Link>
+      </Breadcrumbs>
+      <Grid container>
+        <Grid item>
+          <Typography variant="h3">Root Spaces</Typography>
+        </Grid>
+        <Grid item>
+          <Button {...bindTrigger(addSpacePopupState)}>Add Space</Button>
+        </Grid>
+      </Grid>
+      <GridLayout
+        {...gridProps}
+        // @ts-ignore
+        layout={layout}
+        onDragStop={handleChange}
+        onResizeStop={handleChange}
+        // onDrop={handleChange}
+      >
+        {data?.spaces.map((space) => {
+          return (
+            <div key={space.id}>
+              <Card elevation={3} className={classes.card}>
+                <CardHeader
+                  title={space.name}
+                  to={spaceDetailUrl(space.id)}
+                  component={Link}
+                />
+                <CardContent>{space.itemCount}</CardContent>
+              </Card>
+            </div>
+          )
+        })}
+      </GridLayout>
+      <AddSpaceDialog {...bindPopover(addSpacePopupState)} />
+    </>
   )
 }
 

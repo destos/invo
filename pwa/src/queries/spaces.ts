@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client"
-import { itemListContent } from "./fragments"
+import { errorFragment, itemListContent } from "./fragments"
 
 const layoutBit = gql`
   fragment LayoutBit on Layout {
@@ -10,6 +10,7 @@ const layoutBit = gql`
   }
 `
 
+// Data needed to display space information in a grid item
 const spaceGrid = gql`
   fragment SpaceGrid on SpaceTypes {
     ... on Protocol {
@@ -39,8 +40,19 @@ export const GET_ROOT_SPACES = gql`
 export const GET_NAVIGATION_SPACE = gql`
   query getNavigationSpace($id: ID!) {
     space(id: $id) {
-      ...SpaceGrid
+      ... on Protocol {
+        irn
+      }
       ... on SpaceInterface {
+        id
+        name
+        volume
+        dimensions {
+          x
+          y
+          z
+        }
+        itemCount
         parents @connection(key: "spaceBreadcrumbs") {
           ... on SpaceInterface {
             id
@@ -50,6 +62,7 @@ export const GET_NAVIGATION_SPACE = gql`
         children {
           ...SpaceGrid
         }
+        isLeaf
         items(first: 100) {
           edges {
             cursor
@@ -57,6 +70,16 @@ export const GET_NAVIGATION_SPACE = gql`
               ...ItemListContent
             }
           }
+        }
+        gridConfig {
+          cols
+          rowBasis
+        }
+      }
+      ... on GridSpaceNode {
+        gridSize {
+          rows
+          cols
         }
       }
     }
@@ -72,4 +95,44 @@ export const UPDATE_SPACE_LAYOUT = gql`
     }
   }
   ${spaceGrid}
+`
+
+const spaceFrag = gql`
+  fragment AddSpaceFrag on SpaceTypes {
+    ... on SpaceInterface {
+      name
+    }
+    ... on Protocol {
+      irn
+      qr
+    }
+  }
+`
+
+export const ADD_SPACE = gql`
+  mutation addSpace($input: SpaceInput!) {
+    result: addSpace(input: $input) {
+      success
+      ...ErrorFragment
+      object {
+        ...AddSpaceFrag
+      }
+    }
+  }
+  ${errorFragment}
+  ${spaceFrag}
+`
+
+export const ADD_GRID_SPACE = gql`
+  mutation addGridSpace($input: GridSpaceInput!) {
+    result: addGridSpace(input: $input) {
+      success
+      ...ErrorFragment
+      object {
+        ...AddSpaceFrag
+      }
+    }
+  }
+  ${errorFragment}
+  ${spaceFrag}
 `

@@ -7,6 +7,18 @@ export const timeStamped = gql`
   }
 `
 
+export const errorFragment = gql`
+  fragment ErrorFragment on Payload {
+    errors {
+      name
+      values {
+        code
+        error
+      }
+    }
+  }
+`
+
 // Used when an item is used inside a ItemListItem component
 export const itemListContent = gql`
   fragment ItemListContent on ItemInterface {
@@ -30,7 +42,7 @@ export const itemListContent = gql`
     }
   }
   ${timeStamped}
-  `
+`
 export const spaceListContent = gql`
   fragment SpaceListContent on SpaceInterface {
     id

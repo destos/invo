@@ -19,7 +19,7 @@ const itemFrag = gql`
 
 export const ADD_ITEM = gql`
   mutation addItem($input: ItemInput!) {
-    addItem(input: $input) {
+    result: addItem(input: $input) {
       success
       errors {
         name
@@ -38,7 +38,7 @@ export const ADD_ITEM = gql`
 
 export const ADD_TOOL = gql`
   mutation addTool($input: ToolInput!) {
-    addTool(input: $input) {
+    result: addTool(input: $input) {
       success
       object {
         ...AddItemFrag
@@ -50,7 +50,7 @@ export const ADD_TOOL = gql`
 
 export const ADD_CONSUMABLE = gql`
   mutation addConsumable($input: ConsumableInput!) {
-    addConsumable(input: $input) {
+    result: addConsumable(input: $input) {
       success
       object {
         ...AddItemFrag

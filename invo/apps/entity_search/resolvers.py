@@ -17,11 +17,9 @@ class SearchResolver(InputMixin, Resolver):
         text = search.get("text", "")
         # sqs = searchqueryset.auto_query(text)
         sqs = searchqueryset.filter(SQ(text__fuzzy=text))
-
         # if self.load_all:
         #     sqs = sqs.load_all()
         suggestions = sqs.spelling_suggestion(text)
-        print(suggestions)
         return sqs
         # return EmptySearchQuerySet()
 

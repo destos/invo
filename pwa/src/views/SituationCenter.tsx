@@ -40,7 +40,7 @@ const SituationCenter: FC<SituationCenterProps> = ({ reload = false }) => {
     }
   }
   if (!situation) {
-    return <>{"happinin"}</>
+    return <>{"it's happening!"}</>
   }
 
   return (

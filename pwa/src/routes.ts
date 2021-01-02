@@ -1,4 +1,5 @@
 import SituationCenterView from "./views/SituationCenter"
+import ExamplesView from "./views/Examples"
 import RootSpaceView from "./views/RootSpace"
 import SpaceView from "./views/Space"
 import Root from "./layout/Root"
@@ -22,8 +23,16 @@ const routes: Array<RouteConfig> = [
       {
         path: "/space/:id",
         component: SpaceView
-      }
+      },
       // TODO: tab route for view type selection and tab to drive tab state?
+      {
+        path: "/examples/:example",
+        component: ExamplesView
+      },
+      {
+        path: "/examples/",
+        component: ExamplesView
+      }
     ]
   }
   // TODO:

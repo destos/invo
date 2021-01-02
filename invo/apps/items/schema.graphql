@@ -6,6 +6,16 @@ interface ItemInterface {
   spaceParents(depth: Int): [SpaceTypes]!
 }
 
+enum ItemTypesEnum {
+  "Item"
+  ITEM
+  "Tool"
+  TOOL
+  "Consumable"
+  CONSUMABLE
+  # "Tracked Consumable"
+  # TRACKEDCONSUMABLE
+}
 # Singular items
 
 type Item implements Node & ItemInterface & TimeStamped & Protocol {
@@ -112,21 +122,23 @@ type ItemPayload implements Payload {
 extend type Query {
   item(id: ID!): ItemTypes
   items(first: Int, last: Int, after: String, before: String): Connection!
+  "Suggest the type of item based on the name"
+  suggestType(name: String!): ItemTypesEnum
 }
 
 extend type Mutation {
   # These would be nicer with input unions or whatever feature comes out
-  addItem(input: ItemInput!): ItemPayload
-  addTool(input: ToolInput!): ItemPayload
-  addConsumable(input: ConsumableInput!): ItemPayload
-  updateItem(id: ID!, input: ItemInput!): ItemPayload
-  updateTool(id: ID!, input: ToolInput!): ItemPayload
-  updateConsumable(id: ID!, input: ConsumableInput!): ItemPayload
+  addItem(input: ItemInput!): ItemPayload!
+  addTool(input: ToolInput!): ItemPayload!
+  addConsumable(input: ConsumableInput!): ItemPayload!
+  updateItem(id: ID!, input: ItemInput!): ItemPayload!
+  updateTool(id: ID!, input: ToolInput!): ItemPayload!
+  updateConsumable(id: ID!, input: ConsumableInput!): ItemPayload!
   # Item management
-  deleteItem(id: ID!): ItemPayload
+  deleteItem(id: ID!): ItemPayload!
   # Item movement
   "Move an item to a new space, removes from previous"
-  moveItem(id: ID!, spaceId: ID!): ItemPayload
+  moveItem(id: ID!, spaceId: ID!): ItemPayload!
   "Removes an item from a space"
-  removeItem(id: ID!): ItemPayload
+  removeItem(id: ID!): ItemPayload!
 }

@@ -26,21 +26,24 @@ const ItemListContent: React.FC<ItemListContentProps> = ({
 }) => {
   const { id, irn, name, spaceParents, __typename, qr } = entity
   const labelId = `item-list-label-${id}`
-  const Icon = typeIconMap[__typename ?? "fallback"]
+  const Icon = typeIconMap[__typename || "fallback"]
 
+// TODO: shouldn't show the current page space if being displayed there.
   const bread =
     spaceParents?.map((space) => space?.name ?? "Space").join(" > ") ?? null
 
   return (
     <>
-      <ListItemIcon>
-        <Icon />
-      </ListItemIcon>
+      {Icon ? (
+        <ListItemIcon>
+          <Icon />
+        </ListItemIcon>
+      ) : null}
       <ListItemText id={labelId} primary={name} secondary={bread} />
       {children}
-      <ListItemSecondaryAction>
+      {/* <ListItemSecondaryAction>
         <img src={qr} width={80} alt="qr code" />
-      </ListItemSecondaryAction>
+      </ListItemSecondaryAction> */}
     </>
   )
 }

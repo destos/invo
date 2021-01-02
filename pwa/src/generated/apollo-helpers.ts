@@ -1,5 +1,5 @@
 import { FieldPolicy, FieldReadFunction, TypePolicies } from '@apollo/client/cache';
-export type QueryKeySpecifier = ('currentUser' | 'waffle' | 'activeSituation' | 'getIrnEntity' | 'space' | 'getSpaces' | 'item' | 'items' | 'entitySearch' | QueryKeySpecifier)[];
+export type QueryKeySpecifier = ('currentUser' | 'waffle' | 'activeSituation' | 'getIrnEntity' | 'space' | 'getSpaces' | 'item' | 'items' | 'suggestType' | 'entitySearch' | QueryKeySpecifier)[];
 export type QueryFieldPolicy = {
 	currentUser?: FieldPolicy<any> | FieldReadFunction<any>,
 	waffle?: FieldPolicy<any> | FieldReadFunction<any>,
@@ -9,6 +9,7 @@ export type QueryFieldPolicy = {
 	getSpaces?: FieldPolicy<any> | FieldReadFunction<any>,
 	item?: FieldPolicy<any> | FieldReadFunction<any>,
 	items?: FieldPolicy<any> | FieldReadFunction<any>,
+	suggestType?: FieldPolicy<any> | FieldReadFunction<any>,
 	entitySearch?: FieldPolicy<any> | FieldReadFunction<any>
 };
 export type UserKeySpecifier = ('id' | 'username' | 'firstName' | 'lastName' | 'email' | 'isStaff' | 'isActive' | 'groups' | 'userPermissions' | 'allPermissions' | 'groupPermissions' | UserKeySpecifier)[];
@@ -105,7 +106,7 @@ export type SituationFieldPolicy = {
 	state?: FieldPolicy<any> | FieldReadFunction<any>,
 	exitCondition?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type SpaceNodeKeySpecifier = ('id' | 'created' | 'modified' | 'irn' | 'qr' | 'name' | 'parent' | 'parents' | 'children' | 'items' | 'data' | 'itemCount' | 'layout' | 'dimensions' | 'volume' | SpaceNodeKeySpecifier)[];
+export type SpaceNodeKeySpecifier = ('id' | 'created' | 'modified' | 'irn' | 'qr' | 'name' | 'parent' | 'parents' | 'children' | 'isLeaf' | 'isChild' | 'isRoot' | 'items' | 'data' | 'itemCount' | 'layout' | 'dimensions' | 'volume' | 'gridScale' | 'gridConfig' | SpaceNodeKeySpecifier)[];
 export type SpaceNodeFieldPolicy = {
 	id?: FieldPolicy<any> | FieldReadFunction<any>,
 	created?: FieldPolicy<any> | FieldReadFunction<any>,
@@ -116,26 +117,36 @@ export type SpaceNodeFieldPolicy = {
 	parent?: FieldPolicy<any> | FieldReadFunction<any>,
 	parents?: FieldPolicy<any> | FieldReadFunction<any>,
 	children?: FieldPolicy<any> | FieldReadFunction<any>,
+	isLeaf?: FieldPolicy<any> | FieldReadFunction<any>,
+	isChild?: FieldPolicy<any> | FieldReadFunction<any>,
+	isRoot?: FieldPolicy<any> | FieldReadFunction<any>,
 	items?: FieldPolicy<any> | FieldReadFunction<any>,
 	data?: FieldPolicy<any> | FieldReadFunction<any>,
 	itemCount?: FieldPolicy<any> | FieldReadFunction<any>,
 	layout?: FieldPolicy<any> | FieldReadFunction<any>,
 	dimensions?: FieldPolicy<any> | FieldReadFunction<any>,
-	volume?: FieldPolicy<any> | FieldReadFunction<any>
+	volume?: FieldPolicy<any> | FieldReadFunction<any>,
+	gridScale?: FieldPolicy<any> | FieldReadFunction<any>,
+	gridConfig?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type SpaceInterfaceKeySpecifier = ('id' | 'name' | 'parent' | 'parents' | 'children' | 'items' | 'data' | 'itemCount' | 'layout' | 'dimensions' | 'volume' | SpaceInterfaceKeySpecifier)[];
+export type SpaceInterfaceKeySpecifier = ('id' | 'name' | 'parent' | 'parents' | 'children' | 'isLeaf' | 'isChild' | 'isRoot' | 'items' | 'data' | 'itemCount' | 'layout' | 'dimensions' | 'volume' | 'gridScale' | 'gridConfig' | SpaceInterfaceKeySpecifier)[];
 export type SpaceInterfaceFieldPolicy = {
 	id?: FieldPolicy<any> | FieldReadFunction<any>,
 	name?: FieldPolicy<any> | FieldReadFunction<any>,
 	parent?: FieldPolicy<any> | FieldReadFunction<any>,
 	parents?: FieldPolicy<any> | FieldReadFunction<any>,
 	children?: FieldPolicy<any> | FieldReadFunction<any>,
+	isLeaf?: FieldPolicy<any> | FieldReadFunction<any>,
+	isChild?: FieldPolicy<any> | FieldReadFunction<any>,
+	isRoot?: FieldPolicy<any> | FieldReadFunction<any>,
 	items?: FieldPolicy<any> | FieldReadFunction<any>,
 	data?: FieldPolicy<any> | FieldReadFunction<any>,
 	itemCount?: FieldPolicy<any> | FieldReadFunction<any>,
 	layout?: FieldPolicy<any> | FieldReadFunction<any>,
 	dimensions?: FieldPolicy<any> | FieldReadFunction<any>,
-	volume?: FieldPolicy<any> | FieldReadFunction<any>
+	volume?: FieldPolicy<any> | FieldReadFunction<any>,
+	gridScale?: FieldPolicy<any> | FieldReadFunction<any>,
+	gridConfig?: FieldPolicy<any> | FieldReadFunction<any>
 };
 export type ConnectionKeySpecifier = ('pageInfo' | 'edges' | ConnectionKeySpecifier)[];
 export type ConnectionFieldPolicy = {
@@ -172,12 +183,17 @@ export type DimensionsFieldPolicy = {
 	y?: FieldPolicy<any> | FieldReadFunction<any>,
 	z?: FieldPolicy<any> | FieldReadFunction<any>
 };
+export type GridLayoutConfigKeySpecifier = ('cols' | 'rowBasis' | GridLayoutConfigKeySpecifier)[];
+export type GridLayoutConfigFieldPolicy = {
+	cols?: FieldPolicy<any> | FieldReadFunction<any>,
+	rowBasis?: FieldPolicy<any> | FieldReadFunction<any>
+};
 export type ProtocolKeySpecifier = ('irn' | 'qr' | ProtocolKeySpecifier)[];
 export type ProtocolFieldPolicy = {
 	irn?: FieldPolicy<any> | FieldReadFunction<any>,
 	qr?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type GridSpaceNodeKeySpecifier = ('id' | 'created' | 'modified' | 'irn' | 'qr' | 'name' | 'parent' | 'parents' | 'children' | 'items' | 'data' | 'itemCount' | 'layout' | 'dimensions' | 'volume' | GridSpaceNodeKeySpecifier)[];
+export type GridSpaceNodeKeySpecifier = ('id' | 'created' | 'modified' | 'irn' | 'qr' | 'name' | 'parent' | 'parents' | 'children' | 'isLeaf' | 'isChild' | 'isRoot' | 'items' | 'data' | 'itemCount' | 'layout' | 'dimensions' | 'volume' | 'gridScale' | 'gridConfig' | 'gridSize' | GridSpaceNodeKeySpecifier)[];
 export type GridSpaceNodeFieldPolicy = {
 	id?: FieldPolicy<any> | FieldReadFunction<any>,
 	created?: FieldPolicy<any> | FieldReadFunction<any>,
@@ -188,12 +204,23 @@ export type GridSpaceNodeFieldPolicy = {
 	parent?: FieldPolicy<any> | FieldReadFunction<any>,
 	parents?: FieldPolicy<any> | FieldReadFunction<any>,
 	children?: FieldPolicy<any> | FieldReadFunction<any>,
+	isLeaf?: FieldPolicy<any> | FieldReadFunction<any>,
+	isChild?: FieldPolicy<any> | FieldReadFunction<any>,
+	isRoot?: FieldPolicy<any> | FieldReadFunction<any>,
 	items?: FieldPolicy<any> | FieldReadFunction<any>,
 	data?: FieldPolicy<any> | FieldReadFunction<any>,
 	itemCount?: FieldPolicy<any> | FieldReadFunction<any>,
 	layout?: FieldPolicy<any> | FieldReadFunction<any>,
 	dimensions?: FieldPolicy<any> | FieldReadFunction<any>,
-	volume?: FieldPolicy<any> | FieldReadFunction<any>
+	volume?: FieldPolicy<any> | FieldReadFunction<any>,
+	gridScale?: FieldPolicy<any> | FieldReadFunction<any>,
+	gridConfig?: FieldPolicy<any> | FieldReadFunction<any>,
+	gridSize?: FieldPolicy<any> | FieldReadFunction<any>
+};
+export type GridSizeKeySpecifier = ('cols' | 'rows' | GridSizeKeySpecifier)[];
+export type GridSizeFieldPolicy = {
+	cols?: FieldPolicy<any> | FieldReadFunction<any>,
+	rows?: FieldPolicy<any> | FieldReadFunction<any>
 };
 export type ItemKeySpecifier = ('id' | 'created' | 'modified' | 'irn' | 'qr' | 'name' | 'data' | 'space' | 'spaceParents' | ItemKeySpecifier)[];
 export type ItemFieldPolicy = {
@@ -272,15 +299,17 @@ export type SearchResultFieldPolicy = {
 	irn?: FieldPolicy<any> | FieldReadFunction<any>,
 	object?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type MutationKeySpecifier = ('root' | 'selectEntities' | 'unselectEntities' | 'abandonSituation' | 'addSpace' | 'updateSpaceLayout' | 'updateSpace' | 'removeSpace' | 'addItem' | 'addTool' | 'addConsumable' | 'updateItem' | 'updateTool' | 'updateConsumable' | 'deleteItem' | 'moveItem' | 'removeItem' | MutationKeySpecifier)[];
+export type MutationKeySpecifier = ('root' | 'selectEntities' | 'unselectEntities' | 'abandonSituation' | 'addSpace' | 'addGridSpace' | 'updateSpace' | 'updateGridSpace' | 'updateSpaceLayout' | 'removeSpace' | 'addItem' | 'addTool' | 'addConsumable' | 'updateItem' | 'updateTool' | 'updateConsumable' | 'deleteItem' | 'moveItem' | 'removeItem' | MutationKeySpecifier)[];
 export type MutationFieldPolicy = {
 	root?: FieldPolicy<any> | FieldReadFunction<any>,
 	selectEntities?: FieldPolicy<any> | FieldReadFunction<any>,
 	unselectEntities?: FieldPolicy<any> | FieldReadFunction<any>,
 	abandonSituation?: FieldPolicy<any> | FieldReadFunction<any>,
 	addSpace?: FieldPolicy<any> | FieldReadFunction<any>,
-	updateSpaceLayout?: FieldPolicy<any> | FieldReadFunction<any>,
+	addGridSpace?: FieldPolicy<any> | FieldReadFunction<any>,
 	updateSpace?: FieldPolicy<any> | FieldReadFunction<any>,
+	updateGridSpace?: FieldPolicy<any> | FieldReadFunction<any>,
+	updateSpaceLayout?: FieldPolicy<any> | FieldReadFunction<any>,
 	removeSpace?: FieldPolicy<any> | FieldReadFunction<any>,
 	addItem?: FieldPolicy<any> | FieldReadFunction<any>,
 	addTool?: FieldPolicy<any> | FieldReadFunction<any>,
@@ -466,6 +495,13 @@ export type TypedTypePolicies = TypePolicies & {
 		subscriptionType?: true,
 		fields?: DimensionsFieldPolicy,
 	},
+	GridLayoutConfig?: {
+		keyFields?: false | GridLayoutConfigKeySpecifier | (() => undefined | GridLayoutConfigKeySpecifier),
+		queryType?: true,
+		mutationType?: true,
+		subscriptionType?: true,
+		fields?: GridLayoutConfigFieldPolicy,
+	},
 	Protocol?: {
 		keyFields?: false | ProtocolKeySpecifier | (() => undefined | ProtocolKeySpecifier),
 		queryType?: true,
@@ -479,6 +515,13 @@ export type TypedTypePolicies = TypePolicies & {
 		mutationType?: true,
 		subscriptionType?: true,
 		fields?: GridSpaceNodeFieldPolicy,
+	},
+	GridSize?: {
+		keyFields?: false | GridSizeKeySpecifier | (() => undefined | GridSizeKeySpecifier),
+		queryType?: true,
+		mutationType?: true,
+		subscriptionType?: true,
+		fields?: GridSizeFieldPolicy,
 	},
 	Item?: {
 		keyFields?: false | ItemKeySpecifier | (() => undefined | ItemKeySpecifier),

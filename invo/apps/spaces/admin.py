@@ -1,10 +1,7 @@
 from django.contrib import admin
-
 from django.utils.translation import ugettext_lazy as _
-from polymorphic_tree.admin import (
-    PolymorphicMPTTParentModelAdmin,
-    PolymorphicMPTTChildModelAdmin,
-)
+from polymorphic_tree.admin import PolymorphicMPTTChildModelAdmin, PolymorphicMPTTParentModelAdmin
+
 from . import models
 
 
@@ -20,22 +17,28 @@ class BaseSpaceNodeAdmin(PolymorphicMPTTChildModelAdmin):
     GENERAL_FIELDSET = (
         _("General"),
         {
-            "fields": ("parent", "name"),
+            "fields": (
+                "parent",
+                "name",
+            ),
         },
-        # _("Dimensions"),
-        # {
-        #     "fields": ("size", "volume"),
-        # }
+    )
+    DIMENSIONS_FIELDSET = (
+        _("Dimensions"),
+        {
+            "fields": ("size", "volume"),
+        },
     )
     list_display = (
         "name",
         "irn",
         "item_count",
+        "volume",
     )
 
     base_model = models.SpaceNode
-    # base_readonly_fields = ("parent",)
-    base_fieldsets = (GENERAL_FIELDSET,)
+    base_readonly_fields = ("parent", "size", "volume")
+    base_fieldsets = (GENERAL_FIELDSET, DIMENSIONS_FIELDSET)
 
 
 class GridSpaceNodeAdmin(BaseSpaceNodeAdmin):

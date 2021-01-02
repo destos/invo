@@ -11,7 +11,9 @@ def serialize_measure(value):
 
 # @distance_scalar.value_parser
 def parse_distance(value):
-    return Distance(**{value["unit"]: Decimal(value["value"])})
+    # return Distance(**{value["unit"]: Decimal(value["value"])})
+    assert isinstance(value, str)
+    return Distance(value)
 
 
 def parse_volume(value):

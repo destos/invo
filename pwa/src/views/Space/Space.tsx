@@ -33,6 +33,7 @@ import {
   UpdateSpaceLayoutMutationVariables
 } from "client/types"
 import AddItemDialog from "components/dialogs/AddItemDialog"
+import AddSpaceDialog from "components/dialogs/AddSpaceDialog"
 import useSitu from "hooks/useSitu"
 import _ from "lodash"
 import {
@@ -48,8 +49,8 @@ import GridLayout, {
   WidthProvider
 } from "react-grid-layout"
 import { Link as RouterLink, RouteComponentProps } from "react-router-dom"
-import { relayDeconstructor } from "relay-connections-deconstructor"
 import { spaceDetailUrl } from "routes"
+import { relayDeconstructor } from "utils/relay"
 import ItemsList from "./components/ItemsList"
 
 // TODO: when we detect the space is a leaf node, don't care about displaying layout
@@ -76,13 +77,18 @@ type LayoutProps = {
 // @ts-ignore
 const BaseGridLayout: FC<LayoutProps> = ({ width, space, handleChange }) => {
   const classes = useStyles()
-  const cols = 12
+  const cols = space?.gridConfig.cols ?? 12
+  const rowBasis = space?.gridConfig.rowBasis ?? 12
+
   const scale = width / cols
+  const rowHeight = scale / rowBasis
+
   const gridProps: ReactGridLayoutProps = {
     className: classes.gridLayout,
     // items: 50,
+    // ...(space?.gridConfig ?? {}),
     cols,
-    rowHeight: scale,
+    rowHeight,
     width,
     // containerWidth: 100,
     // verticalCompact: false,
@@ -137,7 +143,7 @@ const Space: FC<SpaceProps> = ({ match }) => {
 
   const classes = useStyles()
   const [tabView, setTabView] = useState("layout")
-  const [pageLayout, setPageLayout] = useState("tabs")
+  let [pageLayout, setPageLayout] = useState("tabs")
 
   const handleViewChange = (event: React.ChangeEvent<{}>, newView: string) => {
     setTabView(newView)
@@ -186,9 +192,14 @@ const Space: FC<SpaceProps> = ({ match }) => {
       }
     })
   }
+
   const itemData = relayDeconstructor(
     space?.items
-  ) as Array<ItemListContentFragment>
+  ) as Array<ItemListContentFragment> // This is not true
+
+  if (space?.isLeaf) {
+    pageLayout = "list"
+  }
 
   const Content =
     pageLayout === "tabs" ? (
@@ -222,15 +233,15 @@ const Space: FC<SpaceProps> = ({ match }) => {
         </TabPanel>
       </TabContext>
     ) : pageLayout === "split" ? (
-      <Grid container spacing={3}>
-        <Grid item xs={12} lg={10} md={11}>
+      <Grid container spacing={0}>
+        <Grid item xs={12} lg={10} md={10}>
           <Layout
             space={space}
             handleChange={handleChange}
             measureBeforeMount={true}
           />
         </Grid>
-        <Grid item xs={12} lg={2} md={3}>
+        <Grid item xs={12} lg={2} md={2}>
           <ItemsList itemData={itemData} />
         </Grid>
       </Grid>
@@ -285,21 +296,32 @@ const Space: FC<SpaceProps> = ({ match }) => {
             onChange={handlePageLayout}
             exclusive
           >
-            <ToggleButton value="tabs">
+            <ToggleButton value="tabs" disabled={space?.isLeaf}>
               <TabIcon />
             </ToggleButton>
-            <ToggleButton value="split">
+            <ToggleButton value="split" disabled={space?.isLeaf}>
               <VerticalSplitIcon />
             </ToggleButton>
-            <ToggleButton value="list">
+            <ToggleButton value="list" disabled={space?.isLeaf}>
               <ListIcon />
             </ToggleButton>
           </ToggleButtonGroup>
         </Grid>
+        <Grid>
+          {JSON.stringify(space?.volume)}
+          {JSON.stringify(space?.dimensions)}
+        </Grid>
       </Grid>
       {Content}
-      <AddItemDialog spaceId={space?.id} {...bindPopover(addItemPopupState)} />
-      <AddItemDialog spaceId={space?.id} {...bindPopover(addSpacePopupState)} />
+      <AddItemDialog
+        spaceId={space?.id}
+        {...bindPopover(addItemPopupState)}
+        closeOnAdd
+      />
+      <AddSpaceDialog
+        parentId={space?.id}
+        {...bindPopover(addSpacePopupState)}
+      />
     </>
   )
 }

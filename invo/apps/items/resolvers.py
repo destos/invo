@@ -22,8 +22,8 @@ class ItemResolver(RelayModelMixin, ModelResolver):
         return self.type_serializers[model]
 
     def perform_destroy(self, instance):
-        # FIX: in extended, graphql.error.graphql_error.GraphQLError: cannot unpack non-iterable NoneType object
-        return 1, instance.delete()
+        # FIX: in ariadne extended, graphql.error.graphql_error.GraphQLError: cannot unpack non-iterable NoneType object
+        return (1, instance.delete())
 
     def filter_nested_queryset(self, queryset):
         if self.operation_kwargs.get("childItems", False):
@@ -40,8 +40,13 @@ def resolve_space_parents(item, info, **kwargs):
     return []
 
 
+def resolve_suggest_type(parent, info, **kwargs):
+    return "ITEM"
+
+
 query.set_field("item", ItemResolver.as_resolver(method="retrieve"))
 query.set_field("items", ItemResolver.as_resolver(method="list"))
+query.set_field("suggestType", resolve_suggest_type)
 
 mutation.set_field("addItem", ItemResolver.as_resolver(method="create"))
 mutation.set_field("addTool", ItemResolver.as_resolver(method="create", model=models.Tool))

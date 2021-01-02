@@ -230,20 +230,29 @@ class Common(Configuration):
         "version": 1,
         "disable_existing_loggers": False,
         "filters": {"require_debug_false": {"()": "django.utils.log.RequireDebugFalse"}},
+        "formatters": {"rich": {"datefmt": "[%X]"}},
         "handlers": {
-            "mail_admins": {
-                "level": "ERROR",
-                "filters": ["require_debug_false"],
-                "class": "django.utils.log.AdminEmailHandler",
+            "console": {
+                "class": "rich.logging.RichHandler",
+                "formatter": "rich",
+                "level": "DEBUG",
             }
         },
-        "loggers": {
-            "django.request": {
-                "handlers": ["mail_admins"],
-                "level": "ERROR",
-                "propagate": True,
-            },
-        },
+        "loggers": {"django": {"handlers": ["console"]}},
+        # "handlers": {
+        #     "mail_admins": {
+        #         "level": "ERROR",
+        #         "filters": ["require_debug_false"],
+        #         "class": "django.utils.log.AdminEmailHandler",
+        #     }
+        # },
+        # "loggers": {
+        #     "django.request": {
+        #         "handlers": ["mail_admins"],
+        #         "level": "ERROR",
+        #         "propagate": True,
+        #     },
+        # },
     }
     # END LOGGING CONFIGURATION
 

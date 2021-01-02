@@ -10,9 +10,9 @@ generates:
       - typescript-apollo-client-helpers
   src/client/types.ts:
     plugins:
-      - "typescript"
-      - "typescript-operations"
-      # - "typescript-graphql-files-modules"
+      - typescript
+      - typescript-operations
+      # - typescript-graphql-files-modules
     config:
       avoidOptionals: true
       # flattenGeneratedTypes: true
@@ -21,15 +21,19 @@ generates:
   # src/generated/apollo.ts:
   #     - typescript
   #     - typescript-operations
-  #     - "typescript-react-apollo"
-  #     # - "typescript-document-nodes"
+  #     - typescript-react-apollo
+  #     # - typescript-document-nodes
   src/generated/possibleTypes.json:
     plugins:
-      - "fragment-matcher"
+      - fragment-matcher
     config:
       apolloClientVersion: 3
   src/generated/graphql.schema.json:
     plugins:
-      - "introspection"
+      - introspection
     # config:
     #   minify: true
+
+  src/generated/jsonSchema.json:
+    plugins:
+      - codegen_plugins/jsonSchema.js

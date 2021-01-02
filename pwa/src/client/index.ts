@@ -2,24 +2,23 @@ import {
   ApolloClient,
   ApolloLink,
   createHttpLink,
-  InMemoryCache,
+  InMemoryCache
 } from "@apollo/client"
-// import { withScalars } from "apollo-link-scalars"
-import { irn } from "../utils/urns"
+// import { buildClientSchema, IntrospectionQuery } from "graphql"
+// import introspectionResult from "../generated/graphql.schema.json"
 import { possibleTypes } from "../generated/possibleTypes.json"
-import introspectionResult from "../generated/graphql.schema.json"
+// import { withScalars } from "apollo-link-scalars"
+// import { irn } from "../utils/urns"
 
-import { buildClientSchema, IntrospectionQuery } from "graphql"
-
-const schema = buildClientSchema(
-  (introspectionResult as unknown) as IntrospectionQuery
-)
+// const schema = buildClientSchema(
+//   (introspectionResult as unknown) as IntrospectionQuery
+// )
 
 const httpLink = createHttpLink({
   // uri: "http://macie.fhome.lan:8000/graphql",
   uri: "http://localhost:8000/graphql",
   // credentials: 'same-origin'
-  credentials: "include",
+  credentials: "include"
 })
 
 // const authLink = setContext((request, { cookies, headers }) => {
@@ -38,19 +37,19 @@ const httpLink = createHttpLink({
 //   }
 // })
 
-const typesMap = {
-  IRN: {
-    // TODO: swap any to IRN type
-    serialize: (parsed: any) => {
-      return irn.format(parsed)
-    },
-    parseValue: (raw: string | null): any | null => {
-      return raw ? irn.parse(raw) : null
-      // TODO: validation errors?
-      // const erros = irn.validated(parsed)
-    },
-  },
-}
+// const typesMap = {
+//   IRN: {
+//     // TODO: swap any to IRN type
+//     serialize: (parsed: any) => {
+//       return irn.format(parsed)
+//     },
+//     parseValue: (raw: string | null): any | null => {
+//       return raw ? irn.parse(raw) : null
+//       // TODO: validation errors?
+//       // const errors = irn.validated(parsed)
+//     }
+//   }
+// }
 
 const link = ApolloLink.from([
   // withScalars({
@@ -60,12 +59,12 @@ const link = ApolloLink.from([
   //   validateEnums: true,
   // }),
   // authLink,
-  httpLink,
+  httpLink
 ])
 
 const client = new ApolloClient({
   cache: new InMemoryCache({ possibleTypes }),
-  link,
+  link
 })
 
 export default client
