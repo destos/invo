@@ -32,6 +32,7 @@ django-measurement = {git = "https://github.com/coddingtonbear/django-measuremen
 marshmallow = "^3.9.1"
 django-model-utils = "^4.1.1"
 rich = "^9.5.1"
+gunicorn = "^20.0.4"
 
 [tool.poetry.dev-dependencies]
 black = {version = "^20.8b1", allow-prereleases = true}
