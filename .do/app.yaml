@@ -5,6 +5,6 @@ static_sites:
   build_command: npm run build
   environment_slug: node-js
   github:
-    branch: main
+    branch: do
     deploy_on_push: true
     repo: destos/invo
