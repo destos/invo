@@ -15,8 +15,7 @@ import { possibleTypes } from "../generated/possibleTypes.json"
 // )
 
 const httpLink = createHttpLink({
-  // uri: "http://macie.fhome.lan:8000/graphql",
-  uri: "http://localhost:8000/graphql",
+  uri: `https://${process.env.REACT_APP_DOMAIN}/graphql`,
   // credentials: 'same-origin'
   credentials: "include"
 })

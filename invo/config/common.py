@@ -18,6 +18,7 @@ import sys
 from configurations import Configuration, values
 import dj_search_url
 
+# Monkey patch to allow for proper haystack backend for elasticsearch 5 when selecting elasticsearch
 dj_search_url.SCHEMES[
     "elasticsearch"
 ] = "haystack.backends.elasticsearch5_backend.Elasticsearch5SearchEngine"
@@ -44,6 +45,8 @@ class Common(Configuration):
     # See: https://docs.djangoproject.com/en/dev/ref/settings/#template-debug
     TEMPLATE_DEBUG = DEBUG
     # END DEBUG
+
+    ALLOWED_HOSTS = values.ListValue(['*'])
 
     # APP CONFIGURATION
     DJANGO_APPS = (
@@ -259,6 +262,12 @@ class Common(Configuration):
     @classmethod
     def post_setup(cls):
         cls.DATABASES["default"]["ATOMIC_REQUESTS"] = True
+
+    #CORS
+    CORS_ORIGIN_WHITELIST = values.ListValue([])
+    CORS_ALLOWED_ORIGIN_REGEXES = values.ListValue([])
+    CORS_ORIGIN_ALLOWS_ALL = values.BooleanValue(False)
+    CORS_ALLOW_CREDENTIALS = values.BooleanValue(True)
 
     # Waffle app
     WAFFLE_FLAG_DEFAULT = values.BooleanValue(False)
