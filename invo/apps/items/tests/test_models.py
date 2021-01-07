@@ -1,6 +1,7 @@
 from django.test import TestCase
 from model_bakery import baker
-from . import models
+
+from items import models
 from spaces.models import SpaceNode
 
 
@@ -51,8 +52,8 @@ class TestItem(TestCase):
 
     def test_attrs(self):
         self.assertEqual(str(self.item), "Test Item")
-        self.assertEqual(self.item.protocol_ident, "items.item:21")
-        self.assertEqual(self.item.protocol_self, "invo:items.item:21")
+        self.assertEqual(self.item.urn_etype, "items.item")
+        self.assertEqual(self.item.irn, "irn:test:items.item:21")
 
     def test_item_can_be_assigned_to_space(self):
         node = baker.make(SpaceNode)
@@ -67,15 +68,16 @@ class TestConsumable(TestCase):
 
     def test_attrs(self):
         self.assertEqual(str(self.item), "Test Consumable")
-        self.assertEqual(self.item.protocol_ident, "items.consumable:42")
-        self.assertEqual(self.item.protocol_self, "invo:items.consumable:42")
+        self.assertEqual(self.item.urn_etype, "items.consumable")
+        self.assertEqual(self.item.irn, "irn:test:items.consumable:42")
 
     def test_default_state(self):
         self.assertEqual(self.item.count, 0)
         self.assertEqual(self.item.warning_enabled, False)
-        self.assertEqual(self.item.warning_count, 10)
+        self.assertEqual(self.item.warning_count, 1)
 
     def test_warning(self):
+        self.item.warning_count = 10
         self.assertFalse(self.item.warning, "Warning should not be on by default")
         self.item.count = 20
         self.assertFalse(self.item.warning, "Warning should not be on by default with high count")
@@ -126,5 +128,5 @@ class TestTrackedConsumable(TestCase):
 
     def test_attrs(self):
         self.assertEqual(str(self.item), "Test Tracked Consumable")
-        self.assertEqual(self.item.protocol_ident, "items.trackedconsumable:84")
-        self.assertEqual(self.item.protocol_self, "invo:items.trackedconsumable:84")
+        self.assertEqual(self.item.urn_etype, "items.trackedconsumable")
+        self.assertEqual(self.item.irn, "irn:test:items.trackedconsumable:84")

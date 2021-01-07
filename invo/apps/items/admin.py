@@ -29,7 +29,7 @@ class ItemParentAdmin(SafeDeleteAdmin, PolymorphicParentModelAdmin):
     list_filter = (PolymorphicChildModelFilter,) + SafeDeleteAdmin.list_filter
     list_display = (
         highlight_deleted,
-        "protocol_ident",
+        "irn",
         "space",
     ) + SafeDeleteAdmin.list_display
 
@@ -43,7 +43,7 @@ class ConsumableAdmin(SafeDeleteAdmin, ItemChildAdmin):
         "count",
         "warning_count",
         "warning",
-        "protocol_ident",
+        "irn",
     ) + SafeDeleteAdmin.list_display
 
 

@@ -9,8 +9,9 @@ https://docs.djangoproject.com/en/3.1/howto/deployment/wsgi/
 
 import os
 
-from django.core.wsgi import get_wsgi_application
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "invo.config")
+os.environ.setdefault("DJANGO_CONFIGURATION", "Local")
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "invo.settings")
+from configurations.wsgi import get_wsgi_application
 
 application = get_wsgi_application()

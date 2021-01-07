@@ -1,81 +1,144 @@
 interface ItemInterface {
-    id: ID!
-    name: String!
-    data: JSONData
-    space: Space
+  id: ID!
+  name: String!
+  data: JSONData
+  space: SpaceTypes
+  spaceParents(depth: Int): [SpaceTypes]!
 }
 
+enum ItemTypesEnum {
+  "Item"
+  ITEM
+  "Tool"
+  TOOL
+  "Consumable"
+  CONSUMABLE
+  # "Tracked Consumable"
+  # TRACKEDCONSUMABLE
+}
 # Singular items
 
 type Item implements Node & ItemInterface & TimeStamped & Protocol {
-    id: ID!
-    created: DateTime!
-    modified: DateTime!
-    name: String!
-    data: JSONData
-    space: Space
-    protocolUri: URL!
+  id: ID!
+  created: DateTime!
+  modified: DateTime!
+  irn: IRN!
+  qr: String!
+  name: String!
+  data: JSONData
+  space: SpaceTypes
+  spaceParents(depth: Int): [SpaceTypes]!
 }
 
 type Tool implements Node & ItemInterface & TimeStamped & Protocol {
-    id: ID!
-    created: DateTime!
-    modified: DateTime!
-    name: String!
-    data: JSONData
-    space: Space
-    protocolUri: URL!
+  id: ID!
+  created: DateTime!
+  modified: DateTime!
+  irn: IRN!
+  qr: String!
+  name: String!
+  data: JSONData
+  space: SpaceTypes
+  spaceParents(depth: Int): [SpaceTypes]!
 }
 
 # Consumables
 
 interface ConsumableInterface {
-    count: Int!
-    warningEnabled: Boolean!
-    warningCount: Float!
-    warning: Boolean!
+  count: Int!
+  warningEnabled: Boolean!
+  warningCount: Float!
+  warning: Boolean!
 }
 
 """
 Consumables are items that consist of multiple physically similar objects, like screws.
 """
 type Consumable implements Node & ItemInterface & ConsumableInterface & TimeStamped & Protocol {
-    id: ID!
-    created: DateTime!
-    modified: DateTime!
-    name: String!
-    data: JSONData
-    space: Space
-    count: Int!
-    warningEnabled: Boolean!
-    warningCount: Float!
-    warning: Boolean!
-    protocolUri: URL!
+  id: ID!
+  created: DateTime!
+  modified: DateTime!
+  irn: IRN!
+  qr: String!
+  name: String!
+  data: JSONData
+  space: SpaceTypes
+  spaceParents(depth: Int): [SpaceTypes]!
+  count: Int!
+  warningEnabled: Boolean!
+  warningCount: Float!
+  warning: Boolean!
 }
 
 """
 Tracked consumables hold a reference to identifiable information.
-Like a bar code or item number, consuming Tracked items requires you pass 
+Like a bar code or item number, consuming Tracked items requires you pass
 the reference that you are consuming.
 """
 type TrackedConsumable implements Node & ItemInterface & ConsumableInterface & TimeStamped & Protocol {
-    id: ID!
-    created: DateTime!
-    modified: DateTime!
-    name: String!
-    data: JSONData
-    space: Space
-    count: Int!
-    warningEnabled: Boolean!
-    warningCount: Float!
-    warning: Boolean!
-    protocolUri: URL!
+  id: ID!
+  created: DateTime!
+  modified: DateTime!
+  irn: IRN!
+  qr: String!
+  name: String!
+  data: JSONData
+  space: SpaceTypes
+  spaceParents(depth: Int): [SpaceTypes]!
+  count: Int!
+  warningEnabled: Boolean!
+  warningCount: Float!
+  warning: Boolean!
 }
 
 "All the different Item types"
 union ItemTypes = Item | Tool | Consumable | TrackedConsumable
 
+# Waiting for input unions or something similar
+input ItemInput {
+  name: String
+  spaceId: ID
+}
+
+input ToolInput {
+  name: String
+  spaceId: ID
+}
+
+input ConsumableInput {
+  name: String
+  spaceId: ID
+  count: Float = 1
+  warningEnabled: Boolean = false
+  warningCount: Float = 1
+}
+
+type ItemPayload implements Payload {
+  success: Boolean!
+  errors: [FieldError!]!
+  object: ItemTypes
+}
+
 extend type Query {
-    item(id: ID!): ItemTypes
-    items(first: Int, last: Int, after: String, before: String): Connection
+  item(id: ID!): ItemTypes
+  items(first: Int, last: Int, after: String, before: String): Connection!
+  "Suggest the type of item based on the name"
+  suggestType(name: String!): ItemTypesEnum
+}
+
+extend type Mutation {
+  # These would be nicer with input unions or whatever feature comes out
+  addItem(input: ItemInput!): ItemPayload!
+  addTool(input: ToolInput!): ItemPayload!
+  addConsumable(input: ConsumableInput!): ItemPayload!
+  updateItem(id: ID!, input: ItemInput!): ItemPayload!
+  updateTool(id: ID!, input: ToolInput!): ItemPayload!
+  updateConsumable(id: ID!, input: ConsumableInput!): ItemPayload!
+  # Item management
+  deleteItem(id: ID!): ItemPayload!
+  # Item movement
+  "Move an item to a new space, removes from previous"
+  moveItem(id: ID!, spaceId: ID!): ItemPayload!
+  "Removes an item from a space"
+  removeItem(id: ID!): ItemPayload!
 }

@@ -13,6 +13,14 @@ Are contexts like branches/trees of actions? Is there a logic tree builder we ca
 placing
 consuming
 
+Notes from conversation with Andrew:
+Is there an API for skus for easy populating?
+
+Associating an item with a QR code that exists for a bin.
+take a picture of text describe an item in that bin.
+When I scan this, I want you to tell me about this.
+image recognition of something I want or need. take a picture of a thing, keep it in the box. text+picture.
+
 # When using this app I would like to:
 
 ## See contents of inventory for scanned space
@@ -32,6 +40,27 @@ trigger actions
 Ideas:
 Scan an item, see what spaces it has belonged to? Where does it need to go?
 
-
 # Ideas
-When using barcodes or non unique ways of identification, allow for lookup of all items that use that serialized code. 
+When using barcodes or non unique ways of identification, allow for lookup of all items that use that serialized code.
+
+# Bits
+
+Make the requirements.txt for github
+```bash
+poetry export -f requirements.txt --output requirements.txt
+```
+
+Run tests with test config:
+```bash
+DJANGO_CONFIGURATION=Test poetry run ptw -- -s invo/apps
+```
+
+Run black formattings:
+```bash
+poetry run black ./invo/
+```
+
+Start elasticsearch
+```bash
+docker run -d --name elasticsearch --net bridge -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" elasticsearch:5.6.16
+```

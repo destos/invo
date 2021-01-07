@@ -1,43 +1,180 @@
 input SpaceFilter {
-    name: String
-    name__icontains: String
+  level: Int
+  name: String
+  name__icontains: String
+}
+
+input LayoutInput {
+  x: Int!
+  y: Int!
+  w: Int!
+  h: Int!
+}
+
+type Layout {
+  x: Int!
+  y: Int!
+  w: Int!
+  h: Int!
+}
+
+input DimensionsInput {
+  x: Distance!
+  y: Distance!
+  z: Distance!
+}
+
+input GridSizeInput {
+  cols: Int!
+  rows: Int!
+}
+
+type GridSize {
+  cols: Int!
+  rows: Int!
+}
+
+"Properties used in the grid layout component"
+type GridLayoutConfig {
+  cols: Int!
+  rowBasis: Float!
+}
+
+type Dimensions {
+  x: Distance!
+  y: Distance!
+  z: Distance!
+}
+
+enum SpaceTypesEnum {
+  "SpaceNode"
+  SPACE
+  "GridSpaceNode"
+  GRID
 }
 
 interface SpaceInterface {
-    id: ID!
-    name: String!
-    parent: Space
-    children(filter: SpaceFilter): [Space]
-    data: JSONData!
-    itemCount: Int!
+  id: ID!
+  name: String!
+  parent: SpaceTypes
+  parents: [SpaceTypes!]!
+  children(filter: SpaceFilter): [SpaceTypes!]!
+  isLeaf: Boolean!
+  isChild: Boolean!
+  isRoot: Boolean!
+  items(
+    first: Int
+    last: Int
+    after: String
+    before: String
+    "Also select items contained in space children"
+    childItems: Boolean = true
+  ): Connection!
+  data: JSONData
+  itemCount: Int!
+  layout: Layout!
+  dimensions: Dimensions!
+  volume: Volume!
+  gridScale: Distance!
+  gridConfig: GridLayoutConfig!
 }
 
-type SpaceNode implements SpaceInterface & TimeStamped {
-    id: ID!
-    created: DateTime!
-    modified: DateTime!
-    name: String!
-    parent: Space
-    children(filter: SpaceFilter): [Space]
-    data: JSONData!
-    itemCount: Int!
+type SpaceNode implements Node & SpaceInterface & TimeStamped & Protocol {
+  id: ID!
+  created: DateTime!
+  modified: DateTime!
+  irn: IRN!
+  qr: String!
+  name: String!
+  parent: SpaceTypes
+  parents: [SpaceTypes!]!
+  children(filter: SpaceFilter): [SpaceTypes!]!
+  isLeaf: Boolean!
+  isChild: Boolean!
+  isRoot: Boolean!
+  items(
+    first: Int
+    last: Int
+    after: String
+    before: String
+    childItems: Boolean = true
+  ): Connection!
+  data: JSONData
+  itemCount: Int!
+  layout: Layout!
+  dimensions: Dimensions!
+  volume: Volume!
+  gridScale: Distance!
+  gridConfig: GridLayoutConfig!
 }
 
-type GridSpaceNode implements SpaceInterface & TimeStamped {
-    id: ID!
-    created: DateTime!
-    modified: DateTime!
-    name: String!
-    size: [Int]
-    parent: Space
-    children(filter: SpaceFilter): [Space]
-    data: JSONData!
-    itemCount: Int!
+type GridSpaceNode implements Node & SpaceInterface & TimeStamped & Protocol {
+  id: ID!
+  created: DateTime!
+  modified: DateTime!
+  irn: IRN!
+  qr: String!
+  name: String!
+  parent: SpaceTypes
+  parents: [SpaceTypes!]!
+  children(filter: SpaceFilter): [SpaceTypes!]!
+  isLeaf: Boolean!
+  isChild: Boolean!
+  isRoot: Boolean!
+  items(
+    first: Int
+    last: Int
+    after: String
+    before: String
+    childItems: Boolean = true
+  ): Connection!
+  data: JSONData
+  itemCount: Int!
+  layout: Layout!
+  dimensions: Dimensions!
+  volume: Volume!
+  gridScale: Distance!
+  gridConfig: GridLayoutConfig!
+  gridSize: GridSize!
 }
 
-union Space = SpaceNode | GridSpaceNode
+union SpaceTypes = SpaceNode | GridSpaceNode
 
 extend type Query {
-    space(id: ID!): Space
-    getSpaces(filter: SpaceFilter): [Space]
+  space(id: ID!): SpaceTypes
+  getSpaces(filter: SpaceFilter): [SpaceTypes!]!
+}
+
+# TODO: make all these new mutations work.
+input SpaceInput {
+  name: String!
+  parent: ID
+  layout: LayoutInput
+  dimensions: DimensionsInput
+  gridScale: Distance
+}
+
+input GridSpaceInput {
+  name: String!
+  parent: ID
+  layout: LayoutInput
+  dimensions: DimensionsInput
+  gridScale: Distance
+  gridSize: GridSizeInput
+}
+
+type SpacePayload implements Payload {
+  success: Boolean!
+  errors: [FieldError!]!
+  object: SpaceTypes
+}
+
+extend type Mutation {
+  addSpace(input: SpaceInput!): SpacePayload!
+  addGridSpace(input: GridSpaceInput!): SpacePayload!
+  updateSpace(id: ID!, input: SpaceInput!): SpacePayload!
+  updateGridSpace(id: ID!, input: GridSpaceInput!): SpacePayload!
+  updateSpaceLayout(id: ID!, layout: LayoutInput!): SpaceTypes!
+  "Removes all Space types"
+  removeSpace(id: ID!): SpacePayload!
 }

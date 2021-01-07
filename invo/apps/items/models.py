@@ -39,7 +39,7 @@ class Consumable(Item):
     # What about Units? What about non-integer amounts?
     count = models.DecimalField(default=D("0"), max_digits=13, decimal_places=4)
     warning_enabled = models.BooleanField(default=False)
-    warning_count = models.DecimalField(default=D("10"), max_digits=13, decimal_places=4)
+    warning_count = models.DecimalField(default=D("1"), max_digits=13, decimal_places=4)
 
     def consume(self, amount=1, save=True):
         self.count -= amount
@@ -69,6 +69,7 @@ class Consumable(Item):
 class TrackedConsumable(Consumable):
     """Serialized consumable consumption for tracking"""
 
+    # Notes:
     # Tracked items and consumables maybe need to exist in multiple spaces?
     # that is outside the nesting scheme, how to handle that?
     # Do tracked consumables have a single instance per item?
@@ -85,5 +86,5 @@ class TrackedConsumable(Consumable):
 class Tool(Item):
     """Tools allow you to store """
 
-    # TODO: tools taxonomy system, mqtt yo!
+    # TODO: toolhub tool taxonomy system, mqtt yo! make it better this time.
     pass

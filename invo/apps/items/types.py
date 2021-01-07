@@ -5,6 +5,8 @@ item = ObjectType("Item")
 tool = ObjectType("Tool")
 consumable = ObjectType("Consumable")
 tracked_consumable = ObjectType("TrackedConsumable")
+# TODO: dynamic enum based on class names?
+# item_types_enum = EnumType("ItemTypesEnum")
 
 item_interface = InterfaceType("ItemInterface")
 consumable_interface = InterfaceType("ConsumableInterface")

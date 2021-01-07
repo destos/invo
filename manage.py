@@ -2,14 +2,14 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
-from ariadne_extended.utils.monkey import patch_autoreload
 
 
 def main():
     """Run administrative tasks."""
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "invo.settings")
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'invo.config')
+    os.environ.setdefault('DJANGO_CONFIGURATION', 'Local')
     try:
-        from django.core.management import execute_from_command_line
+        from configurations.management import execute_from_command_line
     except ImportError as exc:
         raise ImportError(
             "Couldn't import Django. Are you sure it's installed and "
@@ -22,10 +22,12 @@ def main():
     from django.db import models
 
     models.FieldDoesNotExist = FieldDoesNotExist
-    patch_autoreload()
 
     execute_from_command_line(sys.argv)
 
 
 if __name__ == "__main__":
+    from ariadne_extended.utils.monkey import patch_autoreload
+
+    patch_autoreload()
     main()

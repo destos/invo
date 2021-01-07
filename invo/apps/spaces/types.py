@@ -5,4 +5,4 @@ space_node = ObjectType("SpaceNode")
 grid_space_node = ObjectType("GridSpaceNode")
 space_interface = InterfaceType("SpaceInterface")
 
-space = UnionType("Space", type_resolver=resolve_node_type)
+space = UnionType("SpaceTypes", type_resolver=resolve_node_type)

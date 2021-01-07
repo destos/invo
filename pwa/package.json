@@ -1,0 +1,83 @@
+{
+  "name": "pwa",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@apollo/client": "^3.3.4",
+    "@graphql-codegen/typescript-apollo-client-helpers": "^1.1.1",
+    "@material-ui/core": "^4.11.2",
+    "@material-ui/icons": "^4.11.2",
+    "@material-ui/lab": "^4.0.0-alpha.57",
+    "@material-ui/pickers": "^3.2.10",
+    "@rjsf/core": "^2.4.0",
+    "@rjsf/material-ui": "^2.4.0",
+    "@testing-library/jest-dom": "^5.11.6",
+    "@testing-library/react": "^11.2.2",
+    "@testing-library/user-event": "^12.5.0",
+    "@types/jest": "^26.0.16",
+    "@types/lodash": "^4.14.165",
+    "@types/node": "^12.19.8",
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
+    "@types/react-grid-layout": "^1.1.1",
+    "@types/react-router-config": "^5.0.1",
+    "@types/react-router-dom": "^5.1.6",
+    "@types/yup": "^0.29.10",
+    "apollo-link-scalars": "^2.0.2",
+    "graphql": "^15.4.0",
+    "graphql-2-json-schema": "^0.2.0",
+    "lodash": "^4.17.20",
+    "material-ui-popup-state": "^1.7.1",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-form-hook-mui": "^0.10.5",
+    "react-grid-layout": "^1.2.0",
+    "react-hook-form": "^6.12.2",
+    "react-hotkeys": "^2.0.0",
+    "react-router-config": "^5.1.1",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "^4.0.1",
+    "typescript": "^4.1.2",
+    "urn-lib": "^1.2.0",
+    "web-vitals": "^0.2.4",
+    "yup": "^0.32.5"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "gen": "graphql-codegen --config codegen.yml",
+    "gen-watch": "graphql-codegen -w --config codegen.yml",
+    "lint": "prettier -w src"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "1.19.2",
+    "@graphql-codegen/fragment-matcher": "2.0.0",
+    "@graphql-codegen/introspection": "1.18.0",
+    "@graphql-codegen/typescript": "1.17.11",
+    "@graphql-codegen/typescript-document-nodes": "1.17.8",
+    "@graphql-codegen/typescript-graphql-files-modules": "1.18.0",
+    "@graphql-codegen/typescript-operations": "1.17.10",
+    "@graphql-codegen/typescript-react-apollo": "2.1.1",
+    "prettier": "2.2.0"
+  }
+}

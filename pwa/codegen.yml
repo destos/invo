@@ -1,0 +1,39 @@
+overwrite: true
+schema: "http://localhost:8000/graphql"
+# schema: ""../invo/apps/**/*.graphql"
+documents:
+  # - ./src/fragments/*.{ts,tsx,js}
+  - ./src/queries/*.{ts,tsx,js}
+generates:
+  src/generated/apollo-helpers.ts:
+    plugins:
+      - typescript-apollo-client-helpers
+  src/client/types.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      # - typescript-graphql-files-modules
+    config:
+      avoidOptionals: true
+      # flattenGeneratedTypes: true
+      # addOperationExport: true
+      # exportFragmentSpreadSubTypes: true
+  # src/generated/apollo.ts:
+  #     - typescript
+  #     - typescript-operations
+  #     - typescript-react-apollo
+  #     # - typescript-document-nodes
+  src/generated/possibleTypes.json:
+    plugins:
+      - fragment-matcher
+    config:
+      apolloClientVersion: 3
+  src/generated/graphql.schema.json:
+    plugins:
+      - introspection
+    # config:
+    #   minify: true
+
+  src/generated/jsonSchema.json:
+    plugins:
+      - codegen_plugins/jsonSchema.js

@@ -1,0 +1,48 @@
+enum SituationState {
+    "Just started and not interacted with"
+    START
+    "User is selecting entities"
+    SELECTING
+    "User decided to add new items?"
+    ADDING
+    "User decided to place items in a space"
+    PLACING
+    "User added more inventory"
+    INCREMENT
+    "User consumed some inventory"
+    CONSUMING
+}
+
+enum SituationExit {
+    OPEN
+    ABANDONED
+    COMPLETED
+}
+
+type Situation implements Node & TimeStamped {
+    id: ID!
+    created: DateTime!
+    modified: DateTime!
+    user: User!
+    spaces: [SpaceTypes!]!
+    items: [ItemTypes!]!
+    state: SituationState!
+    exitCondition: SituationExit!
+}
+
+extend type Query {
+    activeSituation: Situation
+    # TODO: other methods of selecting historical situations
+}
+
+type SituationPayload {
+    success: Boolean!
+    object: Situation!
+    entities: [Protocol]!
+}
+
+extend type Mutation {
+    selectEntities(irns: [IRN!]!): SituationPayload!
+    unselectEntities(irns: [IRN!]!): SituationPayload!
+    abandonSituation: Situation
+}

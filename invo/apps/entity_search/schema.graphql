@@ -1,0 +1,15 @@
+# Entity search
+type SearchResult {
+  score: Float!
+  irn: IRN!
+  # TODO: indexed value display type? maybe a json field?
+  object: Protocol!
+}
+
+input SearchInput {
+  text: String
+}
+
+extend type Query {
+  entitySearch(search: SearchInput!): [SearchResult!]!
+}
