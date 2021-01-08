@@ -13,6 +13,7 @@ services:
       - key: DATABASE_URL
         value: "${db.DATABASE_URL}"
         scope: RUN_TIME
+        type: SECRET
       - key: DJANGO_ALLOWED_HOSTS
         value: "${APP_DOMAIN},*.${APP_DOMAIN}"
         scope: RUN_TIME
@@ -34,6 +35,7 @@ jobs:
       - key: DATABASE_URL
         value: "${db.DATABASE_URL}"
         scope: RUN_TIME
+        type: SECRET
 static_sites:
   - name: invo-frontend
     source_dir: pwa

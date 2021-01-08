@@ -16,7 +16,7 @@ django-safedelete = "^0.5.6"
 psycopg2-binary = "^2.8.6"
 pyhumps = "^1.6.1"
 python = "^3.9"
-ariadne-extended = {path = "../python/ariadne-extended"}
+ariadne-extended = {url = "https://github.com/patriotresearch/ariadne-extended/archive/docs.tar.gz"}
 django-filter = "^2.4.0"
 django-waffle = "^2.0.0"
 dateutils = "^0.6.11"
