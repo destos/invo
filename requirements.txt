@@ -1,4 +1,4 @@
-ariadne-extended @ https://github.com/patriotresearch/ariadne-extended/archive/docs.tar.gz ; python_version >= "3.7" and python_version < "4.0"
+ariadne-extended @ https://github.com/patriotresearch/ariadne-extended/archive/docs.tar.gz ; python_version >= "3.7" and python_version < "4.0" --hash=sha256:4a3b8773389b454332c7b507c8d12fe2d2b3dd85fccb93f8652102d196b9f156
 ariadne==0.12.0; python_version >= "3.7" and python_version < "4.0" \
     --hash=sha256:e88b574d13c155f934d5e57431e5f9ab3a266a7064a6e397e7c662241276e2e3 \
     --hash=sha256:00a21584eb5ca8751380f9870d560db0a486ff69747884674caaee811a2ae64b
@@ -54,7 +54,7 @@ django-haystack==3.0 \
 django-js-asset==1.2.2; python_version >= "3.5" \
     --hash=sha256:c163ae80d2e0b22d8fb598047cd0dcef31f81830e127cfecae278ad574167260 \
     --hash=sha256:8ec12017f26eec524cab436c64ae73033368a372970af4cf42d9354fcb166bdd
-django-measurement @ git+https://github.com/coddingtonbear/django-measurement.git@v4
+django-measurement @ https://github.com/coddingtonbear/django-measurement/archive/v4.tar.gz  --hash=sha256:e26e7157ad69570160f9fa7ef200eadc33e5ca551049f685981b1d3f53fc4ca9
 django-model-utils==4.1.1 \
     --hash=sha256:eb5dd05ef7d7ce6bc79cae54ea7c4a221f6f81e2aad7722933aee66489e7264b \
     --hash=sha256:ef7c440024e797796a3811432abdd2be8b5225ae64ef346f8bfc6de7d8e5d73c
