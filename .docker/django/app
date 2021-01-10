@@ -1,0 +1,150 @@
+FROM python:3.9-slim-buster as python-base
+
+ENV \
+  # python
+  PYTHONFAULTHANDLER=1 \
+  PYTHONHASHSEED=random \
+  PYTHONUNBUFFERED=1 \
+  PYTHONDONTWRITEBYTECODE=1
+
+
+
+# builder-base is used to build dependencies
+FROM python-base as builder-base
+
+ENV \
+  # pip
+  PIP_NO_CACHE_DIR=off \
+  PIP_DISABLE_PIP_VERSION_CHECK=on \
+  PIP_DEFAULT_TIMEOUT=100 \
+  # poetry:
+  POETRY_VERSION=1.1.4 \
+  POETRY_NO_INTERACTION=1 \
+  POETRY_VIRTUALENVS_CREATE=false \
+  POETRY_CACHE_DIR='/var/cache/pypoetry' \
+  # paths:
+  POETRY_HOME="/opt/poetry" \
+  PYSETUP_PATH="/opt/pysetup" \
+  VENV_PATH="/opt/pysetup/.venv"
+
+
+ENV PATH="$POETRY_HOME/bin:$VENV_PATH/bin:$PATH"
+
+RUN apt-get update \
+    && apt-get install --no-install-recommends -y \
+        curl \
+        git \
+        build-essential
+
+# TODO: postgresql in production/test bases? or here?
+
+# Install poetry - respects $POETRY_VERSION & $POETRY_HOME
+RUN curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | python
+
+# We copy our Python requirements here to cache them
+# and install only runtime deps using poetry
+WORKDIR $PYSETUP_PATH
+COPY ./poetry.lock ./pyproject.toml ./
+RUN poetry install --no-dev  # respects
+
+
+
+# 'development' stage installs all dev deps and can be used to develop code.
+# For example using docker-compose to mount local volume under /app
+FROM python-base as development
+ENV DJANGO_CONFIGURATION=Local
+
+# Copying poetry and venv into image
+COPY --from=builder-base $POETRY_HOME $POETRY_HOME
+COPY --from=builder-base $PYSETUP_PATH $PYSETUP_PATH
+
+# Copying in our entrypoint
+COPY ./.docker/django/docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
+
+# venv already has runtime deps installed we get a quicker install
+WORKDIR $PYSETUP_PATH
+RUN poetry install
+
+WORKDIR /app
+COPY ./invo/ .
+
+EXPOSE 8000
+ENTRYPOINT /docker-entrypoint.sh $0 $@
+CMD ["daphne", "-b", "0.0.0.0", "-p", "8000", "invo.asgi:application"]
+
+
+
+# 'lint' stage runs black and isort
+# running in check mode means build will fail if any linting errors occur
+FROM development AS lint
+RUN black --config ./pyproject.toml --check invo/apps
+RUN isort --settings-path ./pyproject.toml --recursive --check-only
+CMD ["tail", "-f", "/dev/null"]
+
+
+
+# 'test' stage runs our unit tests with pytest and
+# coverage.  Build will fail if test coverage is under 95%
+FROM development AS test
+ENV DJANGO_CONFIGURATION=Test
+
+RUN coverage run --rcfile ./pyproject.toml -m pytest ./invo/apps
+RUN coverage report --fail-under 95
+
+
+
+# 'production' stage uses the clean 'python-base' stage and copyies
+# in only our runtime deps that were installed in the 'builder-base'
+FROM python-base as production
+ENV DJANGO_CONFIGURATION=Local
+
+COPY --from=builder-base $VENV_PATH $VENV_PATH
+# COPY ./.docker/gunicorn_conf.py /gunicorn_conf.py
+
+COPY ./.docker/django/docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
+
+WORKDIR /app
+COPY ./invo .
+
+ENTRYPOINT /docker-entrypoint.sh $0 $@
+CMD ["daphne", "-b", "0.0.0.0", "-p", "8000", "invo.asgi:application"]
+
+
+
+# RUN adduser --uid 1000 --gecos --quiet --disabled-password web
+
+# RUN mkdir -p /srv/app /var/www/media /var/www/static \
+#     && chown web.web /srv/app /var/www/media /var/www/static
+# WORKDIR /srv/app
+
+# ENV DJANGO_SETTINGS_MODULE=invo.config.prod \
+#     DEBUG=false
+
+# RUN apt-get update && apt-get -y install \
+#     python3-dev \
+#     # cleanup
+#     && rm -rf /var/lib/apt/lists/*
+
+# RUN pip install "poetry==$POETRY_VERSION"
+# RUN poetry config virtualenvs.create false
+# COPY --chown=web:web["pyproject.toml", "poetry.lock", "./invo/"]
+
+# ARG POETRY_ARGS="--no-dev --no-interaction --no-ansi"
+# RUN poetry install $POETRY_ARGS
+
+# COPY --chown=web:web. .
+
+# USER invo
+# RUN ./manage.py collectstatic
+
+# EXPOSE 8000/tcp
+
+# ENTRYPOINT ["docker-entrypoint.sh"]
+
+# # CMD ["python", "-Wd", "manage.py", "runserver", "--nostatic", "0.0.0.0:8000"]
+# CMD ["daphne", "-b", "0.0.0.0", "-p", "8001", "invo.asgi:application"]
+# # CMD ["/usr/local/bin/gunicorn", "invo.wsgi", "--bind", "0.0.0.0:5000", "--workers=2", "--chdir=/srv/app"]
+
+# # vim:set filetype=dockerfile:
