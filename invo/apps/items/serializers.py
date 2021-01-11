@@ -1,6 +1,7 @@
 from rest_framework import serializers
-from . import models
 from spaces.models import SpaceNode
+
+from . import models
 
 
 class ItemSerializer(serializers.ModelSerializer):

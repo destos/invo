@@ -1,7 +1,6 @@
 from django.test import TestCase
-from model_bakery import baker
-
 from items import models
+from model_bakery import baker
 from spaces.models import SpaceNode
 
 

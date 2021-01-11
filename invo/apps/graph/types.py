@@ -1,5 +1,6 @@
-from ariadne import MutationType, QueryType, ObjectType, ScalarType
-from .scalars import serialize_measure, parse_distance, parse_volume
+from ariadne import MutationType, ObjectType, QueryType, ScalarType
+
+from .scalars import parse_distance, parse_volume, serialize_measure
 
 query = QueryType()
 

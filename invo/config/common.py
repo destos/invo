@@ -11,12 +11,12 @@ https://docs.djangoproject.com/en/dev/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+import sys
 from os.path import join
 from pathlib import Path
-import sys
 
-from configurations import Configuration, values
 import dj_search_url
+from configurations import Configuration, values
 
 # Monkey patch to allow for proper haystack backend for elasticsearch 5 when selecting elasticsearch
 dj_search_url.SCHEMES[

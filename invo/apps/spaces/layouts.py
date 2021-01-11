@@ -1,7 +1,8 @@
-from numbers import Number
 from decimal import Decimal
-from measurement.measures import Distance, Volume
+from numbers import Number
 from typing import NamedTuple, Union
+
+from measurement.measures import Distance, Volume
 
 
 class Layout(NamedTuple):

@@ -1,10 +1,11 @@
+from decimal import Decimal as D
+
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django_extensions.db.models import TimeStampedModel
 from polymorphic.models import PolymorphicModel
-from safedelete.models import SafeDeleteModel, SOFT_DELETE_CASCADE
 from protocol.models import Protocol
-from decimal import Decimal as D
+from safedelete.models import SOFT_DELETE_CASCADE, SafeDeleteModel
 
 from .managers import ItemManager
 

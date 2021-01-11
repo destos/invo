@@ -28,8 +28,8 @@ from polymorphic_tree.models import PolymorphicMPTTModel, PolymorphicTreeForeign
 from protocol.models import Protocol
 from safedelete.models import SOFT_DELETE_CASCADE, SafeDeleteModel
 
-from .managers import SpaceNodeAllManager, SpaceNodeDeletedManager, SpaceNodeManager
 from .layouts import Layout
+from .managers import SpaceNodeAllManager, SpaceNodeDeletedManager, SpaceNodeManager
 
 
 def default_data(*args):

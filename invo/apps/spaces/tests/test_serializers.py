@@ -1,8 +1,8 @@
 import pytest
 from measurement.measures import Distance
 from model_bakery import baker
-from spaces.models import SpaceNode, GridSpaceNode
-from spaces.serializers import SpaceNodeSerializer, GridSpaceNodeSerializer
+from spaces.models import GridSpaceNode, SpaceNode
+from spaces.serializers import GridSpaceNodeSerializer, SpaceNodeSerializer
 
 
 @pytest.mark.django_db()

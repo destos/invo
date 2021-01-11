@@ -84,7 +84,7 @@ FROM development AS lint
 
 WORKDIR $SETUP_PATH
 RUN black --config ./pyproject.toml --check /app
-RUN isort --settings-path ./pyproject.toml --recursive --check-only /app
+RUN isort --settings-path ./pyproject.toml --check-only /app
 CMD ["tail", "-f", "/dev/null"]
 
 

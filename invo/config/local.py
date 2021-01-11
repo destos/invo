@@ -6,6 +6,7 @@ Local Configurations
 """
 
 from configurations import values
+
 from .common import Common
 
 

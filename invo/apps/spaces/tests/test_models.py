@@ -1,10 +1,8 @@
+import mock
 import pytest
 from django.test import TestCase
-from model_bakery import baker
-import mock
-
 from measurement.measures import Distance
-
+from model_bakery import baker
 from spaces import models
 
 

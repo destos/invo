@@ -1,11 +1,12 @@
 from django.contrib import admin
 from polymorphic.admin import (
-    PolymorphicParentModelAdmin,
     PolymorphicChildModelAdmin,
     PolymorphicChildModelFilter,
+    PolymorphicParentModelAdmin,
 )
-from . import models
 from safedelete.admin import SafeDeleteAdmin, highlight_deleted
+
+from . import models
 
 
 class ItemChildAdmin(PolymorphicChildModelAdmin):
