@@ -19,7 +19,13 @@ class SpaceNodeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.SpaceNode
-        fields = ("name", "parent", "layout", "dimensions", "grid_scale",)
+        fields = (
+            "name",
+            "parent",
+            "layout",
+            "dimensions",
+            "grid_scale",
+        )
         extra_kwargs = {"name": {"required": False}, "parent": {"required": False}}
 
     def validate_dimensions(self, value):

@@ -3,7 +3,6 @@
 Local Configurations
 - Runs in Debug mode
 - Uses console backend for emails
-- Use Django Debug Toolbar
 """
 
 from configurations import values
@@ -28,8 +27,6 @@ class Local(Common):
     # End mail settings
 
     CORS_ALLOWED_ORIGINS = [
-        "http://macie.fhome.lan",
-        "https://macie.fhome.lan",
         "http://localhost:8000",
         "http://localhost:3000",
         "http://127.0.0.1:8000",

@@ -42,4 +42,4 @@ def test_grid_serializer_success():
     assert ser.errors == dict()
     assert valid == True
     ser.save()
-    assert space.grid_size == [4,2]
+    assert space.grid_size == [4, 2]

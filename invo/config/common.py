@@ -46,7 +46,7 @@ class Common(Configuration):
     TEMPLATE_DEBUG = DEBUG
     # END DEBUG
 
-    ALLOWED_HOSTS = values.ListValue(['*'])
+    ALLOWED_HOSTS = values.ListValue(["*"])
 
     # APP CONFIGURATION
     DJANGO_APPS = (
@@ -263,7 +263,7 @@ class Common(Configuration):
     def post_setup(cls):
         cls.DATABASES["default"]["ATOMIC_REQUESTS"] = True
 
-    #CORS
+    # CORS
     CORS_ORIGIN_WHITELIST = values.ListValue([])
     CORS_ALLOWED_ORIGIN_REGEXES = values.ListValue([])
     CORS_ORIGIN_ALLOWS_ALL = values.BooleanValue(False)
