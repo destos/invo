@@ -49,5 +49,6 @@ jobs:
       - name: Test with pytest
         env:
           DATABASE_URL: postgres://127.0.0.1:5432/invo
+          DJANGO_SECRET_KEY: testing_is_hard
           DJANGO_CONFIGURATION: Test
         run: poetry run pytest ./invo/ -n 2
