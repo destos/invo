@@ -39,7 +39,7 @@ static_sites:
     catchall_document: index.html
     github:
       branch: do
-      deploy_on_push: true
+      deploy_on_push: false
       repo: destos/invo
     envs:
       - key: REACT_APP_DOMAIN

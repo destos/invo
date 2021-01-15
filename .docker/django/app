@@ -90,6 +90,7 @@ ARG SETUP_PATH
 WORKDIR $SETUP_PATH
 RUN poetry run black --config ./pyproject.toml --check /app
 RUN poetry run isort --settings-path ./pyproject.toml --check-only /app
+# RUN poetry run ./manage.py check --deploy --fail-level ERROR
 CMD ["tail", "-f", "/dev/null"]
 
 
