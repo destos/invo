@@ -64,3 +64,14 @@ Start elasticsearch
 ```bash
 docker run -d --name elasticsearch --net bridge -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" elasticsearch:5.6.16
 ```
+
+To org
+doctl apps create --spec .do/app.yaml
+doctl apps update 8ebdb3cf-70d8-4151-86a0-864257659b54 --spec .do/app.yaml
+
+poetry export -f requirements.txt -o requirements.txt
+
+docker build --rm --tag invo-test --file .docker/django/app . --target test
+docker build --rm --tag invo-prod --file .docker/django/app . --target production
+
+poetry run isort invo/apps ./manage.py

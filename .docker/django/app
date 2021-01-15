@@ -1,5 +1,9 @@
 # application code is stored in /app
 # TODO: describe build steps
+ARG POETRY_HOME="/opt/poetry/"
+ARG SETUP_PATH="/opt/setup/"
+ARG VENV_PATH="${SETUP_PATH}.venv/"
+
 FROM python:3.9-slim-buster as python-base
 
 ENV \
@@ -12,6 +16,9 @@ ENV \
 # builder-base is used to build dependencies
 FROM python-base as builder-base
 
+ARG POETRY_HOME
+ARG SETUP_PATH
+ARG VENV_PATH
 ENV \
  # pip
   PIP_NO_CACHE_DIR=off \
@@ -20,15 +27,12 @@ ENV \
   # poetry:
   POETRY_VERSION=1.1.4 \
   POETRY_NO_INTERACTION=1 \
-  POETRY_VIRTUALENVS_CREATE=false \
-  POETRY_CACHE_DIR='/var/cache/pypoetry' \
-  # paths:
-  POETRY_HOME="/opt/poetry" \
-  SETUP_PATH="/opt/setup" \
-  VENV_PATH="${SETUP_PATH}}/.venv" \
-  # root of app changes to app path, so settings module changes
-  DJANGO_SETTINGS_MODULE="config"
+  POETRY_VIRTUALENVS_CREATE=true \
+  POETRY_VIRTUALENVS_IN_PROJECT=true \
+  POETRY_CACHE_DIR="/var/cache/pypoetry" \
+  POETRY_HOME=${POETRY_HOME}
 
+# TODO: have poetry actually use the setup path virtual env
 ENV PATH="$POETRY_HOME/bin:$VENV_PATH/bin:$PATH"
 
 RUN apt-get update \
@@ -39,8 +43,6 @@ RUN apt-get update \
     # Cleaning cache:
     && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
     && apt-get clean -y && rm -rf /var/lib/apt/lists/*
-
-# TODO: postgresql in production/test bases? or here?
 
 # Install poetry - respects $POETRY_VERSION & $POETRY_HOME
 RUN curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py | python
@@ -54,6 +56,8 @@ RUN poetry install --no-dev
 # 'development' stage installs all dev deps and can be used to develop code.
 # For example using docker-compose to mount local volume under /app
 FROM builder-base as development
+ARG SETUP_PATH
+ARG POETRY_HOME
 
 ENV DJANGO_CONFIGURATION=Local
 
@@ -61,17 +65,17 @@ ENV DJANGO_CONFIGURATION=Local
 COPY --from=builder-base $POETRY_HOME $POETRY_HOME
 COPY --from=builder-base $SETUP_PATH $SETUP_PATH
 
-# Copying in our entrypoint
-COPY ./.docker/django/docker-entrypoint.sh /docker-entrypoint.sh
-RUN chmod +x /docker-entrypoint.sh
-
 # venv already has runtime deps installed we get a quicker install
 WORKDIR $SETUP_PATH
 RUN poetry install
 
 WORKDIR /app
-COPY ./invo/ .
+COPY ./invo/ ./invo
 COPY ./manage.py manage.py
+
+# Copying in our entrypoint
+COPY ./.docker/django/docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
 
 EXPOSE 8000
 ENTRYPOINT /docker-entrypoint.sh $0 $@
@@ -81,74 +85,48 @@ CMD ["daphne", "-b", "0.0.0.0", "-p", "8000", "asgi:application"]
 # 'lint' stage runs black and isort
 # running in check mode means build will fail if any linting errors occur
 FROM development AS lint
+ARG SETUP_PATH
 
 WORKDIR $SETUP_PATH
-RUN black --config ./pyproject.toml --check /app
-RUN isort --settings-path ./pyproject.toml --check-only /app
+RUN poetry run black --config ./pyproject.toml --check /app
+RUN poetry run isort --settings-path ./pyproject.toml --check-only /app
 CMD ["tail", "-f", "/dev/null"]
 
 
 # 'test' stage runs our unit tests with pytest and
 # coverage.  Build will fail if test coverage is under 95%
-FROM development AS test
-ENV DJANGO_CONFIGURATION=Test
 
-WORKDIR $SETUP_PATH
-# TODO: may be able to use pytest-cov directly?
-RUN coverage run --rcfile ./pyproject.toml -m pytest /app
-RUN coverage report --fail-under 95
+# FROM development AS test
+# ARG SETUP_PATH
+# ENV DJANGO_CONFIGURATION="Test"
+# ENV DJANGO_SECRET_KEY="<super secret>"
+
+# WORKDIR $SETUP_PATH
+# # TODO: may be able to use pytest-cov directly?
+# RUN coverage run --rcfile ./pyproject.toml -m pytest /app
+# RUN coverage report --fail-under 95
 
 
 # 'production' stage uses the clean 'python-base' stage and copyies
 # in only our runtime deps that were installed in the 'builder-base'
 FROM python-base as production
-ENV DJANGO_CONFIGURATION=Local
+
+ARG VENV_PATH
+ENV DJANGO_CONFIGURATION="Prod"
+ENV DJANGO_SECRET_KEY="<super secret>"
 
 COPY --from=builder-base $VENV_PATH $VENV_PATH
-# COPY ./.docker/gunicorn_conf.py /gunicorn_conf.py
+
+WORKDIR /app
+COPY ./invo ./invo
+COPY ./manage.py manage.py
 
 COPY ./.docker/django/docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
 
-COPY ./invo /app
-WORKDIR /app
+RUN python -m venv $VENV_PATH
+ENV PATH="${VENV_PATH}bin:$PATH"
+RUN echo $PATH
 
 ENTRYPOINT /docker-entrypoint.sh $0 $@
-CMD ["daphne", "-b", "0.0.0.0", "-p", "8000", "asgi:application"]
-
-
-# RUN adduser --uid 1000 --gecos --quiet --disabled-password web
-
-# RUN mkdir -p /srv/app /var/www/media /var/www/static \
-#     && chown web.web /srv/app /var/www/media /var/www/static
-# WORKDIR /srv/app
-
-# ENV DJANGO_SETTINGS_MODULE=invo.config.prod \
-#     DEBUG=false
-
-# RUN apt-get update && apt-get -y install \
-#     python3-dev \
-#     # cleanup
-#     && rm -rf /var/lib/apt/lists/*
-
-# RUN pip install "poetry==$POETRY_VERSION"
-# RUN poetry config virtualenvs.create false
-# COPY --chown=web:web["pyproject.toml", "poetry.lock", "./invo/"]
-
-# ARG POETRY_ARGS="--no-dev --no-interaction --no-ansi"
-# RUN poetry install $POETRY_ARGS
-
-# COPY --chown=web:web. .
-
-# USER invo
-# RUN ./manage.py collectstatic
-
-# EXPOSE 8000/tcp
-
-# ENTRYPOINT ["docker-entrypoint.sh"]
-
-# # CMD ["python", "-Wd", "manage.py", "runserver", "--nostatic", "0.0.0.0:8000"]
-# CMD ["daphne", "-b", "0.0.0.0", "-p", "8001", "invo.asgi:application"]
-# # CMD ["/usr/local/bin/gunicorn", "invo.wsgi", "--bind", "0.0.0.0:5000", "--workers=2", "--chdir=/srv/app"]
-
-# # vim:set filetype=dockerfile:
+CMD ["daphne", "-b", "0.0.0.0", "-p", "8000", "invo.asgi:application"]

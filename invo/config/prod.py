@@ -17,3 +17,6 @@ class Prod(Common):
     TEMPLATE_DEBUG = DEBUG
     # END DEBUG
 
+    CORS_ALLOW_CREDENTIALS = True
+
+    INVO_APP_IRN_NAMESPACE = values.Value("prod")

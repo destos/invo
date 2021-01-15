@@ -277,7 +277,8 @@ class Common(Configuration):
     HAYSTACK_CONNECTIONS = values.SearchURLValue("elasticsearch://127.0.0.1:9200/invo")
     HAYSTACK_FUZZY_MIN_SIM = 0.2
     HAYSTACK_FUZZY_MAX_EXPANSIONS = 50
-    HAYSTACK_SIGNAL_PROCESSOR = "haystack.signals.RealtimeSignalProcessor"
+    # HAYSTACK_SIGNAL_PROCESSOR = "haystack.signals.RealtimeSignalProcessor"
+    HAYSTACK_SIGNAL_PROCESSOR = "haystack.signals.BaseSignalProcessor"
 
     # INVO APP SETTINGS
 
