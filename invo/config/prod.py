@@ -23,4 +23,3 @@ class Prod(Common):
 
     USE_X_FORWARDED_HOST = True
     FORCE_SCRIPT_NAME = "/api"
-
