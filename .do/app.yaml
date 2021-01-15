@@ -12,16 +12,11 @@ services:
         value: "${db.DATABASE_URL}"
         scope: RUN_TIME
         type: SECRET
-      - key: SEARCH_URL
-        value: "${es.}"
       - key: DJANGO_ALLOWED_HOSTS
         value: "${APP_DOMAIN},*.${APP_DOMAIN}"
         scope: RUN_TIME
-      -
-    # routes:
-    #   - path: /api
-  # - name: es
-  #   image: elasticsearch:5.6.16
+    routes:
+      - path: /api
 jobs:
   - name: migrate
     kind: PRE_DEPLOY
@@ -31,9 +26,6 @@ jobs:
       tag: latest
     run_command: ./manage.py migrate
     envs:
-      # - key: DISABLE_COLLECTSTATIC
-      #   value: "1"
-      #   scope: BUILD_TIME
       - key: DATABASE_URL
         value: "${db.DATABASE_URL}"
         scope: RUN_TIME

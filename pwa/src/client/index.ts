@@ -15,7 +15,7 @@ import { possibleTypes } from "../generated/possibleTypes.json"
 // )
 
 const httpLink = createHttpLink({
-  uri: `https://${process.env.REACT_APP_DOMAIN}/graphql`,
+  uri: `https://${process.env.REACT_APP_DOMAIN}/api`,
   // credentials: 'same-origin'
   credentials: "include"
 })

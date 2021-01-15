@@ -20,3 +20,7 @@ class Prod(Common):
     CORS_ALLOW_CREDENTIALS = True
 
     INVO_APP_IRN_NAMESPACE = values.Value("prod")
+
+    USE_X_FORWARDED_HOST = True
+    FORCE_SCRIPT_NAME = "/api"
+
