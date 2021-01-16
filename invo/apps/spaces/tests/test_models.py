@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 import mock
 import pytest
 from django.test import TestCase
@@ -99,7 +101,7 @@ class TestSpaceNode(TestCase):
         self.space.size = [Distance("1 m"), Distance("80 cm"), Distance("20 cm")]
         self.space.grid_scale = Distance("1 cm")
         config = self.space.grid_config
-        assert config == dict(cols=100)
+        assert config == dict(cols=100, row_basis=Decimal("0.80"))
 
     def test_space_scale_change_adjusts_children_layout(self):
         # meter by meter front area, layout grid is half a meter
