@@ -1,0 +1,69 @@
+version: '3.1'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: .docker/django/app
+    links:
+      - db
+      - redis
+      - es
+    command: ./manage.py runserver 0.0.0.0:8000
+    env_file: .env
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@invo-db/invo
+    networks:
+      - invo
+    ports:
+      - 8000:8000
+  db:
+    restart: always
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: invo
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - db-volume:/var/lib/postgresql/data
+    env_file: .env
+    # ports:
+    networks:
+      invo:
+        aliases:
+          - invo-db
+  redis:
+    image: redis:latest
+    networks:
+      - invo
+  es:
+    image: elasticsearch:5.6.16
+    container_name: es
+    # environment:
+      # - node.name=es01
+      # - cluster.name=es-docker-cluster
+      # - discovery.seed_hosts=es02,es03
+      # - cluster.initial_master_nodes=es01,es02,es03
+      # - bootstrap.memory_lock=true
+      # - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - es-volume:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    networks:
+      - invo
+
+volumes:
+  db-volume:
+    name: invo_db-volume
+  es-volume:
+    name: invo_es-volume
+
+networks:
+  invo:
+    name: invo-net
+    driver: bridge
