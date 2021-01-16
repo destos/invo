@@ -1,9 +1,7 @@
 from ariadne import InterfaceType, ScalarType
 from ariadne_extended.cursor_pagination.types import resolve_node_type
 
-
 from .models import IRN
-
 
 irn_scalar = ScalarType("IRN")
 protocol_interface = InterfaceType("Protocol")

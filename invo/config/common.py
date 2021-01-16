@@ -11,13 +11,14 @@ https://docs.djangoproject.com/en/dev/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+import sys
 from os.path import join
 from pathlib import Path
-import sys
 
-from configurations import Configuration, values
 import dj_search_url
+from configurations import Configuration, values
 
+# Monkey patch to allow for proper haystack backend for elasticsearch 5 when selecting elasticsearch
 dj_search_url.SCHEMES[
     "elasticsearch"
 ] = "haystack.backends.elasticsearch5_backend.Elasticsearch5SearchEngine"
@@ -44,6 +45,8 @@ class Common(Configuration):
     # See: https://docs.djangoproject.com/en/dev/ref/settings/#template-debug
     TEMPLATE_DEBUG = DEBUG
     # END DEBUG
+
+    ALLOWED_HOSTS = values.ListValue(["*"])
 
     # APP CONFIGURATION
     DJANGO_APPS = (
@@ -260,6 +263,12 @@ class Common(Configuration):
     def post_setup(cls):
         cls.DATABASES["default"]["ATOMIC_REQUESTS"] = True
 
+    # CORS
+    CORS_ORIGIN_WHITELIST = values.ListValue([])
+    CORS_ALLOWED_ORIGIN_REGEXES = values.ListValue([])
+    CORS_ORIGIN_ALLOWS_ALL = values.BooleanValue(False)
+    CORS_ALLOW_CREDENTIALS = values.BooleanValue(True)
+
     # Waffle app
     WAFFLE_FLAG_DEFAULT = values.BooleanValue(False)
     WAFFLE_SWITCH_DEFAULT = values.BooleanValue(False)
@@ -268,7 +277,8 @@ class Common(Configuration):
     HAYSTACK_CONNECTIONS = values.SearchURLValue("elasticsearch://127.0.0.1:9200/invo")
     HAYSTACK_FUZZY_MIN_SIM = 0.2
     HAYSTACK_FUZZY_MAX_EXPANSIONS = 50
-    HAYSTACK_SIGNAL_PROCESSOR = "haystack.signals.RealtimeSignalProcessor"
+    # HAYSTACK_SIGNAL_PROCESSOR = "haystack.signals.RealtimeSignalProcessor"
+    HAYSTACK_SIGNAL_PROCESSOR = "haystack.signals.BaseSignalProcessor"
 
     # INVO APP SETTINGS
 

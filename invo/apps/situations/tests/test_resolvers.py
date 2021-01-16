@@ -1,14 +1,13 @@
-from unittest.mock import Mock, patch
 import json
+from unittest.mock import Mock, patch
 
 import pytest
-from glom import glom
-from django.test import TestCase
-from django.conf import settings
 from ariadne import graphql_sync
-from model_bakery import baker
-
+from django.conf import settings
+from django.test import TestCase
+from glom import glom
 from graph.schema import schema
+from model_bakery import baker
 
 active_query = """
     query {

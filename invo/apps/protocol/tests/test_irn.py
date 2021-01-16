@@ -1,8 +1,7 @@
 import pytest
-from model_bakery import baker
-
-from protocol.models import IRN
 from items.models import Item
+from model_bakery import baker
+from protocol.models import IRN
 
 
 def test_irn_class():

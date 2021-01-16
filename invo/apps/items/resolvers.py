@@ -1,9 +1,8 @@
-from ariadne_extended.resolvers import ModelResolver
 from ariadne_extended.cursor_pagination import RelayModelMixin
-from . import models
-from . import serializers
+from ariadne_extended.resolvers import ModelResolver
+from graph.types import mutation, query
 
-from graph.types import query, mutation
+from . import models, serializers
 from .types import item_interface
 
 

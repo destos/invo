@@ -1,6 +1,6 @@
 from ariadne_extended.resolvers import ListModelMixin, ModelResolver
 from django.contrib.auth.models import AnonymousUser
-from graph.types import query, mutation
+from graph.types import mutation, query
 
 from .models import Situation
 from .types import situation

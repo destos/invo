@@ -1,4 +1,5 @@
 from safedelete.managers import SafeDeleteManager
+
 from .querysets import SituationQuerySet
 
 

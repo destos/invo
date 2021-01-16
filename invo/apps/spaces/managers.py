@@ -1,7 +1,7 @@
 from polymorphic_tree.managers import PolymorphicMPTTModelManager, PolymorphicMPTTQuerySet
-from safedelete.managers import SafeDeleteManager, SafeDeleteAllManager, SafeDeleteDeletedManager
-from safedelete.queryset import SafeDeleteQueryset
 from safedelete.config import DELETED_VISIBLE_BY_PK
+from safedelete.managers import SafeDeleteAllManager, SafeDeleteDeletedManager, SafeDeleteManager
+from safedelete.queryset import SafeDeleteQueryset
 
 
 class SpaceNodeQuerySet(PolymorphicMPTTQuerySet, SafeDeleteQueryset):

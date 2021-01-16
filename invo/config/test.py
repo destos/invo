@@ -1,5 +1,6 @@
-from .common import Common
 from configurations import values
+
+from .common import Common
 
 
 class Test(Common):

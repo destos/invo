@@ -1,6 +1,6 @@
 from ariadne_extended.resolvers.model import ModelResolver
 
-from .types import query, user, group, permission
+from .types import group, permission, query, user
 
 
 class CurrentUserResolver(ModelResolver):

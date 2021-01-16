@@ -1,4 +1,4 @@
-from ariadne import EnumType, ObjectType, UnionType, InterfaceType
+from ariadne import EnumType, InterfaceType, ObjectType, UnionType
 from ariadne_extended.cursor_pagination.types import resolve_node_type
 
 space_node = ObjectType("SpaceNode")
