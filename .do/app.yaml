@@ -12,6 +12,9 @@ services:
         value: "${db.DATABASE_URL}"
         scope: RUN_TIME
         type: SECRET
+      - key: DJANGO_SECRET_KEY
+        scope: RUN_TIME
+        type: SECRET
       - key: DJANGO_ALLOWED_HOSTS
         value: "${APP_DOMAIN},*.${APP_DOMAIN}"
         scope: RUN_TIME
@@ -38,10 +41,12 @@ static_sites:
     index_document: index.html
     catchall_document: index.html
     github:
-      branch: do
+      branch: staging
       deploy_on_push: false
       repo: destos/invo
     envs:
+      - key: REACT_APP_API_GATEWAY
+        value: "https://${APP_DOMAIN}/api/"
       - key: REACT_APP_DOMAIN
         value: "${APP_DOMAIN}"
         scope: BUILD_TIME

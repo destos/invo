@@ -15,7 +15,8 @@ import { possibleTypes } from "../generated/possibleTypes.json"
 // )
 
 const httpLink = createHttpLink({
-  uri: `https://${process.env.REACT_APP_DOMAIN}/api`,
+  // TODO: full url from env
+  uri: process.env.REACT_APP_API_GATEWAY,
   // credentials: 'same-origin'
   credentials: "include"
 })
