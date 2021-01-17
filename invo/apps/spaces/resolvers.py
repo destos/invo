@@ -12,7 +12,7 @@ class SpaceNodeResolver(ListModelMixin, ModelResolver):
     model = SpaceNode
     filterset_class = SpaceNodeFilter
     serializer_class = SpaceNodeSerializer
-    queryset = SpaceNode.objects.all()
+    queryset = SpaceNode.current_site_objects.all()
 
     def update_layout(self, info, layout=None, **kwargs):
         space = self.get_object()
@@ -24,7 +24,7 @@ class SpaceNodeResolver(ListModelMixin, ModelResolver):
 class GridSpaceNodeResolver(SpaceNodeResolver):
     model = GridSpaceNode
     serializer_class = GridSpaceNodeSerializer
-    queryset = GridSpaceNode.objects.all()
+    queryset = GridSpaceNode.current_site_objects.all()
 
 
 grid_space_node.set_field("gridSize", lambda g, i: dict(cols=g.grid_size[0], rows=g.grid_size[1]))

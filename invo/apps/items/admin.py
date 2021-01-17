@@ -19,6 +19,7 @@ class ItemChildAdmin(PolymorphicChildModelAdmin):
         "data",
         "space",
     )
+    base_raw_id_fields = ("sites",)
 
 
 @admin.register(models.Item)
@@ -46,15 +47,18 @@ class ConsumableAdmin(SafeDeleteAdmin, ItemChildAdmin):
         "warning",
         "irn",
     ) + SafeDeleteAdmin.list_display
+    raw_id_fields = ("sites",)
 
 
 @admin.register(models.TrackedConsumable)
 class TrackedConsumableAdmin(ConsumableAdmin):
     base_model = models.TrackedConsumable
     show_in_index = True
+    raw_id_fields = ("sites",)
 
 
 @admin.register(models.Tool)
 class ToolAdmin(ItemChildAdmin):
     base_model = models.Tool
     show_in_index = True
+    raw_id_fields = ("sites",)

@@ -8,7 +8,7 @@ from .types import item_interface
 
 class ItemResolver(RelayModelMixin, ModelResolver):
     model = models.Item
-    queryset = models.Item.objects.all()
+    queryset = models.Item.current_site_objects.all()
 
     type_serializers = {
         models.Item: serializers.ItemSerializer,

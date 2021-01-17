@@ -3,14 +3,15 @@ from decimal import Decimal as D
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django_extensions.db.models import TimeStampedModel
+from owners.models import SharedSite
 from polymorphic.models import PolymorphicModel
 from protocol.models import Protocol
 from safedelete.models import SOFT_DELETE_CASCADE, SafeDeleteModel
 
-from .managers import ItemManager
+from .managers import CurrentSiteItemManager, ItemManager
 
 
-class Item(Protocol, TimeStampedModel, PolymorphicModel, SafeDeleteModel):
+class Item(SharedSite, Protocol, TimeStampedModel, PolymorphicModel, SafeDeleteModel):
     """Base item that can be stored in different spaces"""
 
     _safedelete_policy = SOFT_DELETE_CASCADE
@@ -32,6 +33,7 @@ class Item(Protocol, TimeStampedModel, PolymorphicModel, SafeDeleteModel):
         return self.name
 
     objects = ItemManager()
+    current_site_objects = CurrentSiteItemManager()
 
 
 class Consumable(Item):

@@ -24,12 +24,18 @@ from measurement.measures import Distance, Volume
 from model_utils import FieldTracker
 from mptt.fields import TreeForeignKey
 from mptt.models import MPTTModel
+from owners.models import SingularSite
 from polymorphic_tree.models import PolymorphicMPTTModel, PolymorphicTreeForeignKey
 from protocol.models import Protocol
 from safedelete.models import SOFT_DELETE_CASCADE, SafeDeleteModel
 
 from .layouts import Layout
-from .managers import SpaceNodeAllManager, SpaceNodeDeletedManager, SpaceNodeManager
+from .managers import (
+    CurrentSiteSpaceNodeManager,
+    SpaceNodeAllManager,
+    SpaceNodeDeletedManager,
+    SpaceNodeManager,
+)
 
 
 def default_data(*args):
@@ -59,7 +65,7 @@ class Dimensions(NamedTuple):
     z: Distance
 
 
-class SpaceNode(Protocol, TimeStampedModel, PolymorphicMPTTModel, SafeDeleteModel):
+class SpaceNode(SingularSite, Protocol, TimeStampedModel, PolymorphicMPTTModel, SafeDeleteModel):
     """
     A space that items can be organized under.
 
@@ -115,6 +121,8 @@ class SpaceNode(Protocol, TimeStampedModel, PolymorphicMPTTModel, SafeDeleteMode
     objects = SpaceNodeManager()
     objects_all = SpaceNodeAllManager()
     objects_deleted = SpaceNodeDeletedManager()
+    # Current site objects are only non-deleted spaces
+    current_site_objects = CurrentSiteSpaceNodeManager()
 
     def update_data(self, **data):
         """Update that data yo, and do it nicely, doesn't handle removing data easily"""

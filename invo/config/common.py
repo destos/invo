@@ -58,6 +58,7 @@ class Common(Configuration):
         "django.contrib.sessions",
         "django.contrib.messages",
         "django.contrib.staticfiles",
+        "django.contrib.sites",
     )
 
     THIRD_PARTY_APPS = (
@@ -75,6 +76,8 @@ class Common(Configuration):
     )
 
     LOCAL_APPS = (
+        "accounts",
+        "owners",
         "situations",
         "protocol",
         "graph",
@@ -97,6 +100,7 @@ class Common(Configuration):
         "django.contrib.auth.middleware.AuthenticationMiddleware",
         "django.contrib.messages.middleware.MessageMiddleware",
         "django.middleware.clickjacking.XFrameOptionsMiddleware",
+        "django.contrib.sites.middleware.CurrentSiteMiddleware",
     )
     # END MIDDLEWARE CONFIGURATION
 
@@ -126,6 +130,10 @@ class Common(Configuration):
     # END CACHING
 
     # GENERAL CONFIGURATION
+
+    # Use custom auth model
+    AUTH_USER_MODEL = "accounts.User"
+
     # See: https://docs.djangoproject.com/en/dev/ref/settings/#time-zone
     TIME_ZONE = "America/Chicago"
 

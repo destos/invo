@@ -1,3 +1,4 @@
+from django.contrib.sites.managers import CurrentSiteManager
 from polymorphic_tree.managers import PolymorphicMPTTModelManager, PolymorphicMPTTQuerySet
 from safedelete.config import DELETED_VISIBLE_BY_PK
 from safedelete.managers import SafeDeleteAllManager, SafeDeleteDeletedManager, SafeDeleteManager
@@ -19,3 +20,7 @@ class SpaceNodeAllManager(PolymorphicMPTTModelManager, SafeDeleteAllManager):
 
 class SpaceNodeDeletedManager(PolymorphicMPTTModelManager, SafeDeleteDeletedManager):
     queryset_class = SpaceNodeQuerySet
+
+
+class CurrentSiteSpaceNodeManager(CurrentSiteManager, SpaceNodeManager):
+    pass
