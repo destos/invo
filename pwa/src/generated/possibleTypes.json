@@ -1,17 +1,5 @@
 {
   "possibleTypes": {
-    "Node": [
-      "User",
-      "Group",
-      "Permission",
-      "Situation",
-      "SpaceNode",
-      "GridSpaceNode",
-      "Item",
-      "Tool",
-      "Consumable",
-      "TrackedConsumable"
-    ],
     "WaffleItem": [
       "WaffleFlag",
       "WaffleSwitch",
@@ -21,6 +9,18 @@
       "WaffleFlag",
       "WaffleSwitch",
       "WaffleSample",
+      "Situation",
+      "SpaceNode",
+      "GridSpaceNode",
+      "Item",
+      "Tool",
+      "Consumable",
+      "TrackedConsumable"
+    ],
+    "Node": [
+      "User",
+      "Group",
+      "Permission",
       "Situation",
       "SpaceNode",
       "GridSpaceNode",

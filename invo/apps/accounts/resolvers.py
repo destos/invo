@@ -4,14 +4,16 @@ from graph.types import query
 from .types import group, permission, user
 
 
-class CurrentUserResolver(ModelResolver):
-    def retrieve(self, parent, **kwargs):
-        if self.info.context.user.id is None:
+class UserResolver(ModelResolver):
+
+    def current(self, parent, **kwargs):
+        # TODO: should this check that user belongs to current site? likely
+        if self.request.user.id is None:
             return None
-        return self.info.context.user
+        return self.request.user
 
 
-query.set_field("currentUser", CurrentUserResolver.as_resolver(method="retrieve"))
+query.set_field("currentUser", UserResolver.as_resolver(method="current"))
 
 
 @group.field("permissions")

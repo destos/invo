@@ -4,9 +4,10 @@ from graph.types import mutation, query
 
 from .models import Situation
 from .types import situation
+from owners.resolvers import OwnerResolverMixin
 
 
-class SituationResolver(ModelResolver):
+class SituationResolver(OwnerResolverMixin, ModelResolver):
     model = Situation
     queryset = Situation.objects.all()
 
@@ -23,10 +24,13 @@ class SituationResolver(ModelResolver):
         return situ
 
     def active(self, info, **kwargs):
-        return self.get_active()
+        active = self.get_active()
+        self.check_object_permissions(self.request, active)
+        return active
 
     def select_entities(self, into, irns=list(), **kwargs):
         active = self.get_active()
+        self.check_object_permissions(self.request, active)
         entities = []
         if active is not None:
             entities = [i.get_instance() for i in irns]
@@ -38,6 +42,7 @@ class SituationResolver(ModelResolver):
 
     def unselect_entities(self, into, irns=list(), **kwargs):
         active = self.get_active()
+        self.check_object_permissions(self.request, active)
         entities = []
         if active is not None:
             entities = [i.get_instance() for i in irns]

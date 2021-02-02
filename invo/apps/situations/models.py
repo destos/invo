@@ -5,14 +5,15 @@ from django.db import models
 from django_extensions.db.models import TimeStampedModel
 from django_fsm import FSMIntegerField, transition
 from items.models import Item
+from owners.models import SingularSite
 from polymorphic.contrib.guardian import get_polymorphic_base_content_type
 from safedelete.models import SOFT_DELETE, SOFT_DELETE_CASCADE, SafeDeleteModel
 from spaces.models import SpaceNode
 
-from .managers import SituationManager
+from .managers import SituationManager, CurrentSiteSituationManager
 
 
-class Situation(SafeDeleteModel, TimeStampedModel):
+class Situation(SingularSite, SafeDeleteModel, TimeStampedModel):
     """
     Situations are moments when a user is interacting with the app and we want a way to continue to flow
     """
@@ -64,6 +65,7 @@ class Situation(SafeDeleteModel, TimeStampedModel):
     exit_condition = FSMIntegerField(default=Exit.OPEN, choices=Exit.choices)
 
     objects = SituationManager()
+    current_site_objects = CurrentSiteSituationManager()
 
     class Meta(TimeStampedModel.Meta):
         ordering = ("created",)

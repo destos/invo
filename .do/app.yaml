@@ -18,6 +18,9 @@ services:
       - key: DJANGO_ALLOWED_HOSTS
         value: "${APP_DOMAIN},*.${APP_DOMAIN}"
         scope: RUN_TIME
+      - key: DJANGO_ROOT_DOMAIN
+        value: "${APP_DOMAIN}"
+        scope: RUN_TIME
     routes:
       - path: /api
 jobs:

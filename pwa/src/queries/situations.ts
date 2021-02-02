@@ -3,12 +3,6 @@ import fragments from "./fragments"
 
 export const SITU_QUERY = gql`
   query getActiveSituation {
-    currentUser {
-      id
-      username
-      firstName
-      lastName
-    }
     # TODO: Is a connection needed to invalidate cache when a new situation is active?
     activeSituation {
       ...SituationBit

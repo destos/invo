@@ -1,4 +1,5 @@
 // Show the top level spaces in your invo app
+// TODO: get rid of and merge with Space.tsx, use props to customize
 import { useMutation, useQuery } from "@apollo/client"
 import {
   Link,

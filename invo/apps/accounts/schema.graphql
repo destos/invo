@@ -15,10 +15,9 @@ type Permission implements Node {
 
 type User implements Node {
   id: ID!
-  username: String
+  email: String!
   firstName: String
   lastName: String
-  email: String!
   isStaff: Boolean!
   isActive: Boolean!
   groups: [Group]!

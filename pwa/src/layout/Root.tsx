@@ -1,15 +1,20 @@
-import { Container, CssBaseline, Theme } from "@material-ui/core"
 import {
-  createStyles
-} from "@material-ui/core/styles"
+  Container,
+  CssBaseline,
+  LinearProgress,
+  Theme
+} from "@material-ui/core"
+import { createStyles } from "@material-ui/core/styles"
 import { makeStyles } from "@material-ui/styles"
+import { useAuth } from "client/auth"
 import clsx from "clsx"
 import SearchDialog from "components/dialogs/SearchDialog"
 import ShortcutDialog from "components/dialogs/ShortcutDialog"
 import { ActiveSituProvider } from "context/SituationContext"
 import { bindPopover, usePopupState } from "material-ui-popup-state/hooks"
-import { default as React } from "react"
+import { default as React, Suspense, useCallback } from "react"
 import { renderRoutes, RouteConfig } from "react-router-config"
+import { Redirect, useHistory } from "react-router-dom"
 import Header from "./Header"
 import SituationDrawer from "./SituationDrawer"
 
@@ -34,12 +39,6 @@ const useStyles = makeStyles((theme: Theme) =>
       }),
       marginRight: drawerWidth
     },
-    // title: {
-    //   flexGrow: 1
-    // },
-    // hide: {
-    //   display: "none"
-    // },
     drawer: {
       width: drawerWidth,
       flexShrink: 0
@@ -80,6 +79,7 @@ export interface RootProps {
 
 const Root: React.FC<RootProps> = ({ route }) => {
   const classes = useStyles()
+  const auth = useAuth()
 
   const searchPopupState = usePopupState({
     variant: "popover",
@@ -96,12 +96,16 @@ const Root: React.FC<RootProps> = ({ route }) => {
     popupId: "situDrawer"
   })
 
-  const openShortcuts = React.useCallback(
+  const openShortcuts = useCallback(
     (e) => {
       shortcutsPopupState.open(e)
     },
     [shortcutsPopupState]
   )
+
+  if (auth.user === null) {
+    return <Redirect to="/auth/login"/>
+  }
 
   const handlers = {
     SHOW_DIALOG: openShortcuts
@@ -125,7 +129,9 @@ const Root: React.FC<RootProps> = ({ route }) => {
         >
           <div className={classes.drawerHeader} />
           <Container maxWidth="xl">
-            {renderRoutes(route?.routes)}
+            <Suspense fallback={<LinearProgress />}>
+              {renderRoutes(route?.routes)}
+            </Suspense>
           </Container>
         </main>
         <SituationDrawer

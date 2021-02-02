@@ -68,6 +68,7 @@ class UserAdmin(DjangoUserAdmin):
         (None, {"fields": ("email", "password")}),
         (_("Personal info"), {"fields": ("first_name", "last_name")}),
         (_("Permissions"), {"fields": ("is_staff", "groups", "user_permissions")}),
+        (_("Sites"), {"fields": ("sites",)}),
         (_("Important dates"), {"fields": ("last_login", "date_joined")}),
     )
     # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin

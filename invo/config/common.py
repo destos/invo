@@ -47,6 +47,7 @@ class Common(Configuration):
     # END DEBUG
 
     ALLOWED_HOSTS = values.ListValue(["*"])
+    ROOT_DOMAIN = values.Value()
 
     # APP CONFIGURATION
     DJANGO_APPS = (
@@ -73,6 +74,8 @@ class Common(Configuration):
         "ariadne_extended.payload",
         "ariadne_extended.contrib.waffle_graph",
         "haystack",
+        "rest_framework_simplejwt.token_blacklist",
+        # "ariadne_jwt",
     )
 
     LOCAL_APPS = (
@@ -141,7 +144,7 @@ class Common(Configuration):
     LANGUAGE_CODE = "en-us"
 
     # See: https://docs.djangoproject.com/en/dev/ref/settings/#site-id
-    SITE_ID = 1
+    SITE_ID = None
 
     # See: https://docs.djangoproject.com/en/dev/ref/settings/#use-i18n
     USE_I18N = True
@@ -206,9 +209,10 @@ class Common(Configuration):
     # End URL Configuration
 
     # AUTHENTICATION CONFIGURATION
-    # AUTHENTICATION_BACKENDS = (
-    #     'django.contrib.auth.backends.ModelBackend',
-    # )
+    AUTHENTICATION_BACKENDS = (
+        # "ariadne_jwt.backends.JSONWebTokenBackend",
+        "django.contrib.auth.backends.ModelBackend",
+    )
 
     # Password validation
     # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -241,7 +245,7 @@ class Common(Configuration):
         "version": 1,
         "disable_existing_loggers": False,
         "filters": {"require_debug_false": {"()": "django.utils.log.RequireDebugFalse"}},
-        "formatters": {"rich": {"datefmt": "[%X]"}},
+        "formatters": {"rich": {"datefmt": "[%X]", "rich_tracebacks": True}},
         "handlers": {
             "console": {
                 "class": "rich.logging.RichHandler",
@@ -276,6 +280,12 @@ class Common(Configuration):
     CORS_ALLOWED_ORIGIN_REGEXES = values.ListValue([])
     CORS_ORIGIN_ALLOWS_ALL = values.BooleanValue(False)
     CORS_ALLOW_CREDENTIALS = values.BooleanValue(True)
+
+    # JWT
+    # JWT_LONG_RUNNING_REFRESH_TOKEN = values.BooleanValue(True)
+    # JWT_AUTH_HEADER_PREFIX = "Bearer"
+    # JWT_REFRESH_EXPIRATION_DELTA
+    # JWT_EXPIRATION_DELTA
 
     # Waffle app
     WAFFLE_FLAG_DEFAULT = values.BooleanValue(False)

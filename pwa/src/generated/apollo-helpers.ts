@@ -1,8 +1,9 @@
 import { FieldPolicy, FieldReadFunction, TypePolicies } from '@apollo/client/cache';
-export type QueryKeySpecifier = ('currentUser' | 'waffle' | 'activeSituation' | 'getIrnEntity' | 'space' | 'getSpaces' | 'item' | 'items' | 'suggestType' | 'entitySearch' | QueryKeySpecifier)[];
+export type QueryKeySpecifier = ('waffle' | 'currentUser' | 'currentSite' | 'activeSituation' | 'getIrnEntity' | 'space' | 'getSpaces' | 'item' | 'items' | 'suggestType' | 'entitySearch' | QueryKeySpecifier)[];
 export type QueryFieldPolicy = {
-	currentUser?: FieldPolicy<any> | FieldReadFunction<any>,
 	waffle?: FieldPolicy<any> | FieldReadFunction<any>,
+	currentUser?: FieldPolicy<any> | FieldReadFunction<any>,
+	currentSite?: FieldPolicy<any> | FieldReadFunction<any>,
 	activeSituation?: FieldPolicy<any> | FieldReadFunction<any>,
 	getIrnEntity?: FieldPolicy<any> | FieldReadFunction<any>,
 	space?: FieldPolicy<any> | FieldReadFunction<any>,
@@ -11,37 +12,6 @@ export type QueryFieldPolicy = {
 	items?: FieldPolicy<any> | FieldReadFunction<any>,
 	suggestType?: FieldPolicy<any> | FieldReadFunction<any>,
 	entitySearch?: FieldPolicy<any> | FieldReadFunction<any>
-};
-export type UserKeySpecifier = ('id' | 'username' | 'firstName' | 'lastName' | 'email' | 'isStaff' | 'isActive' | 'groups' | 'userPermissions' | 'allPermissions' | 'groupPermissions' | UserKeySpecifier)[];
-export type UserFieldPolicy = {
-	id?: FieldPolicy<any> | FieldReadFunction<any>,
-	username?: FieldPolicy<any> | FieldReadFunction<any>,
-	firstName?: FieldPolicy<any> | FieldReadFunction<any>,
-	lastName?: FieldPolicy<any> | FieldReadFunction<any>,
-	email?: FieldPolicy<any> | FieldReadFunction<any>,
-	isStaff?: FieldPolicy<any> | FieldReadFunction<any>,
-	isActive?: FieldPolicy<any> | FieldReadFunction<any>,
-	groups?: FieldPolicy<any> | FieldReadFunction<any>,
-	userPermissions?: FieldPolicy<any> | FieldReadFunction<any>,
-	allPermissions?: FieldPolicy<any> | FieldReadFunction<any>,
-	groupPermissions?: FieldPolicy<any> | FieldReadFunction<any>
-};
-export type NodeKeySpecifier = ('id' | NodeKeySpecifier)[];
-export type NodeFieldPolicy = {
-	id?: FieldPolicy<any> | FieldReadFunction<any>
-};
-export type GroupKeySpecifier = ('id' | 'name' | 'permissions' | GroupKeySpecifier)[];
-export type GroupFieldPolicy = {
-	id?: FieldPolicy<any> | FieldReadFunction<any>,
-	name?: FieldPolicy<any> | FieldReadFunction<any>,
-	permissions?: FieldPolicy<any> | FieldReadFunction<any>
-};
-export type PermissionKeySpecifier = ('id' | 'name' | 'contentType' | 'codename' | PermissionKeySpecifier)[];
-export type PermissionFieldPolicy = {
-	id?: FieldPolicy<any> | FieldReadFunction<any>,
-	name?: FieldPolicy<any> | FieldReadFunction<any>,
-	contentType?: FieldPolicy<any> | FieldReadFunction<any>,
-	codename?: FieldPolicy<any> | FieldReadFunction<any>
 };
 export type WaffleKeySpecifier = ('flags' | 'switches' | 'samples' | 'all' | 'flag' | 'switch' | 'sample' | 'flagDefault' | 'switchDefault' | 'sampleDefault' | WaffleKeySpecifier)[];
 export type WaffleFieldPolicy = {
@@ -94,6 +64,42 @@ export type WaffleSampleFieldPolicy = {
 	note?: FieldPolicy<any> | FieldReadFunction<any>,
 	created?: FieldPolicy<any> | FieldReadFunction<any>,
 	modified?: FieldPolicy<any> | FieldReadFunction<any>
+};
+export type UserKeySpecifier = ('id' | 'email' | 'firstName' | 'lastName' | 'isStaff' | 'isActive' | 'groups' | 'userPermissions' | 'allPermissions' | 'groupPermissions' | UserKeySpecifier)[];
+export type UserFieldPolicy = {
+	id?: FieldPolicy<any> | FieldReadFunction<any>,
+	email?: FieldPolicy<any> | FieldReadFunction<any>,
+	firstName?: FieldPolicy<any> | FieldReadFunction<any>,
+	lastName?: FieldPolicy<any> | FieldReadFunction<any>,
+	isStaff?: FieldPolicy<any> | FieldReadFunction<any>,
+	isActive?: FieldPolicy<any> | FieldReadFunction<any>,
+	groups?: FieldPolicy<any> | FieldReadFunction<any>,
+	userPermissions?: FieldPolicy<any> | FieldReadFunction<any>,
+	allPermissions?: FieldPolicy<any> | FieldReadFunction<any>,
+	groupPermissions?: FieldPolicy<any> | FieldReadFunction<any>
+};
+export type NodeKeySpecifier = ('id' | NodeKeySpecifier)[];
+export type NodeFieldPolicy = {
+	id?: FieldPolicy<any> | FieldReadFunction<any>
+};
+export type GroupKeySpecifier = ('id' | 'name' | 'permissions' | GroupKeySpecifier)[];
+export type GroupFieldPolicy = {
+	id?: FieldPolicy<any> | FieldReadFunction<any>,
+	name?: FieldPolicy<any> | FieldReadFunction<any>,
+	permissions?: FieldPolicy<any> | FieldReadFunction<any>
+};
+export type PermissionKeySpecifier = ('id' | 'name' | 'contentType' | 'codename' | PermissionKeySpecifier)[];
+export type PermissionFieldPolicy = {
+	id?: FieldPolicy<any> | FieldReadFunction<any>,
+	name?: FieldPolicy<any> | FieldReadFunction<any>,
+	contentType?: FieldPolicy<any> | FieldReadFunction<any>,
+	codename?: FieldPolicy<any> | FieldReadFunction<any>
+};
+export type SiteKeySpecifier = ('active' | 'domain' | 'name' | SiteKeySpecifier)[];
+export type SiteFieldPolicy = {
+	active?: FieldPolicy<any> | FieldReadFunction<any>,
+	domain?: FieldPolicy<any> | FieldReadFunction<any>,
+	name?: FieldPolicy<any> | FieldReadFunction<any>
 };
 export type SituationKeySpecifier = ('id' | 'created' | 'modified' | 'user' | 'spaces' | 'items' | 'state' | 'exitCondition' | SituationKeySpecifier)[];
 export type SituationFieldPolicy = {
@@ -299,9 +305,9 @@ export type SearchResultFieldPolicy = {
 	irn?: FieldPolicy<any> | FieldReadFunction<any>,
 	object?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type MutationKeySpecifier = ('root' | 'selectEntities' | 'unselectEntities' | 'abandonSituation' | 'addSpace' | 'addGridSpace' | 'updateSpace' | 'updateGridSpace' | 'updateSpaceLayout' | 'removeSpace' | 'addItem' | 'addTool' | 'addConsumable' | 'updateItem' | 'updateTool' | 'updateConsumable' | 'deleteItem' | 'moveItem' | 'removeItem' | MutationKeySpecifier)[];
+export type MutationKeySpecifier = ('registerSite' | 'selectEntities' | 'unselectEntities' | 'abandonSituation' | 'addSpace' | 'addGridSpace' | 'updateSpace' | 'updateGridSpace' | 'updateSpaceLayout' | 'removeSpace' | 'addItem' | 'addTool' | 'addConsumable' | 'updateItem' | 'updateTool' | 'updateConsumable' | 'deleteItem' | 'moveItem' | 'removeItem' | MutationKeySpecifier)[];
 export type MutationFieldPolicy = {
-	root?: FieldPolicy<any> | FieldReadFunction<any>,
+	registerSite?: FieldPolicy<any> | FieldReadFunction<any>,
 	selectEntities?: FieldPolicy<any> | FieldReadFunction<any>,
 	unselectEntities?: FieldPolicy<any> | FieldReadFunction<any>,
 	abandonSituation?: FieldPolicy<any> | FieldReadFunction<any>,
@@ -320,6 +326,11 @@ export type MutationFieldPolicy = {
 	deleteItem?: FieldPolicy<any> | FieldReadFunction<any>,
 	moveItem?: FieldPolicy<any> | FieldReadFunction<any>,
 	removeItem?: FieldPolicy<any> | FieldReadFunction<any>
+};
+export type SitePayloadKeySpecifier = ('success' | 'site' | SitePayloadKeySpecifier)[];
+export type SitePayloadFieldPolicy = {
+	success?: FieldPolicy<any> | FieldReadFunction<any>,
+	site?: FieldPolicy<any> | FieldReadFunction<any>
 };
 export type SituationPayloadKeySpecifier = ('success' | 'object' | 'entities' | SituationPayloadKeySpecifier)[];
 export type SituationPayloadFieldPolicy = {
@@ -362,34 +373,6 @@ export type TypedTypePolicies = TypePolicies & {
 		subscriptionType?: true,
 		fields?: QueryFieldPolicy,
 	},
-	User?: {
-		keyFields?: false | UserKeySpecifier | (() => undefined | UserKeySpecifier),
-		queryType?: true,
-		mutationType?: true,
-		subscriptionType?: true,
-		fields?: UserFieldPolicy,
-	},
-	Node?: {
-		keyFields?: false | NodeKeySpecifier | (() => undefined | NodeKeySpecifier),
-		queryType?: true,
-		mutationType?: true,
-		subscriptionType?: true,
-		fields?: NodeFieldPolicy,
-	},
-	Group?: {
-		keyFields?: false | GroupKeySpecifier | (() => undefined | GroupKeySpecifier),
-		queryType?: true,
-		mutationType?: true,
-		subscriptionType?: true,
-		fields?: GroupFieldPolicy,
-	},
-	Permission?: {
-		keyFields?: false | PermissionKeySpecifier | (() => undefined | PermissionKeySpecifier),
-		queryType?: true,
-		mutationType?: true,
-		subscriptionType?: true,
-		fields?: PermissionFieldPolicy,
-	},
 	Waffle?: {
 		keyFields?: false | WaffleKeySpecifier | (() => undefined | WaffleKeySpecifier),
 		queryType?: true,
@@ -431,6 +414,41 @@ export type TypedTypePolicies = TypePolicies & {
 		mutationType?: true,
 		subscriptionType?: true,
 		fields?: WaffleSampleFieldPolicy,
+	},
+	User?: {
+		keyFields?: false | UserKeySpecifier | (() => undefined | UserKeySpecifier),
+		queryType?: true,
+		mutationType?: true,
+		subscriptionType?: true,
+		fields?: UserFieldPolicy,
+	},
+	Node?: {
+		keyFields?: false | NodeKeySpecifier | (() => undefined | NodeKeySpecifier),
+		queryType?: true,
+		mutationType?: true,
+		subscriptionType?: true,
+		fields?: NodeFieldPolicy,
+	},
+	Group?: {
+		keyFields?: false | GroupKeySpecifier | (() => undefined | GroupKeySpecifier),
+		queryType?: true,
+		mutationType?: true,
+		subscriptionType?: true,
+		fields?: GroupFieldPolicy,
+	},
+	Permission?: {
+		keyFields?: false | PermissionKeySpecifier | (() => undefined | PermissionKeySpecifier),
+		queryType?: true,
+		mutationType?: true,
+		subscriptionType?: true,
+		fields?: PermissionFieldPolicy,
+	},
+	Site?: {
+		keyFields?: false | SiteKeySpecifier | (() => undefined | SiteKeySpecifier),
+		queryType?: true,
+		mutationType?: true,
+		subscriptionType?: true,
+		fields?: SiteFieldPolicy,
 	},
 	Situation?: {
 		keyFields?: false | SituationKeySpecifier | (() => undefined | SituationKeySpecifier),
@@ -578,6 +596,13 @@ export type TypedTypePolicies = TypePolicies & {
 		mutationType?: true,
 		subscriptionType?: true,
 		fields?: MutationFieldPolicy,
+	},
+	SitePayload?: {
+		keyFields?: false | SitePayloadKeySpecifier | (() => undefined | SitePayloadKeySpecifier),
+		queryType?: true,
+		mutationType?: true,
+		subscriptionType?: true,
+		fields?: SitePayloadFieldPolicy,
 	},
 	SituationPayload?: {
 		keyFields?: false | SituationPayloadKeySpecifier | (() => undefined | SituationPayloadKeySpecifier),

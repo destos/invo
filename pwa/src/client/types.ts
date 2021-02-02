@@ -19,8 +19,9 @@ export type Scalars = {
 
 export type Query = {
   __typename?: 'Query';
-  currentUser: Maybe<User>;
   waffle: Maybe<Waffle>;
+  currentUser: Maybe<User>;
+  currentSite: Site;
   activeSituation: Maybe<Situation>;
   getIrnEntity: Maybe<Protocol>;
   space: Maybe<SpaceTypes>;
@@ -68,40 +69,6 @@ export type QuerySuggestTypeArgs = {
 
 export type QueryEntitySearchArgs = {
   search: SearchInput;
-};
-
-export type User = Node & {
-  __typename?: 'User';
-  id: Scalars['ID'];
-  username: Maybe<Scalars['String']>;
-  firstName: Maybe<Scalars['String']>;
-  lastName: Maybe<Scalars['String']>;
-  email: Scalars['String'];
-  isStaff: Scalars['Boolean'];
-  isActive: Scalars['Boolean'];
-  groups: Array<Maybe<Group>>;
-  userPermissions: Array<Maybe<Permission>>;
-  allPermissions: Array<Maybe<Scalars['String']>>;
-  groupPermissions: Array<Maybe<Scalars['String']>>;
-};
-
-export type Node = {
-  id: Scalars['ID'];
-};
-
-export type Group = Node & {
-  __typename?: 'Group';
-  id: Scalars['ID'];
-  name: Maybe<Scalars['String']>;
-  permissions: Maybe<Array<Maybe<Permission>>>;
-};
-
-export type Permission = Node & {
-  __typename?: 'Permission';
-  id: Scalars['ID'];
-  name: Maybe<Scalars['String']>;
-  contentType: Maybe<Scalars['String']>;
-  codename: Maybe<Scalars['String']>;
 };
 
 export type Waffle = {
@@ -177,6 +144,46 @@ export type WaffleSample = WaffleItem & TimeStamped & {
   note: Maybe<Scalars['String']>;
   created: Scalars['DateTime'];
   modified: Scalars['DateTime'];
+};
+
+export type User = Node & {
+  __typename?: 'User';
+  id: Scalars['ID'];
+  email: Scalars['String'];
+  firstName: Maybe<Scalars['String']>;
+  lastName: Maybe<Scalars['String']>;
+  isStaff: Scalars['Boolean'];
+  isActive: Scalars['Boolean'];
+  groups: Array<Maybe<Group>>;
+  userPermissions: Array<Maybe<Permission>>;
+  allPermissions: Array<Maybe<Scalars['String']>>;
+  groupPermissions: Array<Maybe<Scalars['String']>>;
+};
+
+export type Node = {
+  id: Scalars['ID'];
+};
+
+export type Group = Node & {
+  __typename?: 'Group';
+  id: Scalars['ID'];
+  name: Maybe<Scalars['String']>;
+  permissions: Maybe<Array<Maybe<Permission>>>;
+};
+
+export type Permission = Node & {
+  __typename?: 'Permission';
+  id: Scalars['ID'];
+  name: Maybe<Scalars['String']>;
+  contentType: Maybe<Scalars['String']>;
+  codename: Maybe<Scalars['String']>;
+};
+
+export type Site = {
+  __typename?: 'Site';
+  active: Scalars['Boolean'];
+  domain: Scalars['String'];
+  name: Scalars['String'];
 };
 
 export type Situation = Node & TimeStamped & {
@@ -529,7 +536,7 @@ export type SearchResult = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  root: Maybe<Scalars['Boolean']>;
+  registerSite: SitePayload;
   selectEntities: SituationPayload;
   unselectEntities: SituationPayload;
   abandonSituation: Maybe<Situation>;
@@ -551,6 +558,11 @@ export type Mutation = {
   moveItem: ItemPayload;
   /** Removes an item from a space */
   removeItem: ItemPayload;
+};
+
+
+export type MutationRegisterSiteArgs = {
+  subDomain: Scalars['String'];
 };
 
 
@@ -643,6 +655,12 @@ export type MutationMoveItemArgs = {
 
 export type MutationRemoveItemArgs = {
   id: Scalars['ID'];
+};
+
+export type SitePayload = {
+  __typename?: 'SitePayload';
+  success: Scalars['Boolean'];
+  site: Site;
 };
 
 export type SituationPayload = {
@@ -744,6 +762,17 @@ export enum SpaceTypesEnum {
   /** GridSpaceNode */
   Grid = 'GRID'
 }
+
+export type UserDetailsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type UserDetailsQuery = (
+  { __typename?: 'Query' }
+  & { user: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'email' | 'firstName' | 'lastName'>
+  )> }
+);
 
 type Times_WaffleFlag_Fragment = (
   { __typename?: 'WaffleFlag' }
@@ -1116,10 +1145,7 @@ export type GetActiveSituationQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetActiveSituationQuery = (
   { __typename?: 'Query' }
-  & { currentUser: Maybe<(
-    { __typename?: 'User' }
-    & Pick<User, 'id' | 'username' | 'firstName' | 'lastName'>
-  )>, activeSituation: Maybe<(
+  & { activeSituation: Maybe<(
     { __typename?: 'Situation' }
     & SituationBitFragment
   )> }

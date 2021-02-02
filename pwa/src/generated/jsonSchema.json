@@ -4,6 +4,20 @@
     "Query": {
       "type": "object",
       "properties": {
+        "waffle": {
+          "type": "object",
+          "properties": {
+            "return": {
+              "$ref": "#/definitions/Waffle"
+            },
+            "arguments": {
+              "type": "object",
+              "properties": {},
+              "required": []
+            }
+          },
+          "required": []
+        },
         "currentUser": {
           "type": "object",
           "properties": {
@@ -18,11 +32,11 @@
           },
           "required": []
         },
-        "waffle": {
+        "currentSite": {
           "type": "object",
           "properties": {
             "return": {
-              "$ref": "#/definitions/Waffle"
+              "$ref": "#/definitions/Site"
             },
             "arguments": {
               "type": "object",
@@ -201,17 +215,23 @@
     "Mutation": {
       "type": "object",
       "properties": {
-        "root": {
+        "registerSite": {
           "type": "object",
           "properties": {
             "return": {
-              "$ref": "#/definitions/Boolean",
-              "type": "boolean"
+              "$ref": "#/definitions/SitePayload"
             },
             "arguments": {
               "type": "object",
-              "properties": {},
-              "required": []
+              "properties": {
+                "subDomain": {
+                  "$ref": "#/definitions/String",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "subDomain"
+              ]
             }
           },
           "required": []
@@ -621,119 +641,6 @@
       "title": "String",
       "description": "The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text."
     },
-    "User": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "$ref": "#/definitions/ID"
-        },
-        "username": {
-          "$ref": "#/definitions/String",
-          "type": "string"
-        },
-        "firstName": {
-          "$ref": "#/definitions/String",
-          "type": "string"
-        },
-        "lastName": {
-          "$ref": "#/definitions/String",
-          "type": "string"
-        },
-        "email": {
-          "$ref": "#/definitions/String",
-          "type": "string"
-        },
-        "isStaff": {
-          "$ref": "#/definitions/Boolean",
-          "type": "boolean"
-        },
-        "isActive": {
-          "$ref": "#/definitions/Boolean",
-          "type": "boolean"
-        },
-        "groups": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Group"
-          }
-        },
-        "userPermissions": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Permission"
-          }
-        },
-        "allPermissions": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/String",
-            "type": "string"
-          }
-        },
-        "groupPermissions": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/String",
-            "type": "string"
-          }
-        }
-      },
-      "required": [
-        "id",
-        "email",
-        "isStaff",
-        "isActive"
-      ]
-    },
-    "Boolean": {
-      "type": "boolean",
-      "title": "Boolean",
-      "description": "The `Boolean` scalar type represents `true` or `false`."
-    },
-    "Group": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "$ref": "#/definitions/ID"
-        },
-        "name": {
-          "$ref": "#/definitions/String",
-          "type": "string"
-        },
-        "permissions": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Permission"
-          }
-        }
-      },
-      "required": [
-        "id"
-      ]
-    },
-    "Permission": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "$ref": "#/definitions/ID"
-        },
-        "name": {
-          "$ref": "#/definitions/String",
-          "type": "string"
-        },
-        "contentType": {
-          "$ref": "#/definitions/String",
-          "type": "string"
-        },
-        "codename": {
-          "$ref": "#/definitions/String",
-          "type": "string"
-        }
-      },
-      "required": [
-        "id"
-      ]
-    },
     "Waffle": {
       "type": "object",
       "properties": {
@@ -785,6 +692,11 @@
         }
       },
       "required": []
+    },
+    "Boolean": {
+      "type": "boolean",
+      "title": "Boolean",
+      "description": "The `Boolean` scalar type represents `true` or `false`."
     },
     "WaffleFlag": {
       "type": "object",
@@ -878,6 +790,132 @@
       "required": [
         "created",
         "modified"
+      ]
+    },
+    "User": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/ID"
+        },
+        "email": {
+          "$ref": "#/definitions/String",
+          "type": "string"
+        },
+        "firstName": {
+          "$ref": "#/definitions/String",
+          "type": "string"
+        },
+        "lastName": {
+          "$ref": "#/definitions/String",
+          "type": "string"
+        },
+        "isStaff": {
+          "$ref": "#/definitions/Boolean",
+          "type": "boolean"
+        },
+        "isActive": {
+          "$ref": "#/definitions/Boolean",
+          "type": "boolean"
+        },
+        "groups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Group"
+          }
+        },
+        "userPermissions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Permission"
+          }
+        },
+        "allPermissions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/String",
+            "type": "string"
+          }
+        },
+        "groupPermissions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/String",
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "email",
+        "isStaff",
+        "isActive"
+      ]
+    },
+    "Group": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/ID"
+        },
+        "name": {
+          "$ref": "#/definitions/String",
+          "type": "string"
+        },
+        "permissions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Permission"
+          }
+        }
+      },
+      "required": [
+        "id"
+      ]
+    },
+    "Permission": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/ID"
+        },
+        "name": {
+          "$ref": "#/definitions/String",
+          "type": "string"
+        },
+        "contentType": {
+          "$ref": "#/definitions/String",
+          "type": "string"
+        },
+        "codename": {
+          "$ref": "#/definitions/String",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id"
+      ]
+    },
+    "Site": {
+      "type": "object",
+      "properties": {
+        "active": {
+          "$ref": "#/definitions/Boolean",
+          "type": "boolean"
+        },
+        "domain": {
+          "$ref": "#/definitions/String",
+          "type": "string"
+        },
+        "name": {
+          "$ref": "#/definitions/String",
+          "type": "string"
+        }
+      },
+      "required": [
+        "active",
+        "domain",
+        "name"
       ]
     },
     "Situation": {
@@ -1605,6 +1643,22 @@
         "score",
         "irn",
         "object"
+      ]
+    },
+    "SitePayload": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "$ref": "#/definitions/Boolean",
+          "type": "boolean"
+        },
+        "site": {
+          "$ref": "#/definitions/Site"
+        }
+      },
+      "required": [
+        "success",
+        "site"
       ]
     },
     "SituationPayload": {

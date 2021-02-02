@@ -9,6 +9,7 @@ class SituationAdmin(SafeDeleteAdmin):
     list_display = (
         highlight_deleted,
         "user",
+        "site",
         # "spaces__count",
         # "items__count",
         "created",

@@ -1,4 +1,5 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.contrib.sites.managers import CurrentSiteManager
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from owners.models import SharedSite
@@ -36,6 +37,10 @@ class UserManager(BaseUserManager):
         return self._create_user(email, password, **extra_fields)
 
 
+class CurrentSiteUserManager(CurrentSiteManager, UserManager):
+    pass
+
+
 class User(SharedSite, AbstractUser):
 
     username = None  # unset username field from AbstractUser
@@ -45,6 +50,7 @@ class User(SharedSite, AbstractUser):
     REQUIRED_FIELDS = ("first_name", "last_name")
 
     objects = UserManager()
+    current_site_objects = CurrentSiteUserManager()
 
     def __str__(self):
         if self.get_full_name():

@@ -19,7 +19,7 @@ import CloseIcon from "@material-ui/icons/Close"
 import InfoIcon from "@material-ui/icons/Info"
 import { makeStyles } from "@material-ui/styles"
 import { Scalars, SubscribedEventTypeFragment } from "client/types"
-import { default as React } from "react"
+import React from "react"
 
 // Dialog
 const useStyles = makeStyles((theme: Theme) => ({

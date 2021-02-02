@@ -1,6 +1,7 @@
 import { ApolloProvider } from "@apollo/client"
 import { ThemeProvider } from "@material-ui/core"
 import { createMuiTheme } from "@material-ui/core/styles"
+import { AuthProvider } from "client/auth"
 import React from "react"
 import { renderRoutes } from "react-router-config"
 import { BrowserRouter as Router } from "react-router-dom"
@@ -50,7 +51,9 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <ApolloProvider client={client}>
-        <Router>{renderRoutes(routes)}</Router>
+        <AuthProvider>
+          <Router>{renderRoutes(routes)}</Router>
+        </AuthProvider>
       </ApolloProvider>
     </ThemeProvider>
   )

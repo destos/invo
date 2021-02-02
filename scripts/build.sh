@@ -2,4 +2,4 @@
 
 set -e
 
-docker build --rm --tag invo-build --file .docker/django/app . --target production
+docker build --rm --tag invo-build --file .docker/django/Dockerfile . --target production
