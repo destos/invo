@@ -8,7 +8,7 @@ from situations.models import Situation
 
 class TestSituationManager(TestCase):
     def setUp(self):
-        self.user = baker.make(settings.AUTH_USER_MODEL, username="test_user")
+        self.user = baker.make(settings.AUTH_USER_MODEL, email="test@email.com")
 
     def test_get_active(self):
         situ = baker.make(Situation, user=self.user)

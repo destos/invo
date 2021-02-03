@@ -1,5 +1,6 @@
 from ariadne_extended.resolvers import ListModelMixin, ModelResolver
 from django.contrib.auth.models import AnonymousUser
+from django.contrib.sites.shortcuts import get_current_site
 from graph.types import mutation, query
 
 from .models import Situation
@@ -11,6 +12,9 @@ class SituationResolver(OwnerResolverMixin, ModelResolver):
     model = Situation
     queryset = Situation.objects.all()
 
+    def get_queryset(self):
+        return super().get_queryset().filter(site=get_current_site(self.request))
+
     def get_active(self):
         user = getattr(self.request, "user", None)
         # Catch un-authed users for now
@@ -20,7 +24,8 @@ class SituationResolver(OwnerResolverMixin, ModelResolver):
         # No active situation found create and return a new one
         if situ is None:
             # if no active, make it
-            return Situation.objects.create(user=user)
+            site = get_current_site(self.request)
+            return Situation.current_site_objects.create(user=user, site=site)
         return situ
 
     def active(self, info, **kwargs):

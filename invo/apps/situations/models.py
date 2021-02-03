@@ -71,7 +71,7 @@ class Situation(SingularSite, SafeDeleteModel, TimeStampedModel):
         ordering = ("created",)
 
     def __str__(self):
-        return f"{self.user.username} ({self.States(self.state).label}, {self.Exit(self.exit_condition).label})"
+        return f"{self.user} ({self.States(self.state).label}, {self.Exit(self.exit_condition).label})"
 
     def __repr__(self):
         return f"<Situation: {str(self)}>"
