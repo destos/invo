@@ -4,8 +4,8 @@ from unittest.mock import Mock, patch
 import pytest
 from ariadne import graphql_sync
 from django.conf import settings
-from django.test import RequestFactory, TestCase
 from django.contrib.sites.models import Site
+from django.test import RequestFactory, TestCase
 from glom import glom
 from graph.schema import schema
 from model_bakery import baker
@@ -69,10 +69,10 @@ unselect_entities = """
 
 class TestSituationResolver(TestCase):
     def setUp(self):
-        self.site =Site.objects.get()
+        self.site = Site.objects.get()
         self.user = baker.make(settings.AUTH_USER_MODEL, email="test@email.com", sites=[self.site])
 
-        self.request = RequestFactory().post("/",  HTTP_HOST="example.com")
+        self.request = RequestFactory().post("/", HTTP_HOST="example.com")
         self.context = dict(request=self.request)
         self.request.user = self.user
 
