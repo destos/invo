@@ -16,7 +16,7 @@ import { apolloLinkJWT } from "./auth"
 //   (introspectionResult as unknown) as IntrospectionQuery
 // )
 
-const isBrowser = typeof window !== 'undefined'
+const isBrowser = typeof window !== "undefined"
 
 const httpLink = createHttpLink({
   uri: process.env.REACT_APP_API_GATEWAY,

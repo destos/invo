@@ -28,7 +28,7 @@ const ItemListContent: React.FC<ItemListContentProps> = ({
   const labelId = `item-list-label-${id}`
   const Icon = typeIconMap[__typename || "fallback"]
 
-// TODO: shouldn't show the current page space if being displayed there.
+  // TODO: shouldn't show the current page space if being displayed there.
   const bread =
     spaceParents?.map((space) => space?.name ?? "Space").join(" > ") ?? null
 

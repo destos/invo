@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client"
 
 export const ENTITY_SEARCH = gql`
-  query entitySearch($text: String!){
+  query entitySearch($text: String!) {
     entitySearch(search: { text: $text }) {
       irn
       score

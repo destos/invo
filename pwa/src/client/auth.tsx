@@ -3,8 +3,11 @@
 // There is a hook that returns authenticated context
 // Handle refreshing token when it expires with Apollo Link JWT
 
-import { ApolloLinkJWT } from "apollo-link-jwt"
+import { useLazyQuery } from "@apollo/client"
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import * as Sentry from "@sentry/react"
+import { ApolloLinkJWT } from "apollo-link-jwt"
+import { GET_USER_DETAILS } from "queries/auth"
 import {
   createContext,
   Dispatch,
@@ -13,10 +16,8 @@ import {
   useEffect,
   useState
 } from "react"
-import warning from "tiny-warning"
 import { useHistory } from "react-router-dom"
-import { useLazyQuery } from "@apollo/client"
-import { GET_USER_DETAILS } from "queries/auth"
+import warning from "tiny-warning"
 import {
   Maybe,
   User,
@@ -51,10 +52,7 @@ const onRefreshComplete = async (data: any) => {
   // Find and return the access token and refresh token from the provided fetch callback
   // TODO: fix
   if (data?.code === "token_no_valid") {
-    warning(
-      true,
-      "Token not valid, log back in."
-    )
+    warning(true, "Token not valid, log back in.")
     return
   }
   const newAccessToken = data?.access
@@ -146,7 +144,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
   >(GET_USER_DETAILS, {
     fetchPolicy: "network-only",
     onCompleted: (data) => {
-      setUser(data.user)
+      const { user } = data
+      setUser(user)
+      Sentry.setUser({
+        id: user?.id,
+        email: user?.email,
+        username: user?.email,
+        ip_address: "{{auto}}"
+      })
     }
   })
 
@@ -187,7 +192,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
   }, [setUser, getUser, tokens])
 
   // Attempt to get current user when component mounts, app layouts will direct properly if user set.
-  useEffect(()=> {
+  useEffect(() => {
     getUser()
   }, [])
 

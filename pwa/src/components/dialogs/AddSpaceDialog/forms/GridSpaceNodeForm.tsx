@@ -5,7 +5,6 @@ import { TextFieldElement } from "react-form-hook-mui"
 interface Props {}
 
 const ConsumableForm: React.FC<Props> = ({}) => {
-
   return (
     <>
       <Grid item xs={6}>

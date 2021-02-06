@@ -3,7 +3,7 @@ import join from "lodash/join"
 import map from "lodash/map"
 
 export function setErrors(errors: Array<FieldError>, setError: any) {
-  errors.forEach(fieldError => {
+  errors.forEach((fieldError) => {
     const errorJoined = join(map(fieldError.values, "error"), ", ")
     setError(fieldError.name, errorJoined)
   })

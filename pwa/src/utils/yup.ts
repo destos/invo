@@ -105,7 +105,7 @@ export const yupResolver = <TFieldValues extends FieldValues>(
         ...options,
         context: {
           ...context,
-          ...options.context || {}
+          ...(options.context || {})
         }
       })) as any,
       errors: {}

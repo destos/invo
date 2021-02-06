@@ -14,7 +14,6 @@
 //   edges: Edge<Node>
 // }
 
-
 // const relayDeconstructor: <O extends Connection> = (relayObj: O): any => {
 export const relayDeconstructor = (relayObj: any): any => {
   if (!relayObj || typeof relayObj !== "object" || Array.isArray(relayObj)) {

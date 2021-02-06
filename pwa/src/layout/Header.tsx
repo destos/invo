@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
 
 export interface HeaderProps extends AppBarProps {}
 
-const Header: React.FC<HeaderProps> = ({...appBarProps}) => {
+const Header: React.FC<HeaderProps> = ({ ...appBarProps }) => {
   const classes = useStyles()
   const { situation, searchPopup, situDrawer } = useSitu()
 
@@ -71,7 +71,9 @@ const Header: React.FC<HeaderProps> = ({...appBarProps}) => {
         <IconButton component={RouterLink} to="/">
           <AppsIcon />
         </IconButton>
-        <Button component={RouterLink} to="/select">Select</Button>
+        <Button component={RouterLink} to="/select">
+          Select
+        </Button>
         <IconButton onClick={(e) => searchPopup.open(e)}>
           <SearchIcon />
         </IconButton>

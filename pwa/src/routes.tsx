@@ -19,7 +19,6 @@ const SpaceView = lazy(
   () => import(/* webpackChunkName: "spaces" */ "./views/Space")
 )
 
-
 const routes: Array<RouteConfig> = [
   {
     component: UnAuthedRoot,

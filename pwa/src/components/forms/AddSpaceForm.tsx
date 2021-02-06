@@ -1,10 +1,8 @@
-import Form from "@rjsf/material-ui";
+import Form from "@rjsf/material-ui"
 import React from "react"
 // import schema from "generated/jsonSchema.json"
 
-interface AddSpaceFormProps {
-
-}
+interface AddSpaceFormProps {}
 // schema.properties.Mutation.properties.addSpace
 const test_schema = {
   title: "Name",
@@ -14,7 +12,7 @@ const test_schema = {
 const AddSpaceForm: React.FC<AddSpaceFormProps> = ({}) => {
   return (
     // @ts-ignore
-    <Form schema={test_schema}/>
+    <Form schema={test_schema} />
   )
 }
 

@@ -12,7 +12,7 @@ export const SITU_QUERY = gql`
 `
 
 export const SELECT_ENTITIES = gql`
-  mutation addToActiveSituation($irns: [IRN!]!){
+  mutation addToActiveSituation($irns: [IRN!]!) {
     selectEntities(irns: $irns) {
       success
       object {
@@ -24,7 +24,7 @@ export const SELECT_ENTITIES = gql`
 `
 
 export const UNSELECT_ENTITIES = gql`
-  mutation removeFromActiveSituation($irns: [IRN!]!){
+  mutation removeFromActiveSituation($irns: [IRN!]!) {
     unselectEntities(irns: $irns) {
       success
       object {

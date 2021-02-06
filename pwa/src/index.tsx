@@ -3,12 +3,16 @@ import ReactDOM from "react-dom"
 import "./index.css"
 import "../node_modules/react-grid-layout/css/styles.css"
 import "../node_modules/react-resizable/css/styles.css"
+import * as Sentry from "@sentry/react"
 import App from "./App"
+
+const FinalApp = Sentry.withProfiler(App, { name: "CustomAppName" })
+
 // import reportWebVitals from "./reportWebVitals"
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <FinalApp />
   </React.StrictMode>,
   document.getElementById("root")
 )

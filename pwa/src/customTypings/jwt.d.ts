@@ -1,1 +1,1 @@
-declare module 'apollo-link-jwt';
+declare module "apollo-link-jwt"

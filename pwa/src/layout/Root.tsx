@@ -6,6 +6,7 @@ import {
 } from "@material-ui/core"
 import { createStyles } from "@material-ui/core/styles"
 import { makeStyles } from "@material-ui/styles"
+import { ErrorBoundary } from "@sentry/react"
 import { useAuth } from "client/auth"
 import clsx from "clsx"
 import SearchDialog from "components/dialogs/SearchDialog"
@@ -14,7 +15,7 @@ import { ActiveSituProvider } from "context/SituationContext"
 import { bindPopover, usePopupState } from "material-ui-popup-state/hooks"
 import { default as React, Suspense, useCallback } from "react"
 import { renderRoutes, RouteConfig } from "react-router-config"
-import { Redirect, useHistory } from "react-router-dom"
+import { Redirect } from "react-router-dom"
 import Header from "./Header"
 import SituationDrawer from "./SituationDrawer"
 
@@ -104,7 +105,7 @@ const Root: React.FC<RootProps> = ({ route }) => {
   )
 
   if (auth.user === null) {
-    return <Redirect to="/auth/login"/>
+    return <Redirect to="/auth/login" />
   }
 
   const handlers = {
@@ -129,9 +130,11 @@ const Root: React.FC<RootProps> = ({ route }) => {
         >
           <div className={classes.drawerHeader} />
           <Container maxWidth="xl">
-            <Suspense fallback={<LinearProgress />}>
-              {renderRoutes(route?.routes)}
-            </Suspense>
+            <ErrorBoundary fallback={"An error occurred"}>
+              <Suspense fallback={<LinearProgress />}>
+                {renderRoutes(route?.routes)}
+              </Suspense>
+            </ErrorBoundary>
           </Container>
         </main>
         <SituationDrawer
