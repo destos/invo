@@ -7,7 +7,7 @@ from configurations import Configuration, values
 class Sentry:
     SENTRY_DSN = values.SecretValue()
     SENTRY_ENVIRONMENT = values.Value("stage")
-    SENTRY_SAMPLE_RATE = values. FloatValue(1.0)
+    SENTRY_SAMPLE_RATE = values.FloatValue(1.0)
     DO_HOSTNAME = values.Value("unset", environ_name="HOSTNAME", environ_prefix="")
 
     @classmethod

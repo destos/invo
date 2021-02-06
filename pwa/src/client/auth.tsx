@@ -50,8 +50,15 @@ export const newTokenEvent = (token: string) => {
 const onRefreshComplete = async (data: any) => {
   // Find and return the access token and refresh token from the provided fetch callback
   // TODO: fix
-  const newAccessToken = data?.data?.refreshToken?.token
-  const newRefreshToken = data?.data?.refreshToken?.refreshToken
+  if (data?.code === "token_no_valid") {
+    warning(
+      true,
+      "Token not valid, log back in."
+    )
+    return
+  }
+  const newAccessToken = data?.access
+  const newRefreshToken = data?.refresh
 
   // Handle sign out logic if the refresh token attempt failed
   if (!newAccessToken || !newRefreshToken) {
@@ -60,6 +67,7 @@ const onRefreshComplete = async (data: any) => {
       "Redirect back to login, because the refresh token was expired!"
     )
 
+    // TODO:
     // signOutHandler()
     return
   }
@@ -81,15 +89,7 @@ const onRefreshComplete = async (data: any) => {
  * Configure the body of the token refresh method
  */
 const fetchBody = async () => ({
-  // query: `mutation refreshToken($refreshToken: String!) {
-  //   refreshToken(token: $refreshToken) {
-  //     token
-  //     refreshToken
-  //   }
-  // }`,
-  // variables: {
-  refreshToken: await AsyncStorage.getItem(REFRESH_TOKEN)
-  // }
+  refresh: await AsyncStorage.getItem(REFRESH_TOKEN)
 })
 
 /**

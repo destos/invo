@@ -9,20 +9,22 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/dev/ref/settings/
 """
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 import sys
+from datetime import timedelta
 from os.path import join
 from pathlib import Path
 
 import dj_search_url
 from configurations import Configuration, values
+from .values import TimeDeltaValue
 
 # Monkey patch to allow for proper haystack backend for elasticsearch 5 when selecting elasticsearch
 dj_search_url.SCHEMES[
     "elasticsearch"
 ] = "haystack.backends.elasticsearch5_backend.Elasticsearch5SearchEngine"
 
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = Path(__file__).resolve().parent.parent
 sys.path.append(join(BASE_DIR, "apps"))
 
@@ -75,7 +77,6 @@ class Common(Configuration):
         "ariadne_extended.contrib.waffle_graph",
         "haystack",
         "rest_framework_simplejwt.token_blacklist",
-        # "ariadne_jwt",
     )
 
     LOCAL_APPS = (
@@ -127,9 +128,8 @@ class Common(Configuration):
     # CACHING
     # Do this here because thanks to django-pylibmc-sasl and pylibmc
     # memcacheify (used on heroku) is painful to install on windows.
-    CACHES = {
-        "default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache", "LOCATION": ""}
-    }
+    CACHES = values.CacheURLValue("locmem://invo")
+
     # END CACHING
 
     # GENERAL CONFIGURATION
@@ -209,10 +209,7 @@ class Common(Configuration):
     # End URL Configuration
 
     # AUTHENTICATION CONFIGURATION
-    AUTHENTICATION_BACKENDS = (
-        # "ariadne_jwt.backends.JSONWebTokenBackend",
-        "django.contrib.auth.backends.ModelBackend",
-    )
+    AUTHENTICATION_BACKENDS = ("django.contrib.auth.backends.ModelBackend",)
 
     # Password validation
     # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -282,10 +279,21 @@ class Common(Configuration):
     CORS_ALLOW_CREDENTIALS = values.BooleanValue(True)
 
     # JWT
-    # JWT_LONG_RUNNING_REFRESH_TOKEN = values.BooleanValue(True)
-    # JWT_AUTH_HEADER_PREFIX = "Bearer"
-    # JWT_REFRESH_EXPIRATION_DELTA
-    # JWT_EXPIRATION_DELTA
+    ACCESS_TOKEN_LIFETIME = TimeDeltaValue(timedelta(minutes=5))
+    REFRESH_TOKEN_LIFETIME = TimeDeltaValue(timedelta(days=2))
+    ROTATE_REFRESH_TOKENS = values.BooleanValue(True)
+    BLACKLIST_AFTER_ROTATION = values.BooleanValue(True)
+    UPDATE_LAST_LOGIN = values.BooleanValue(True)
+
+    @property
+    def SIMPLE_JWT(self):
+        return {
+            "ACCESS_TOKEN_LIFETIME": self.ACCESS_TOKEN_LIFETIME,
+            "REFRESH_TOKEN_LIFETIME": self.REFRESH_TOKEN_LIFETIME,
+            "ROTATE_REFRESH_TOKENS": self.ROTATE_REFRESH_TOKENS,
+            "BLACKLIST_AFTER_ROTATION": self.BLACKLIST_AFTER_ROTATION,
+            "UPDATE_LAST_LOGIN": self.UPDATE_LAST_LOGIN,
+        }
 
     # Waffle app
     WAFFLE_FLAG_DEFAULT = values.BooleanValue(False)
