@@ -19,9 +19,9 @@ Sentry.init({
   debug: process.env.NODE_ENV !== "production",
   integrations: [
     new Integrations.BrowserTracing({
-      // @ts-ignore
       routingInstrumentation: Sentry.reactRouterV5Instrumentation(
         history,
+        // @ts-ignore
         routes,
         matchPath
       )
