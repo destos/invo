@@ -65,7 +65,7 @@ export type WaffleSampleFieldPolicy = {
 	created?: FieldPolicy<any> | FieldReadFunction<any>,
 	modified?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type UserKeySpecifier = ('id' | 'email' | 'firstName' | 'lastName' | 'isStaff' | 'isActive' | 'groups' | 'userPermissions' | 'allPermissions' | 'groupPermissions' | UserKeySpecifier)[];
+export type UserKeySpecifier = ('id' | 'email' | 'firstName' | 'lastName' | 'isStaff' | 'isActive' | 'groups' | 'userPermissions' | 'allPermissions' | 'groupPermissions' | 'sites' | UserKeySpecifier)[];
 export type UserFieldPolicy = {
 	id?: FieldPolicy<any> | FieldReadFunction<any>,
 	email?: FieldPolicy<any> | FieldReadFunction<any>,
@@ -76,7 +76,8 @@ export type UserFieldPolicy = {
 	groups?: FieldPolicy<any> | FieldReadFunction<any>,
 	userPermissions?: FieldPolicy<any> | FieldReadFunction<any>,
 	allPermissions?: FieldPolicy<any> | FieldReadFunction<any>,
-	groupPermissions?: FieldPolicy<any> | FieldReadFunction<any>
+	groupPermissions?: FieldPolicy<any> | FieldReadFunction<any>,
+	sites?: FieldPolicy<any> | FieldReadFunction<any>
 };
 export type NodeKeySpecifier = ('id' | NodeKeySpecifier)[];
 export type NodeFieldPolicy = {
@@ -305,8 +306,9 @@ export type SearchResultFieldPolicy = {
 	irn?: FieldPolicy<any> | FieldReadFunction<any>,
 	object?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type MutationKeySpecifier = ('registerSite' | 'selectEntities' | 'unselectEntities' | 'abandonSituation' | 'addSpace' | 'addGridSpace' | 'updateSpace' | 'updateGridSpace' | 'updateSpaceLayout' | 'removeSpace' | 'addItem' | 'addTool' | 'addConsumable' | 'updateItem' | 'updateTool' | 'updateConsumable' | 'deleteItem' | 'moveItem' | 'removeItem' | MutationKeySpecifier)[];
+export type MutationKeySpecifier = ('createUser' | 'registerSite' | 'selectEntities' | 'unselectEntities' | 'abandonSituation' | 'addSpace' | 'addGridSpace' | 'updateSpace' | 'updateGridSpace' | 'updateSpaceLayout' | 'removeSpace' | 'addItem' | 'addTool' | 'addConsumable' | 'updateItem' | 'updateTool' | 'updateConsumable' | 'deleteItem' | 'moveItem' | 'removeItem' | MutationKeySpecifier)[];
 export type MutationFieldPolicy = {
+	createUser?: FieldPolicy<any> | FieldReadFunction<any>,
 	registerSite?: FieldPolicy<any> | FieldReadFunction<any>,
 	selectEntities?: FieldPolicy<any> | FieldReadFunction<any>,
 	unselectEntities?: FieldPolicy<any> | FieldReadFunction<any>,
@@ -327,19 +329,8 @@ export type MutationFieldPolicy = {
 	moveItem?: FieldPolicy<any> | FieldReadFunction<any>,
 	removeItem?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type SitePayloadKeySpecifier = ('success' | 'site' | SitePayloadKeySpecifier)[];
-export type SitePayloadFieldPolicy = {
-	success?: FieldPolicy<any> | FieldReadFunction<any>,
-	site?: FieldPolicy<any> | FieldReadFunction<any>
-};
-export type SituationPayloadKeySpecifier = ('success' | 'object' | 'entities' | SituationPayloadKeySpecifier)[];
-export type SituationPayloadFieldPolicy = {
-	success?: FieldPolicy<any> | FieldReadFunction<any>,
-	object?: FieldPolicy<any> | FieldReadFunction<any>,
-	entities?: FieldPolicy<any> | FieldReadFunction<any>
-};
-export type SpacePayloadKeySpecifier = ('success' | 'errors' | 'object' | SpacePayloadKeySpecifier)[];
-export type SpacePayloadFieldPolicy = {
+export type UserPayloadKeySpecifier = ('success' | 'errors' | 'object' | UserPayloadKeySpecifier)[];
+export type UserPayloadFieldPolicy = {
 	success?: FieldPolicy<any> | FieldReadFunction<any>,
 	errors?: FieldPolicy<any> | FieldReadFunction<any>,
 	object?: FieldPolicy<any> | FieldReadFunction<any>
@@ -358,6 +349,23 @@ export type ErrorDetailKeySpecifier = ('error' | 'code' | ErrorDetailKeySpecifie
 export type ErrorDetailFieldPolicy = {
 	error?: FieldPolicy<any> | FieldReadFunction<any>,
 	code?: FieldPolicy<any> | FieldReadFunction<any>
+};
+export type SitePayloadKeySpecifier = ('success' | 'site' | SitePayloadKeySpecifier)[];
+export type SitePayloadFieldPolicy = {
+	success?: FieldPolicy<any> | FieldReadFunction<any>,
+	site?: FieldPolicy<any> | FieldReadFunction<any>
+};
+export type SituationPayloadKeySpecifier = ('success' | 'object' | 'entities' | SituationPayloadKeySpecifier)[];
+export type SituationPayloadFieldPolicy = {
+	success?: FieldPolicy<any> | FieldReadFunction<any>,
+	object?: FieldPolicy<any> | FieldReadFunction<any>,
+	entities?: FieldPolicy<any> | FieldReadFunction<any>
+};
+export type SpacePayloadKeySpecifier = ('success' | 'errors' | 'object' | SpacePayloadKeySpecifier)[];
+export type SpacePayloadFieldPolicy = {
+	success?: FieldPolicy<any> | FieldReadFunction<any>,
+	errors?: FieldPolicy<any> | FieldReadFunction<any>,
+	object?: FieldPolicy<any> | FieldReadFunction<any>
 };
 export type ItemPayloadKeySpecifier = ('success' | 'errors' | 'object' | ItemPayloadKeySpecifier)[];
 export type ItemPayloadFieldPolicy = {
@@ -597,26 +605,12 @@ export type TypedTypePolicies = TypePolicies & {
 		subscriptionType?: true,
 		fields?: MutationFieldPolicy,
 	},
-	SitePayload?: {
-		keyFields?: false | SitePayloadKeySpecifier | (() => undefined | SitePayloadKeySpecifier),
+	UserPayload?: {
+		keyFields?: false | UserPayloadKeySpecifier | (() => undefined | UserPayloadKeySpecifier),
 		queryType?: true,
 		mutationType?: true,
 		subscriptionType?: true,
-		fields?: SitePayloadFieldPolicy,
-	},
-	SituationPayload?: {
-		keyFields?: false | SituationPayloadKeySpecifier | (() => undefined | SituationPayloadKeySpecifier),
-		queryType?: true,
-		mutationType?: true,
-		subscriptionType?: true,
-		fields?: SituationPayloadFieldPolicy,
-	},
-	SpacePayload?: {
-		keyFields?: false | SpacePayloadKeySpecifier | (() => undefined | SpacePayloadKeySpecifier),
-		queryType?: true,
-		mutationType?: true,
-		subscriptionType?: true,
-		fields?: SpacePayloadFieldPolicy,
+		fields?: UserPayloadFieldPolicy,
 	},
 	Payload?: {
 		keyFields?: false | PayloadKeySpecifier | (() => undefined | PayloadKeySpecifier),
@@ -638,6 +632,27 @@ export type TypedTypePolicies = TypePolicies & {
 		mutationType?: true,
 		subscriptionType?: true,
 		fields?: ErrorDetailFieldPolicy,
+	},
+	SitePayload?: {
+		keyFields?: false | SitePayloadKeySpecifier | (() => undefined | SitePayloadKeySpecifier),
+		queryType?: true,
+		mutationType?: true,
+		subscriptionType?: true,
+		fields?: SitePayloadFieldPolicy,
+	},
+	SituationPayload?: {
+		keyFields?: false | SituationPayloadKeySpecifier | (() => undefined | SituationPayloadKeySpecifier),
+		queryType?: true,
+		mutationType?: true,
+		subscriptionType?: true,
+		fields?: SituationPayloadFieldPolicy,
+	},
+	SpacePayload?: {
+		keyFields?: false | SpacePayloadKeySpecifier | (() => undefined | SpacePayloadKeySpecifier),
+		queryType?: true,
+		mutationType?: true,
+		subscriptionType?: true,
+		fields?: SpacePayloadFieldPolicy,
 	},
 	ItemPayload?: {
 		keyFields?: false | ItemPayloadKeySpecifier | (() => undefined | ItemPayloadKeySpecifier),

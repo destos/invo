@@ -26,13 +26,23 @@ type User implements Node {
   groupPermissions: [String]!
 }
 
+input CreateUserInput {
+  email: String!
+  firstName: String!
+  lastName: String!
+  password: String!
+}
+
+type UserPayload implements Payload {
+  success: Boolean!
+  errors: [FieldError!]!
+  object: User
+}
 
 extend type Query {
   currentUser: User
 }
 
-input UserAuthInput {
-  email: String!
-  password: String!
+extend type Mutation {
+  createUser(input: CreateUserInput!): UserPayload!
 }
-

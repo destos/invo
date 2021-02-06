@@ -1,10 +1,13 @@
 from ariadne_extended.resolvers.model import ModelResolver
-from graph.types import query
+from graph.types import mutation, query
 
 from .types import group, permission, user
+from .serializers import UserSerializer
 
 
 class UserResolver(ModelResolver):
+    serializer_class = UserSerializer
+    # TODO: rate limit/block user creates
 
     def current(self, parent, **kwargs):
         # TODO: should this check that user belongs to current site? likely
@@ -14,6 +17,7 @@ class UserResolver(ModelResolver):
 
 
 query.set_field("currentUser", UserResolver.as_resolver(method="current"))
+mutation.set_field("createUser", UserResolver.as_resolver(method="create"))
 
 
 @group.field("permissions")

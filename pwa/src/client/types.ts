@@ -158,6 +158,7 @@ export type User = Node & {
   userPermissions: Array<Maybe<Permission>>;
   allPermissions: Array<Maybe<Scalars['String']>>;
   groupPermissions: Array<Maybe<Scalars['String']>>;
+  sites: Array<Site>;
 };
 
 export type Node = {
@@ -536,6 +537,7 @@ export type SearchResult = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  createUser: UserPayload;
   registerSite: SitePayload;
   selectEntities: SituationPayload;
   unselectEntities: SituationPayload;
@@ -558,6 +560,11 @@ export type Mutation = {
   moveItem: ItemPayload;
   /** Removes an item from a space */
   removeItem: ItemPayload;
+};
+
+
+export type MutationCreateUserArgs = {
+  input: CreateUserInput;
 };
 
 
@@ -657,6 +664,37 @@ export type MutationRemoveItemArgs = {
   id: Scalars['ID'];
 };
 
+export type CreateUserInput = {
+  email: Scalars['String'];
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+  password: Scalars['String'];
+};
+
+export type UserPayload = Payload & {
+  __typename?: 'UserPayload';
+  success: Scalars['Boolean'];
+  errors: Array<FieldError>;
+  object: Maybe<User>;
+};
+
+export type Payload = {
+  success: Maybe<Scalars['Boolean']>;
+  errors: Maybe<Array<Maybe<FieldError>>>;
+};
+
+export type FieldError = {
+  __typename?: 'FieldError';
+  name: Maybe<Scalars['String']>;
+  values: Maybe<Array<Maybe<ErrorDetail>>>;
+};
+
+export type ErrorDetail = {
+  __typename?: 'ErrorDetail';
+  error: Maybe<Scalars['String']>;
+  code: Maybe<Scalars['String']>;
+};
+
 export type SitePayload = {
   __typename?: 'SitePayload';
   success: Scalars['Boolean'];
@@ -696,23 +734,6 @@ export type SpacePayload = Payload & {
   success: Scalars['Boolean'];
   errors: Array<FieldError>;
   object: Maybe<SpaceTypes>;
-};
-
-export type Payload = {
-  success: Maybe<Scalars['Boolean']>;
-  errors: Maybe<Array<Maybe<FieldError>>>;
-};
-
-export type FieldError = {
-  __typename?: 'FieldError';
-  name: Maybe<Scalars['String']>;
-  values: Maybe<Array<Maybe<ErrorDetail>>>;
-};
-
-export type ErrorDetail = {
-  __typename?: 'ErrorDetail';
-  error: Maybe<Scalars['String']>;
-  code: Maybe<Scalars['String']>;
 };
 
 export type GridSpaceInput = {
@@ -774,6 +795,20 @@ export type UserDetailsQuery = (
   )> }
 );
 
+export type UserSignUpMutationVariables = Exact<{
+  input: CreateUserInput;
+}>;
+
+
+export type UserSignUpMutation = (
+  { __typename?: 'Mutation' }
+  & { createUser: (
+    { __typename?: 'UserPayload' }
+    & Pick<UserPayload, 'success'>
+    & ErrorFragment_UserPayload_Fragment
+  ) }
+);
+
 type Times_WaffleFlag_Fragment = (
   { __typename?: 'WaffleFlag' }
   & Pick<WaffleFlag, 'created' | 'modified'>
@@ -826,6 +861,18 @@ type Times_TrackedConsumable_Fragment = (
 
 export type TimesFragment = Times_WaffleFlag_Fragment | Times_WaffleSwitch_Fragment | Times_WaffleSample_Fragment | Times_Situation_Fragment | Times_SpaceNode_Fragment | Times_GridSpaceNode_Fragment | Times_Item_Fragment | Times_Tool_Fragment | Times_Consumable_Fragment | Times_TrackedConsumable_Fragment;
 
+type ErrorFragment_UserPayload_Fragment = (
+  { __typename?: 'UserPayload' }
+  & { errors: Array<(
+    { __typename?: 'FieldError' }
+    & Pick<FieldError, 'name'>
+    & { values: Maybe<Array<Maybe<(
+      { __typename?: 'ErrorDetail' }
+      & Pick<ErrorDetail, 'code' | 'error'>
+    )>>> }
+  )> }
+);
+
 type ErrorFragment_SpacePayload_Fragment = (
   { __typename?: 'SpacePayload' }
   & { errors: Array<(
@@ -850,7 +897,7 @@ type ErrorFragment_ItemPayload_Fragment = (
   )> }
 );
 
-export type ErrorFragmentFragment = ErrorFragment_SpacePayload_Fragment | ErrorFragment_ItemPayload_Fragment;
+export type ErrorFragmentFragment = ErrorFragment_UserPayload_Fragment | ErrorFragment_SpacePayload_Fragment | ErrorFragment_ItemPayload_Fragment;
 
 type ItemListContent_Item_Fragment = (
   { __typename?: 'Item' }

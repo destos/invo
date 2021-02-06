@@ -83,8 +83,8 @@ export default function SignIn() {
         Sign in
       </Typography>
       <FormContainer
-        className={classes.form}
         FormProps={{
+          className: classes.form,
           autoComplete: "new-password"
         }}
         formContext={formContext}
@@ -93,7 +93,6 @@ export default function SignIn() {
         <TextFieldElement
           variant="outlined"
           margin="normal"
-          required
           fullWidth
           label="Email Address"
           name="email"
@@ -103,7 +102,6 @@ export default function SignIn() {
         <TextFieldElement
           variant="outlined"
           margin="normal"
-          required
           fullWidth
           name="password"
           label="Password"

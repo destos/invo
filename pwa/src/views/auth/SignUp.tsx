@@ -1,20 +1,25 @@
 import { useMutation } from "@apollo/client"
-import { TextField } from "@material-ui/core"
 import Avatar from "@material-ui/core/Avatar"
 import Button from "@material-ui/core/Button"
-import Checkbox from "@material-ui/core/Checkbox"
 import FormControlLabel from "@material-ui/core/FormControlLabel"
 import Grid from "@material-ui/core/Grid"
 import Link from "@material-ui/core/Link"
 import { makeStyles } from "@material-ui/core/styles"
 import Typography from "@material-ui/core/Typography"
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined"
-import { newTokenEvent } from "client/auth"
+import { UserSignUpMutation, UserSignUpMutationVariables } from "client/types"
+import { SIGN_UP } from "queries/auth"
 import React from "react"
+import {
+  CheckboxElement,
+  FormContainer,
+  TextFieldElement
+} from "react-form-hook-mui"
 import { useForm } from "react-hook-form"
 import { Link as RouterLink, useHistory } from "react-router-dom"
+import { setErrors } from "utils/form"
 import { yupResolver } from "utils/yup"
-import schema from "./loginSchema"
+import schema from "./signupSchema"
 
 const useStyles = makeStyles((theme) => ({
   avatar: {
@@ -30,40 +35,63 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
+export type FormValues = {
+  firstName: string
+  lastName: string
+  email: string
+  password: string
+  accept: boolean
+}
+
+const defaultValues = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  password: "",
+  accept: false
+}
+
 export default function SignUp() {
   const classes = useStyles()
-  // const history = useHistory()
-  // const formContext = useForm<FormValues>({
-  //   context: {
-  //     cast: "validate"
-  //   },
-  //   defaultValues,
-  //   resolver: yupResolver(schema, { strict: false })
-  // })
-  // const { reset } = formContext
+  const history = useHistory()
 
-  // const [signIn] = useMutation<SignInMutation, SignInMutationVariables>(SIGN_IN)
+  const formContext = useForm<FormValues>({
+    context: {
+      cast: "validate"
+    },
+    defaultValues,
+    resolver: yupResolver(schema, { strict: false })
+  })
+  const { reset, setError } = formContext
 
-  // const doSubmit = async (data: FormValues) => {
-  //   const {
-  //     // @ts-ignore
-  //     data: { token }
-  //   } = await signIn({
-  //     variables: data
-  //   })
-  //   if (token) {
-  //     reset(defaultValues)
-  //     const event = newTokenEvent(token)
-  //     // Redirect
-  //     history.replace("/")
-  //   } else {
-  //     formContext.setError("password", {
-  //       type: "validate",
-  //       shouldFocus: true,
-  //       message: "Password is incorrect"
-  //     })
-  //   }
-  // }
+  const [signIn] = useMutation<UserSignUpMutation, UserSignUpMutationVariables>(
+    SIGN_UP
+  )
+
+  const doSubmit = async (data: FormValues) => {
+    const input = schema.cast(data, { context: { cast: "create" } })
+
+    const {
+      data: {
+        // @ts-ignore
+        createUser: { success, errors }
+      }
+    } = await signIn({
+      variables: {
+        // @ts-ignore
+        input
+      }
+    })
+
+    if (success) {
+      reset(defaultValues)
+      // Redirect
+      // @ts-ignore
+      history.replace("/auth/login")
+    } else {
+      setErrors(errors, setError)
+    }
+  }
 
   return (
     <>
@@ -73,14 +101,20 @@ export default function SignUp() {
       <Typography component="h1" variant="h5">
         Sign up
       </Typography>
-      <form className={classes.form} noValidate>
+      <FormContainer
+        FormProps={{
+          className: classes.form,
+          autoComplete: "on"
+        }}
+        formContext={formContext}
+        onSuccess={doSubmit}
+      >
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
-            <TextField
+            <TextFieldElement
               autoComplete="fname"
               name="firstName"
               variant="outlined"
-              required
               fullWidth
               id="firstName"
               label="First Name"
@@ -88,9 +122,8 @@ export default function SignUp() {
             />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <TextField
+            <TextFieldElement
               variant="outlined"
-              required
               fullWidth
               id="lastName"
               label="Last Name"
@@ -99,9 +132,8 @@ export default function SignUp() {
             />
           </Grid>
           <Grid item xs={12}>
-            <TextField
+            <TextFieldElement
               variant="outlined"
-              required
               fullWidth
               id="email"
               label="Email Address"
@@ -110,9 +142,8 @@ export default function SignUp() {
             />
           </Grid>
           <Grid item xs={12}>
-            <TextField
+            <TextFieldElement
               variant="outlined"
-              required
               fullWidth
               name="password"
               label="Password"
@@ -122,8 +153,9 @@ export default function SignUp() {
             />
           </Grid>
           <Grid item xs={12}>
-            <FormControlLabel
-              control={<Checkbox value="allowExtraEmails" color="primary" />}
+            <CheckboxElement
+              name="accept"
+              color="primary"
               label="You agree that when using this alpha project you won't be mad if data disappears or stuff breaks."
             />
           </Grid>
@@ -140,11 +172,11 @@ export default function SignUp() {
         <Grid container justify="flex-end">
           <Grid item>
             <Link to="/auth/login" component={RouterLink} variant="body2">
-              Already have an account? Sign in
+              Already have an account? Sign in instead
             </Link>
           </Grid>
         </Grid>
-      </form>
+      </FormContainer>
     </>
   )
 }

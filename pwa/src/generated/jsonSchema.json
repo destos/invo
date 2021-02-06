@@ -215,6 +215,26 @@
     "Mutation": {
       "type": "object",
       "properties": {
+        "createUser": {
+          "type": "object",
+          "properties": {
+            "return": {
+              "$ref": "#/definitions/UserPayload"
+            },
+            "arguments": {
+              "type": "object",
+              "properties": {
+                "input": {
+                  "$ref": "#/definitions/CreateUserInput"
+                }
+              },
+              "required": [
+                "input"
+              ]
+            }
+          },
+          "required": []
+        },
         "registerSite": {
           "type": "object",
           "properties": {
@@ -842,6 +862,12 @@
           "items": {
             "$ref": "#/definitions/String",
             "type": "string"
+          }
+        },
+        "sites": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Site"
           }
         }
       },
@@ -1645,6 +1671,84 @@
         "object"
       ]
     },
+    "CreateUserInput": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "$ref": "#/definitions/String",
+          "type": "string"
+        },
+        "firstName": {
+          "$ref": "#/definitions/String",
+          "type": "string"
+        },
+        "lastName": {
+          "$ref": "#/definitions/String",
+          "type": "string"
+        },
+        "password": {
+          "$ref": "#/definitions/String",
+          "type": "string"
+        }
+      },
+      "required": [
+        "email",
+        "firstName",
+        "lastName",
+        "password"
+      ]
+    },
+    "UserPayload": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "$ref": "#/definitions/Boolean",
+          "type": "boolean"
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FieldError"
+          }
+        },
+        "object": {
+          "$ref": "#/definitions/User"
+        }
+      },
+      "required": [
+        "success"
+      ]
+    },
+    "FieldError": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "$ref": "#/definitions/String",
+          "type": "string"
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ErrorDetail"
+          }
+        }
+      },
+      "required": []
+    },
+    "ErrorDetail": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "$ref": "#/definitions/String",
+          "type": "string"
+        },
+        "code": {
+          "$ref": "#/definitions/String",
+          "type": "string"
+        }
+      },
+      "required": []
+    },
     "SitePayload": {
       "type": "object",
       "properties": {
@@ -1769,36 +1873,6 @@
       "required": [
         "success"
       ]
-    },
-    "FieldError": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "$ref": "#/definitions/String",
-          "type": "string"
-        },
-        "values": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ErrorDetail"
-          }
-        }
-      },
-      "required": []
-    },
-    "ErrorDetail": {
-      "type": "object",
-      "properties": {
-        "error": {
-          "$ref": "#/definitions/String",
-          "type": "string"
-        },
-        "code": {
-          "$ref": "#/definitions/String",
-          "type": "string"
-        }
-      },
-      "required": []
     },
     "GridSpaceInput": {
       "type": "object",
