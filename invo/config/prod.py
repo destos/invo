@@ -8,9 +8,10 @@ Production Configurations
 from configurations import values
 
 from .common import Common
+from .sentry import Sentry
 
 
-class Prod(Common):
+class Prod(Sentry, Common):
 
     # DEBUG
     DEBUG = False
