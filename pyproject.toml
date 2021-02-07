@@ -22,7 +22,7 @@ django-filter = "^2.4.0"
 django-waffle = "^2.0.0"
 dateutils = "^0.6.11"
 django-fsm = "^2.7.0"
-arrow = "^0.17.0"
+arrow = "^0.15.6"
 django-cors-headers = "^3.5.0"
 glom = "^20.11.0"
 django-configurations = {version = "^2.2", extras = ["cache", "database", "email", "search"]}
@@ -37,6 +37,10 @@ daphne = "^3.0.1"
 sentry-sdk = "^0.19.5"
 PyJWT = "^2.0.0"
 djangorestframework-simplejwt = "^4.6.0"
+django-q = {path = "../python/django-q", develop = true}
+psutil = "^5.8.0"
+django-redis = "^4.12.1"
+django-memoize = "^2.3.1"
 
 [tool.poetry.dev-dependencies]
 black = {version = "^20.8b1", allow-prereleases = true}

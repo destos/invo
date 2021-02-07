@@ -25,7 +25,7 @@ class SituationResolver(OwnerResolverMixin, ModelResolver):
         if situ is None:
             # if no active, make it
             site = get_current_site(self.request)
-            return Situation.current_site_objects.create(user=user, site=site)
+            return Situation.objects.create(user=user, site=site)
         return situ
 
     def active(self, info, **kwargs):

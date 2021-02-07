@@ -1,8 +1,14 @@
 from ariadne_extended.resolvers import ListModelMixin, ModelResolver
 from django.contrib.sites.models import Site
 from django.contrib.sites.shortcuts import get_current_site
-from graph.types import mutation, query
+from django.core.exceptions import FieldDoesNotExist
 from rest_framework.permissions import BasePermission, IsAuthenticated
+
+from graph.types import mutation, query
+
+
+def get_site(request):
+    return request.site if hasattr(request, "site") else get_current_site(request)
 
 
 class SitePermission(BasePermission):
@@ -10,7 +16,7 @@ class SitePermission(BasePermission):
         """
         Return `True` if permission is granted, `False` otherwise.
         """
-        site = get_current_site(request)
+        site = get_site(request)
         return request.user.sites.filter(id=site.id).exists()
 
     def has_object_permission(self, request, view, obj):
@@ -18,8 +24,26 @@ class SitePermission(BasePermission):
         return request.user.sites.filter(id=obj.site.id).exists()
 
 
+# TODO: convert/add resolver mixin for current site lookup restriction. what is the most fault tollerant to prevent data leakage?
 class OwnerResolverMixin:
     permission_classes = [IsAuthenticated & SitePermission]
+    __field_name = None
+
+    def get_queryset(self):
+        site = get_site(self.request)
+        return super().get_queryset().filter(**{self._get_field_name() + "__id": site.id})
+
+    def _get_field_name(self):
+        """ Return self.__field_name or 'site' or 'sites'. """
+
+        if self.__field_name is None:
+            try:
+                self.model._meta.get_field("site")
+            except FieldDoesNotExist:
+                self.__field_name = "sites"
+            else:
+                self.__field_name = "site"
+        return self.__field_name
 
 
 class SiteResolver(ModelResolver):

@@ -77,6 +77,8 @@ class Common(Configuration):
         "ariadne_extended.contrib.waffle_graph",
         "haystack",
         "rest_framework_simplejwt.token_blacklist",
+        "django_q",
+        "memoize",
     )
 
     LOCAL_APPS = (
@@ -126,10 +128,7 @@ class Common(Configuration):
     # END DATABASE CONFIGURATION
 
     # CACHING
-    # Do this here because thanks to django-pylibmc-sasl and pylibmc
-    # memcacheify (used on heroku) is painful to install on windows.
     CACHES = values.CacheURLValue("locmem://invo")
-
     # END CACHING
 
     # GENERAL CONFIGURATION
@@ -305,6 +304,15 @@ class Common(Configuration):
     HAYSTACK_FUZZY_MAX_EXPANSIONS = 50
     # HAYSTACK_SIGNAL_PROCESSOR = "haystack.signals.RealtimeSignalProcessor"
     HAYSTACK_SIGNAL_PROCESSOR = "haystack.signals.BaseSignalProcessor"
+
+    # Django Q
+    Q_CLUSTER = {
+        # default={"name": "main", "workers": 4, "timeout": 90, "django_redis": "default"},
+        "name": "main",
+        "workers": 4,
+        "timeout": 90,
+        "django_redis": "default",
+    }
 
     # INVO APP SETTINGS
 

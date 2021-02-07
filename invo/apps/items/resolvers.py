@@ -4,11 +4,12 @@ from graph.types import mutation, query
 
 from . import models, serializers
 from .types import item_interface
+from owners.resolvers import OwnerResolverMixin
 
 
-class ItemResolver(RelayModelMixin, ModelResolver):
+class ItemResolver(OwnerResolverMixin, RelayModelMixin, ModelResolver):
     model = models.Item
-    queryset = models.Item.current_site_objects.all()
+    queryset = models.Item.objects.all()
 
     type_serializers = {
         models.Item: serializers.ItemSerializer,

@@ -21,8 +21,23 @@ services:
       - key: DJANGO_ROOT_DOMAIN
         value: "${APP_DOMAIN}"
         scope: RUN_TIME
+    # TODO: add sentry envs to this and cluster
     routes:
       - path: /api
+  - name: qcluster
+    image:
+      registry_type: DOCR
+      repository: invo-build
+      tag: latest
+    run_command: ./manage.py qcluster
+    envs:
+      - key: DATABASE_URL
+        value: "${db.DATABASE_URL}"
+        scope: RUN_TIME
+        type: SECRET
+      - key: DJANGO_SECRET_KEY
+        scope: RUN_TIME
+        type: SECRET
 jobs:
   - name: migrate
     kind: PRE_DEPLOY
