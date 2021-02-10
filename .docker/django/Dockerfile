@@ -1,8 +1,8 @@
 # application code is stored in /app
 # TODO: describe build steps
-ARG POETRY_HOME="/opt/poetry/"
-ARG SETUP_PATH="/opt/setup/"
-ARG VENV_PATH="${SETUP_PATH}.venv/"
+ARG POETRY_HOME="/opt/poetry"
+ARG SETUP_PATH="/opt/setup"
+ARG VENV_PATH="${SETUP_PATH}/.venv/"
 
 FROM python:3.9-slim-buster as python-base
 
@@ -51,72 +51,16 @@ RUN curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poet
 # and install only runtime deps using poetry
 WORKDIR $SETUP_PATH
 COPY ./poetry.lock ./pyproject.toml ./
-RUN poetry install --no-dev
-
-# 'development' stage installs all dev deps and can be used to develop code.
-# For example using docker-compose to mount local volume under /app
-FROM builder-base as development
-ARG SETUP_PATH
-ARG POETRY_HOME
-
-ENV DJANGO_CONFIGURATION=Local
-
-# Copying poetry and venv into image
-COPY --from=builder-base $POETRY_HOME $POETRY_HOME
-COPY --from=builder-base $SETUP_PATH $SETUP_PATH
-
-# venv already has runtime deps installed we get a quicker install
-WORKDIR $SETUP_PATH
-RUN poetry install
-
-WORKDIR /app
-COPY ./invo/ ./invo
-COPY ./manage.py manage.py
-
-# Copying in our entrypoint
-COPY ./.docker/django/docker-entrypoint.sh /docker-entrypoint.sh
-RUN chmod +x /docker-entrypoint.sh
-
-EXPOSE 8000
-ENTRYPOINT /docker-entrypoint.sh $0 $@
-CMD ["daphne", "-b", "0.0.0.0", "-p", "8000", "asgi:application"]
-
-
-# 'lint' stage runs black and isort
-# running in check mode means build will fail if any linting errors occur
-FROM development AS lint
-ARG SETUP_PATH
-
-WORKDIR $SETUP_PATH
-RUN poetry run black --config ./pyproject.toml --check /app
-RUN poetry run isort --settings-path ./pyproject.toml --check-only /app
-# RUN poetry run ./manage.py check --deploy --fail-level ERROR
-CMD ["tail", "-f", "/dev/null"]
-
-
-# 'test' stage runs our unit tests with pytest and
-# coverage.  Build will fail if test coverage is under 95%
-
-# FROM development AS test
-# ARG SETUP_PATH
-# ENV DJANGO_CONFIGURATION="Test"
-# ENV DJANGO_SECRET_KEY="<super secret>"
-
-# WORKDIR $SETUP_PATH
-# # TODO: may be able to use pytest-cov directly?
-# RUN coverage run --rcfile ./pyproject.toml -m pytest /app
-# RUN coverage report --fail-under 95
-
+# dobi is used at this point to install any needed modules
 
 # 'production' stage uses the clean 'python-base' stage and copyies
 # in only our runtime deps that were installed in the 'builder-base'
 FROM python-base as production
 
 ARG VENV_PATH
-ENV DJANGO_CONFIGURATION="Prod"
-ENV DJANGO_SECRET_KEY="<super secret>"
+ENV DJANGO_CONFIGURATION=Prod
 
-COPY --from=builder-base $VENV_PATH $VENV_PATH
+COPY .build/venv $VENV_PATH
 
 WORKDIR /app
 COPY ./invo ./invo
@@ -128,6 +72,7 @@ RUN chmod +x /docker-entrypoint.sh
 RUN python -m venv $VENV_PATH
 ENV PATH="${VENV_PATH}bin:$PATH"
 RUN echo $PATH
+RUN pip install supervisor
 
 ENTRYPOINT /docker-entrypoint.sh $0 $@
 CMD ["daphne", "-b", "0.0.0.0", "-p", "8000", "invo.asgi:application"]

@@ -1,4 +1,32 @@
 name: myinvo
+# Django app envs
+envs:
+  - key: DJANGO_SECRET_KEY
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+    value: EV[1:hqH5Uawu6KkWnFc1/KKTQAzAxX8Ge+7N:wVK6YuKa4rPH0sQRBdYfqN7JBsgIX6f1scdb7+yzUNKlJ2BIfFgHFz1LLqpRh4O/WZ4qKtMyNu7XtOB6XbyszlTR]
+  - key: DJANGO_SENTRY_DSN
+    scope: RUN_AND_BUILD_TIME
+    type: SECRET
+    value: EV[1:GVYmpoKzz/ll4Eg5gEjdN0KOg/rvSNQ8:+HIqY37KB1MBcSVZFz95YbtpOXGH6v6YLQqGqtR434aKOWQiPYhtErXhdCnaJYmznuw9Bzcwm7u1DQuZXBqKdwEl9TSe+tN2/5BOqcMzEBvpb4pSqkYBBpw=]
+  - key: DJANGO_SENTRY_ENVIRONMENT
+    scope: RUN_AND_BUILD_TIME
+    value: stage
+  - key: DATABASE_URL
+    scope: RUN_AND_BUILD_TIME
+    value: ${db.DATABASE_URL}
+  - key: CACHE_URL
+    scope: RUN_AND_BUILD_TIME
+    value: ${redis.DATABASE_URL}
+  - key: DJANGO_ALLOWED_HOSTS
+    scope: RUN_AND_BUILD_TIME
+    value: ${APP_DOMAIN},*.${APP_DOMAIN}
+  - key: DJANGO_ROOT_DOMAIN
+    scope: RUN_AND_BUILD_TIME
+    value: ${APP_DOMAIN}
+  - key: DJANGO_INVO_APP_IRN_NAMESPACE
+    scope: RUN_AND_BUILD_TIME
+    value: stage
 services:
   - name: server
     image:
@@ -8,36 +36,18 @@ services:
     run_command: daphne -b 0.0.0.0 -p 8000 invo.asgi:application
     http_port: 8000
     envs:
-      - key: DATABASE_URL
-        value: "${db.DATABASE_URL}"
+      - key: DJANGO_CORS_ORIGIN_WHITELIST
+        value: ${APP_DOMAIN},*.${APP_DOMAIN}
         scope: RUN_TIME
-        type: SECRET
-      - key: DJANGO_SECRET_KEY
-        scope: RUN_TIME
-        type: SECRET
-      - key: DJANGO_ALLOWED_HOSTS
-        value: "${APP_DOMAIN},*.${APP_DOMAIN}"
-        scope: RUN_TIME
-      - key: DJANGO_ROOT_DOMAIN
-        value: "${APP_DOMAIN}"
-        scope: RUN_TIME
-    # TODO: add sentry envs to this and cluster
     routes:
       - path: /api
+workers:
   - name: qcluster
     image:
       registry_type: DOCR
       repository: invo-build
       tag: latest
     run_command: ./manage.py qcluster
-    envs:
-      - key: DATABASE_URL
-        value: "${db.DATABASE_URL}"
-        scope: RUN_TIME
-        type: SECRET
-      - key: DJANGO_SECRET_KEY
-        scope: RUN_TIME
-        type: SECRET
 jobs:
   - name: migrate
     kind: PRE_DEPLOY
@@ -45,7 +55,7 @@ jobs:
       registry_type: DOCR
       repository: invo-build
       tag: latest
-    run_command: ./manage.py migrate
+    run_command: ./manage.py migrate --no-input
     envs:
       - key: DATABASE_URL
         value: "${db.DATABASE_URL}"
@@ -59,22 +69,28 @@ static_sites:
     index_document: index.html
     catchall_document: index.html
     github:
-      branch: staging
+      branch: 5-add-sites
       deploy_on_push: false
       repo: destos/invo
     envs:
       - key: REACT_APP_API_GATEWAY
         value: "https://${APP_DOMAIN}/api/"
+        scope: BUILD_TIME
       - key: REACT_APP_DOMAIN
         value: "${APP_DOMAIN}"
         scope: BUILD_TIME
+      - key: REACT_APP_SENTRY_DSN
+        # value: "https://6ba65e0f1fb54abbadc7e8fcdf0f1bf2@o517777.ingest.sentry.io/5626111"
+        value: EV[1:TWt56i7UtZ/d5BxfX2yy3ydM3GCjBrQ+:SNH3Naeh9QgtY96aqIEQwJyJUMjBQhjsOVKNj4KBAX9C+jk0YpeuZ5ApxZ5EJ2t70GQFqTh7O3WVRZA/pYSmFwylzLEMBN6vEwdiwLpg61G0XA/kGvodkiQ=]
+        scope: BUILD_TIME
+        type: SECRET
   # - name: django-static
   #   image:
   #     registry_type: DOCR
   #     repository: invo-build
   #     tag: latest
   #   # This happens as part of the Python/DJango buildpack:
-  #   # build_command: python manage.py collectstatic --noinput
+  #   # build_command: python manage.py collectstatic --no-input
   #   output_dir: staticfiles
   #   routes:
   #     - path: /static
@@ -83,3 +99,12 @@ databases:
   - name: db
     engine: PG
     version: "12"
+  - name: redis
+    cluster_name: "invo-stage-redis"
+    production: true
+    engine: REDIS
+domains:
+  - domain: myinvo.app
+    type: PRIMARY
+    wildcard: true
+    zone: myinvo.app
