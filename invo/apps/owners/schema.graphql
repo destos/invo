@@ -18,7 +18,7 @@ extend type Mutation {
 }
 
 extend type User {
-  sites: [Sites!]!
+  sites: [Site!]!
 }
 
 # TODO: think about site flow in relation to a recent sign up.

@@ -3,6 +3,7 @@ from django.contrib.sites.models import Site
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import FieldDoesNotExist
 from rest_framework.permissions import BasePermission, IsAuthenticated
+from accounts.types import user
 
 from graph.types import mutation, query
 
@@ -52,5 +53,12 @@ class SiteResolver(ModelResolver):
     def current(self, info, **kwargs):
         return get_current_site(self.request)
 
+    def sites_for_object(self, info, **kwargs):
+        return self.parent.sites.all()
+
+    def site_for_object(self, info, **kwargs):
+        return self.parent.site
+
 
 query.set_field("currentSite", SiteResolver.as_resolver(method="current"))
+user.set_field("sites", SiteResolver.as_resolver(method="sites_for_object"))
