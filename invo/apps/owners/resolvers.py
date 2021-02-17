@@ -3,8 +3,9 @@ from django.contrib.sites.models import Site
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import FieldDoesNotExist
 from rest_framework.permissions import BasePermission, IsAuthenticated
-from accounts.types import user
 
+from .models import SingularSite
+from accounts.types import user
 from graph.types import mutation, query
 
 
@@ -46,14 +47,27 @@ class OwnerResolverMixin:
                 self.__field_name = "site"
         return self.__field_name
 
+    def perform_create(self, serializer):
+        # model = self.get_model()
+        model = self.model
+        if issubclass(model, SingularSite):
+            return serializer.save(site=get_current_site(self.request))
+        else:
+            site=get_current_site(self.request)
+            instance = serializer.save()
+            instance.sites.add(site)
+            return instance
+
 
 class SiteResolver(ModelResolver):
+    """Resolve related sites or current site"""
     queryset = Site.objects.all()
 
     def current(self, info, **kwargs):
         return get_current_site(self.request)
 
     def sites_for_object(self, info, **kwargs):
+        # TODO: is this something we solved already with the nested resolvers?
         return self.parent.sites.all()
 
     def site_for_object(self, info, **kwargs):
