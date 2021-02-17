@@ -100,7 +100,10 @@ class Situation(SingularSite, SafeDeleteModel, TimeStampedModel):
             manager.remove(*objects)
 
     @transition(
-        field=state, source=(States.SELECTING), target=States.ADDING, conditions=[has_space]
+        field=state,
+        source=(States.SELECTING),
+        target=States.ADDING,
+        conditions=[has_space],
     )
     def chose_item(space):
         """Set situation state to adding when trying to add an item"""
@@ -108,7 +111,10 @@ class Situation(SingularSite, SafeDeleteModel, TimeStampedModel):
         pass
 
     @transition(
-        field=state, source=(States.SELECTING), target=States.PLACING, conditions=[has_item]
+        field=state,
+        source=(States.SELECTING),
+        target=States.PLACING,
+        conditions=[has_item],
     )
     def chose_space(space):
         """Set situation state to placing when trying to place an item"""

@@ -191,7 +191,12 @@ class TestGridSpaceNode(TestCase):
 
     def test_sync_children_existing_nodes(self):
         "Existing nodes with a proper position shouldn't be replaced or removed"
-        baker.make(models.SpaceNode, parent=self.space, data=dict(position=[0, 0]), site=self.site)
+        baker.make(
+            models.SpaceNode,
+            parent=self.space,
+            data=dict(position=[0, 0]),
+            site=self.site,
+        )
         self.space.sync_children(child_class=models.GridSpaceNode)
         children = self.space.children.instance_of(models.GridSpaceNode)
         orig_children = self.space.children.instance_of(models.SpaceNode)

@@ -7,7 +7,9 @@ class SpaceNodeSerializer(serializers.ModelSerializer):
     # parent = serializers.PrimaryKeyRelatedField(queryset=SpaceNode.objects.all(), required=False)
     # name = serializers.CharField(required=False)
     dimensions = serializers.ModelField(
-        source="size", model_field=models.SpaceNode._meta.get_field("size"), required=False
+        source="size",
+        model_field=models.SpaceNode._meta.get_field("size"),
+        required=False,
     )
     # layout = serializers.ModelField(model_field=models.SpaceNode._meta.get_field('layout'))
     layout = serializers.ModelField(model_field=models.SpaceNode.layout, required=False)

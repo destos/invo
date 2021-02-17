@@ -56,7 +56,8 @@ mutation.set_field(
 mutation.set_field("updateItem", ItemResolver.as_resolver(method="update"))
 mutation.set_field("updateTool", ItemResolver.as_resolver(method="update", model=models.Tool))
 mutation.set_field(
-    "updateConsumable", ItemResolver.as_resolver(method="update", model=models.Consumable)
+    "updateConsumable",
+    ItemResolver.as_resolver(method="update", model=models.Consumable),
 )
 
 mutation.set_field("deleteItem", ItemResolver.as_resolver(method="destroy"))

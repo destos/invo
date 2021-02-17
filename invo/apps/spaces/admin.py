@@ -1,6 +1,9 @@
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
-from polymorphic_tree.admin import PolymorphicMPTTChildModelAdmin, PolymorphicMPTTParentModelAdmin
+from polymorphic_tree.admin import (
+    PolymorphicMPTTChildModelAdmin,
+    PolymorphicMPTTParentModelAdmin,
+)
 
 from . import models
 
