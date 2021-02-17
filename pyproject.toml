@@ -17,7 +17,7 @@ psycopg2-binary = "^2.8.6"
 pyhumps = "^1.6.1"
 python = "^3.9"
 # TODO: fix extended and django-measurement packages.
-ariadne-extended = {path = "../python/ariadne-extended", develop = true}
+ariadne-extended = {path = "../python/ariadne-extended"}
 django-filter = "^2.4.0"
 django-waffle = "^2.0.0"
 dateutils = "^0.6.11"
@@ -37,10 +37,14 @@ daphne = "^3.0.1"
 sentry-sdk = "^0.19.5"
 PyJWT = "^2.0.0"
 djangorestframework-simplejwt = "^4.6.0"
-django-q = {path = "../python/django-q", develop = true}
+django-q = {path = "../python/django-q"}
 psutil = "^5.8.0"
 django-redis = "^4.12.1"
 django-memoize = "^2.3.1"
+Twisted = {version = "^20.3.0", extras = ["tls", "http2"]}
+supervisor = "^4.2.1"
+whitenoise = "^5.2.0"
+uvicorn = {version = "^0.13.3", extras = ["standard"]}
 
 [tool.poetry.dev-dependencies]
 black = {version = "^20.8b1", allow-prereleases = true}

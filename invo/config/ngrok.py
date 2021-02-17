@@ -11,10 +11,10 @@ from .common import Common
 from .sentry import Sentry
 
 
-class Prod(Sentry, Common):
+class Ngrok(Sentry, Common):
 
     # DEBUG
-    DEBUG = False
+    DEBUG = True
     TEMPLATE_DEBUG = DEBUG
     # END DEBUG
 
@@ -30,9 +30,10 @@ class Prod(Sentry, Common):
     # whitenoise
     STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
     WHITENOISE_MANIFEST_STRICT = False
+    # STATIC_URL = "https://myinvo.ngrok.io/api/static/"
 
     USE_X_FORWARDED_HOST = True
-    FORCE_SCRIPT_NAME = "/api"
+    # FORCE_SCRIPT_NAME = "/api/"
 
     # INVO APP SETTINGS
-    INVO_APP_IRN_NAMESPACE = values.Value("prod")
+    INVO_APP_IRN_NAMESPACE = values.Value("ngrok")

@@ -97,17 +97,18 @@ class Common(Configuration):
     # END APP CONFIGURATION
 
     # MIDDLEWARE CONFIGURATION
-    MIDDLEWARE = (
+    # MIDDLEWARE = values.BackendsValue([
+    MIDDLEWARE = [
         "django.middleware.security.SecurityMiddleware",
         "django.contrib.sessions.middleware.SessionMiddleware",
-        "corsheaders.middleware.CorsMiddleware",
         "django.middleware.common.CommonMiddleware",
         "django.middleware.csrf.CsrfViewMiddleware",
         "django.contrib.auth.middleware.AuthenticationMiddleware",
         "django.contrib.messages.middleware.MessageMiddleware",
         "django.middleware.clickjacking.XFrameOptionsMiddleware",
         "django.contrib.sites.middleware.CurrentSiteMiddleware",
-    )
+        "corsheaders.middleware.CorsMiddleware",
+    ]
     # END MIDDLEWARE CONFIGURATION
 
     # EMAIL CONFIGURATION
@@ -175,7 +176,7 @@ class Common(Configuration):
 
     # STATIC FILE CONFIGURATION
     # See: https://docs.djangoproject.com/en/dev/ref/settings/#static-root
-    # STATIC_ROOT = join(os.path.dirname(BASE_DIR), 'staticfiles')
+    STATIC_ROOT = join(os.path.dirname(BASE_DIR), "staticfiles")
 
     # See: https://docs.djangoproject.com/en/dev/ref/settings/#static-url
     STATIC_URL = "/static/"
@@ -276,6 +277,7 @@ class Common(Configuration):
     CORS_ALLOWED_ORIGIN_REGEXES = values.ListValue([])
     CORS_ORIGIN_ALLOWS_ALL = values.BooleanValue(False)
     CORS_ALLOW_CREDENTIALS = values.BooleanValue(True)
+    CORS_URLS_REGEX = r"^/api/.*$"
 
     # JWT
     ACCESS_TOKEN_LIFETIME = TimeDeltaValue(timedelta(minutes=5))
@@ -320,4 +322,3 @@ class Common(Configuration):
     # TODO: maybe tie to sites framework?
     # nullable
     INVO_APP_IRN_NAMESPACE = values.Value("stage")
-    # INVO_APP_IRN_NAMESPACE = None

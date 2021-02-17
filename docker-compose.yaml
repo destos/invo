@@ -1,21 +1,54 @@
 version: '3.1'
 services:
+  nginx:
+    image: nginx:latest
+    links:
+      - app
+    volumes:
+      - .docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    command: [nginx-debug, '-g', 'daemon off;']
+    networks:
+      - invo
+      # - host
+    ports:
+      - 8080:80
   app:
-    build:
-      context: .
-      dockerfile: .docker/django/app
+    # build:
+    #   context: .
+    #   dockerfile: .docker/django/app
+    # image: invo-prod:latest
+    image: invo-dev:latest
     links:
       - db
       - redis
       - es
-    command: ./manage.py runserver 0.0.0.0:8000
-    env_file: .env
+    # command: ./manage.py runserver 0.0.0.0:8000
+    # command: supervisord -n -c ./invo/supervisord.conf
+    # command: daphne --root-path=/api -b 0.0.0.0 -p 8000 invo.asgi:application
+    command: uvicorn --reload --lifespan=off --root-path=/api --host 0.0.0.0 --port 8000 invo.asgi:application
+    # command: daphne -b 0.0.0.0 -p 8000 invo.asgi:application
+    env_file: .env.ngrok
     environment:
       DATABASE_URL: postgres://postgres:postgres@invo-db/invo
+      CACHE_URL: redis://invo-redis/0
     networks:
       - invo
     ports:
       - 8000:8000
+    volumes:
+      - ./invo:/app/invo/
+  qworkers:
+    image: invo-prod:latest
+    links:
+      - db
+      - redis
+    command: python ./manage.py qcluster
+    env_file: .env
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@invo-db/invo
+      CACHE_URL: redis://invo-redis/0
+    networks:
+      - invo
   db:
     restart: always
     image: postgres:latest
@@ -27,17 +60,21 @@ services:
     volumes:
       - db-volume:/var/lib/postgresql/data
     env_file: .env
-    # ports:
+    ports:
+      - 5432:5432
+      - 5433:5433
     networks:
       invo:
         aliases:
           - invo-db
   redis:
     image: redis:latest
-    networks:
-      - invo
     ports:
       - 6379:6379
+    networks:
+      invo:
+        aliases:
+          - invo-redis
   es:
     image: elasticsearch:5.6.16
     container_name: es
@@ -57,7 +94,9 @@ services:
     ports:
       - 9200:9200
     networks:
-      - invo
+      invo:
+        aliases:
+          - invo-es
 
 volumes:
   db-volume:
@@ -69,3 +108,6 @@ networks:
   invo:
     name: invo-net
     driver: bridge
+  # host:
+  #   name: host
+  #   external: true

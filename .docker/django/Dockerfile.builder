@@ -51,41 +51,25 @@ RUN curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poet
 # and install only runtime deps using poetry
 WORKDIR $SETUP_PATH
 COPY ./poetry.lock ./pyproject.toml ./
-# dobi is used at this point to install any needed modules
 
-# 'production' stage uses the clean 'python-base' stage and copyies
-# in only our runtime deps that were installed in the 'builder-base'
 FROM python-base as production
 
 ARG VENV_PATH
-ENV DJANGO_SECRET_KEY=temporary
-# ENV DJANGO_SENTRY_DSN=http://temporary.com/1234
+# ENV DJANGO_CONFIGURATION="Prod"
+# ENV DJANGO_SECRET_KEY="<super secret>"
 
-COPY .build/venv $VENV_PATH
+COPY --from=builder-base $VENV_PATH $VENV_PATH
 
 WORKDIR /app
 COPY ./invo ./invo
 COPY ./manage.py manage.py
 
-# set up python env
-RUN python -m venv $VENV_PATH
-ENV PATH="${VENV_PATH}bin:$PATH"
-
-# Use build config for any build steps
-ENV DJANGO_CONFIGURATION=Build
-
-# make static files
-RUN mkdir /app/staticfiles/
-RUN ./manage.py collectstatic --noinput
-
-# Revert to prod config
-ENV DJANGO_CONFIGURATION=Prod
 COPY ./.docker/django/docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
 
-RUN mkdir /run/daphne
-RUN chown root.root /run/daphne/
-RUN echo "d /run/daphne 0755 root root" >> /usr/lib/tmpfiles.d/daphne.conf
+RUN python -m venv $VENV_PATH
+ENV PATH="${VENV_PATH}bin:$PATH"
+RUN echo $PATH
 
-# ENTRYPOINT /docker-entrypoint.sh $0 $@
-# CMD ["daphne", "-b", "0.0.0.0", "-p", "8000", "invo.asgi:application"]
+ENTRYPOINT /docker-entrypoint.sh $0 $@
+CMD ["daphne", "-b", "0.0.0.0", "-p", "8000", "invo.asgi:application"]

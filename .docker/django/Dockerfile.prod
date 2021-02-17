@@ -1,0 +1,24 @@
+ARG SETUP_PATH="/opt/setup"
+ARG VENV_PATH="${SETUP_PATH}/.venv/"
+
+FROM python-base as production
+
+ARG VENV_PATH
+ENV DJANGO_CONFIGURATION="Prod"
+ENV DJANGO_SECRET_KEY="<super secret>"
+
+COPY --from=builder-base $VENV_PATH $VENV_PATH
+
+WORKDIR /app
+COPY ./invo ./invo
+COPY ./manage.py manage.py
+
+COPY ./.docker/django/docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
+
+RUN python -m venv $VENV_PATH
+ENV PATH="${VENV_PATH}bin:$PATH"
+RUN echo $PATH
+
+ENTRYPOINT /docker-entrypoint.sh $0 $@
+CMD ["daphne", "-b", "0.0.0.0", "-p", "8000", "invo.asgi:application"]

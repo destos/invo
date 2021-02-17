@@ -3,7 +3,11 @@ from graph.middleware import JWTMiddleware
 from django.contrib import admin
 from django.urls import path
 from graph.schema import schema
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+    TokenVerifyView,
+)
 
 # TODO: using cookies for tokens is more secure. Investigate
 # from graph.views import CookieTokenObtainPairView

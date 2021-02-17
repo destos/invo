@@ -1,53 +1,58 @@
 name: myinvo
 # Django app envs
-envs:
-  - key: DJANGO_SECRET_KEY
-    scope: RUN_AND_BUILD_TIME
-    type: SECRET
-    value: EV[1:hqH5Uawu6KkWnFc1/KKTQAzAxX8Ge+7N:wVK6YuKa4rPH0sQRBdYfqN7JBsgIX6f1scdb7+yzUNKlJ2BIfFgHFz1LLqpRh4O/WZ4qKtMyNu7XtOB6XbyszlTR]
-  - key: DJANGO_SENTRY_DSN
-    scope: RUN_AND_BUILD_TIME
-    type: SECRET
-    value: EV[1:GVYmpoKzz/ll4Eg5gEjdN0KOg/rvSNQ8:+HIqY37KB1MBcSVZFz95YbtpOXGH6v6YLQqGqtR434aKOWQiPYhtErXhdCnaJYmznuw9Bzcwm7u1DQuZXBqKdwEl9TSe+tN2/5BOqcMzEBvpb4pSqkYBBpw=]
-  - key: DJANGO_SENTRY_ENVIRONMENT
-    scope: RUN_AND_BUILD_TIME
-    value: stage
-  - key: DATABASE_URL
-    scope: RUN_AND_BUILD_TIME
-    value: ${db.DATABASE_URL}
-  - key: CACHE_URL
-    scope: RUN_AND_BUILD_TIME
-    value: ${redis.DATABASE_URL}
-  - key: DJANGO_ALLOWED_HOSTS
-    scope: RUN_AND_BUILD_TIME
-    value: ${APP_DOMAIN},*.${APP_DOMAIN}
-  - key: DJANGO_ROOT_DOMAIN
-    scope: RUN_AND_BUILD_TIME
-    value: ${APP_DOMAIN}
-  - key: DJANGO_INVO_APP_IRN_NAMESPACE
-    scope: RUN_AND_BUILD_TIME
-    value: stage
+# envs:
+  # - key: DJANGO_SECRET_KEY
+  #   scope: RUN_AND_BUILD_TIME
+  #   type: SECRET
+  #   # value: EV[1:hqH5Uawu6KkWnFc1/KKTQAzAxX8Ge+7N:wVK6YuKa4rPH0sQRBdYfqN7JBsgIX6f1scdb7+yzUNKlJ2BIfFgHFz1LLqpRh4O/WZ4qKtMyNu7XtOB6XbyszlTR]
+  # - key: DJANGO_SENTRY_DSN
+  #   scope: RUN_AND_BUILD_TIME
+  #   type: SECRET
+  #   # value: EV[1:GVYmpoKzz/ll4Eg5gEjdN0KOg/rvSNQ8:+HIqY37KB1MBcSVZFz95YbtpOXGH6v6YLQqGqtR434aKOWQiPYhtErXhdCnaJYmznuw9Bzcwm7u1DQuZXBqKdwEl9TSe+tN2/5BOqcMzEBvpb4pSqkYBBpw=]
+  # - key: DJANGO_SENTRY_ENVIRONMENT
+  #   scope: RUN_AND_BUILD_TIME
+  #   value: stage
+  # - key: DATABASE_URL
+  #   scope: RUN_AND_BUILD_TIME
+  #   value: ${db.DATABASE_URL}
+  # - key: CACHE_URL
+  #   scope: RUN_AND_BUILD_TIME
+  #   value: ${redis.DATABASE_URL}
+  # - key: DJANGO_ALLOWED_HOSTS
+  #   scope: RUN_AND_BUILD_TIME
+  #   value: ${APP_DOMAIN},*.${APP_DOMAIN}
+  # - key: DJANGO_ROOT_DOMAIN
+  #   scope: RUN_AND_BUILD_TIME
+  #   value: ${APP_DOMAIN}
+  # - key: DJANGO_INVO_APP_IRN_NAMESPACE
+  #   scope: RUN_AND_BUILD_TIME
+  #   value: stage
+  # - key: DJANGO_CORS_ORIGIN_WHITELIST
+  #   value: https://${APP_DOMAIN},https://reserved.${APP_DOMAIN}
+  #   scope: RUN_AND_BUILD_TIME
+  # - key: DJANGO_CORS_ALLOWED_ORIGIN_REGEXES
+  #   value: ^https://\w+\.myinvo\.app$
+  #   scope: RUN_AND_BUILD_TIME
 services:
   - name: server
     image:
       registry_type: DOCR
       repository: invo-build
       tag: latest
-    run_command: daphne -b 0.0.0.0 -p 8000 invo.asgi:application
+    instance_count: 1
+    instance_size_slug: basic-xs
+    # run_command: daphne --root-path=/api -b 0.0.0.0 -p 8000 invo.asgi:application
+    run_command: supervisord -n -c ./invo/supervisord.conf
     http_port: 8000
-    envs:
-      - key: DJANGO_CORS_ORIGIN_WHITELIST
-        value: ${APP_DOMAIN},*.${APP_DOMAIN}
-        scope: RUN_TIME
     routes:
       - path: /api
-workers:
-  - name: qcluster
-    image:
-      registry_type: DOCR
-      repository: invo-build
-      tag: latest
-    run_command: ./manage.py qcluster
+# workers:
+#   - name: qcluster
+#     image:
+#       registry_type: DOCR
+#       repository: invo-build
+#       tag: latest
+#     run_command: ./manage.py qcluster
 jobs:
   - name: migrate
     kind: PRE_DEPLOY
@@ -56,11 +61,6 @@ jobs:
       repository: invo-build
       tag: latest
     run_command: ./manage.py migrate --no-input
-    envs:
-      - key: DATABASE_URL
-        value: "${db.DATABASE_URL}"
-        scope: RUN_TIME
-        type: SECRET
 static_sites:
   - name: invo-frontend
     source_dir: pwa
@@ -68,6 +68,7 @@ static_sites:
     environment_slug: node-js
     index_document: index.html
     catchall_document: index.html
+    instance_size_slug: medium
     github:
       branch: 5-add-sites
       deploy_on_push: false
@@ -81,7 +82,8 @@ static_sites:
         scope: BUILD_TIME
       - key: REACT_APP_SENTRY_DSN
         # value: "https://6ba65e0f1fb54abbadc7e8fcdf0f1bf2@o517777.ingest.sentry.io/5626111"
-        value: EV[1:TWt56i7UtZ/d5BxfX2yy3ydM3GCjBrQ+:SNH3Naeh9QgtY96aqIEQwJyJUMjBQhjsOVKNj4KBAX9C+jk0YpeuZ5ApxZ5EJ2t70GQFqTh7O3WVRZA/pYSmFwylzLEMBN6vEwdiwLpg61G0XA/kGvodkiQ=]
+        value: EV[1:DLnt5Cs4vhQ/vh66/07IsmOmux4aIq+r:psvDGJ9gvCj0eakZEic4ud2s5PiTIItsWMIJfjHS8gAbxMHt7bCVFJvh61ZuDnF9m1hoyt/jfAA9BpX7VLymu38fcah9MbytXSh/Vff+ek4vvTUWfjlb8L8=]
+        # value: EV[1:TWt56i7UtZ/d5BxfX2yy3ydM3GCjBrQ+:SNH3Naeh9QgtY96aqIEQwJyJUMjBQhjsOVKNj4KBAX9C+jk0YpeuZ5ApxZ5EJ2t70GQFqTh7O3WVRZA/pYSmFwylzLEMBN6vEwdiwLpg61G0XA/kGvodkiQ=]
         scope: BUILD_TIME
         type: SECRET
   # - name: django-static

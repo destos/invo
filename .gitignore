@@ -143,3 +143,4 @@ pwa/.eslintcache
 # Dobi build
 .build/
 .dobi/
+.env.ngrok
