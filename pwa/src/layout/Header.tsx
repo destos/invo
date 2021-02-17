@@ -1,4 +1,4 @@
-import { Badge, Button, Chip } from "@material-ui/core"
+import { Badge, Button } from "@material-ui/core"
 import AppBar, { AppBarProps } from "@material-ui/core/AppBar"
 import IconButton from "@material-ui/core/IconButton"
 import { fade, makeStyles } from "@material-ui/core/styles"
@@ -8,7 +8,7 @@ import AppsIcon from "@material-ui/icons/Apps"
 import MenuIcon from "@material-ui/icons/Menu"
 import SearchIcon from "@material-ui/icons/Search"
 import useSitu from "hooks/useSitu"
-import { bindToggle, bindTrigger } from "material-ui-popup-state/hooks"
+import { bindToggle } from "material-ui-popup-state/hooks"
 import React from "react"
 import { Link as RouterLink } from "react-router-dom"
 
@@ -52,7 +52,7 @@ export interface HeaderProps extends AppBarProps {}
 
 const Header: React.FC<HeaderProps> = ({ ...appBarProps }) => {
   const classes = useStyles()
-  const { situation, searchPopup, situDrawer } = useSitu()
+  const { situation, site, searchPopup, situDrawer } = useSitu()
 
   return (
     <AppBar {...appBarProps}>
@@ -66,7 +66,7 @@ const Header: React.FC<HeaderProps> = ({ ...appBarProps }) => {
           <MenuIcon />
         </IconButton>
         <Typography className={classes.title} variant="h6" noWrap>
-          Invo
+          Invo ({site?.name})
         </Typography>
         <IconButton component={RouterLink} to="/">
           <AppsIcon />

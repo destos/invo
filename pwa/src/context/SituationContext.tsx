@@ -5,6 +5,7 @@ import {
   GetActiveSituationQuery,
   GetActiveSituationQueryVariables,
   Scalars,
+  Site,
   SituationBitFragment
 } from "client/types"
 import {
@@ -21,6 +22,7 @@ import {
 export type SituValue =
   | {
       situation: SituationBitFragment | null
+      site: Partial<Site> | null
       loading: boolean
       select: (irns: any) => any
       unselect: (irns: any) => any
@@ -49,6 +51,7 @@ export const ActiveSituProvider: React.FC<SituProviderProps> = ({
   >(SITU_QUERY)
 
   const situation = data?.activeSituation ?? null
+  const site = data?.currentSite ?? null
 
   const [
     selectEntity,
@@ -61,6 +64,7 @@ export const ActiveSituProvider: React.FC<SituProviderProps> = ({
 
   const value = {
     situation,
+    site,
     loading: loading || selectLoading || unselectLoading,
     select(irns: Array<Scalars["IRN"]>) {
       // situDrawerState.open()

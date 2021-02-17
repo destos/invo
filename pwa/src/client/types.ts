@@ -1192,7 +1192,10 @@ export type GetActiveSituationQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetActiveSituationQuery = (
   { __typename?: 'Query' }
-  & { activeSituation: Maybe<(
+  & { currentSite: (
+    { __typename?: 'Site' }
+    & Pick<Site, 'domain' | 'name'>
+  ), activeSituation: Maybe<(
     { __typename?: 'Situation' }
     & SituationBitFragment
   )> }
