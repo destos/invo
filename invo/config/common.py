@@ -17,6 +17,7 @@ from pathlib import Path
 
 import dj_search_url
 from configurations import Configuration, values
+from .mixins.waffle import Waffle
 from .values import TimeDeltaValue
 
 # Monkey patch to allow for proper haystack backend for elasticsearch 5 when selecting elasticsearch
@@ -29,7 +30,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 sys.path.append(join(BASE_DIR, "apps"))
 
 
-class Common(Configuration):
+class Common(Waffle, Configuration):
 
     BASE_DIR = BASE_DIR
 
@@ -65,6 +66,7 @@ class Common(Configuration):
     )
 
     THIRD_PARTY_APPS = (
+        "channels",
         "django_extensions",
         "safedelete",
         "mptt",
@@ -206,6 +208,7 @@ class Common(Configuration):
 
     # See: https://docs.djangoproject.com/en/dev/ref/settings/#wsgi-application
     WSGI_APPLICATION = "invo.wsgi.application"
+    ASGI_APPLICATION = "invo.asgi.application"
     # End URL Configuration
 
     # AUTHENTICATION CONFIGURATION
@@ -248,26 +251,30 @@ class Common(Configuration):
                 "class": "rich.logging.RichHandler",
                 "formatter": "rich",
                 "level": "DEBUG",
+            },
+        },
+        "loggers": {
+            "": {
+                'level': 'DEBUG',
+                'handlers': ['console']
             }
         },
-        "loggers": {"django": {"handlers": ["console"]}},
-        # "handlers": {
-        #     "mail_admins": {
-        #         "level": "ERROR",
-        #         "filters": ["require_debug_false"],
-        #         "class": "django.utils.log.AdminEmailHandler",
-        #     }
-        # },
-        # "loggers": {
-        #     "django.request": {
-        #         "handlers": ["mail_admins"],
-        #         "level": "ERROR",
-        #         "propagate": True,
-        #     },
-        # },
     }
     # END LOGGING CONFIGURATION
 
+    # Channels
+    @property
+    def CHANNEL_LAYERS(self):
+        return {
+            "default": {
+                "BACKEND": "channels_redis.core.RedisChannelLayer",
+                "CONFIG": {
+                    "hosts": [self.CACHES["default"]['LOCATION']],
+                },
+            },
+        }
+
+    # Additional database setup
     @classmethod
     def post_setup(cls):
         cls.DATABASES["default"]["ATOMIC_REQUESTS"] = True
@@ -277,7 +284,7 @@ class Common(Configuration):
     CORS_ALLOWED_ORIGIN_REGEXES = values.ListValue([])
     CORS_ORIGIN_ALLOWS_ALL = values.BooleanValue(False)
     CORS_ALLOW_CREDENTIALS = values.BooleanValue(True)
-    CORS_URLS_REGEX = r"^/api/.*$"
+    # CORS_URLS_REGEX = r"^/api/.*$"
 
     # JWT
     ACCESS_TOKEN_LIFETIME = TimeDeltaValue(timedelta(minutes=5))
@@ -295,11 +302,6 @@ class Common(Configuration):
             "BLACKLIST_AFTER_ROTATION": self.BLACKLIST_AFTER_ROTATION,
             "UPDATE_LAST_LOGIN": self.UPDATE_LAST_LOGIN,
         }
-
-    # Waffle app
-    WAFFLE_FLAG_DEFAULT = values.BooleanValue(False)
-    WAFFLE_SWITCH_DEFAULT = values.BooleanValue(False)
-    WAFFLE_SAMPLE_DEFAULT = values.BooleanValue(False)
 
     HAYSTACK_CONNECTIONS = values.SearchURLValue("elasticsearch://127.0.0.1:9200/invo")
     HAYSTACK_FUZZY_MIN_SIM = 0.2

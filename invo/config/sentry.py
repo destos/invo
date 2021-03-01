@@ -1,7 +1,11 @@
+import logging
+
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 from sentry_sdk.integrations.redis import RedisIntegration
-from configurations import Configuration, values
+from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
+from sentry_sdk.integrations.logging import LoggingIntegration
+from configurations import values
 
 
 class Sentry:
@@ -15,7 +19,16 @@ class Sentry:
         sentry_sdk.init(
             dsn=cls.SENTRY_DSN,
             environment=cls.SENTRY_ENVIRONMENT,
-            integrations=[DjangoIntegration(), RedisIntegration()],
+            integrations=[
+                DjangoIntegration(),
+                RedisIntegration(),
+                LoggingIntegration(
+                    level=logging.INFO,  # Capture info and above as breadcrumbs
+                    event_level=logging.ERROR,  # Send errors as events
+                ),
+                # CeleryIntegration(),
+                # TornadoIntegration(),
+            ],
             traces_sample_rate=cls.SENTRY_SAMPLE_RATE,
             # If you wish to associate users to errors (assuming you are using
             # django.contrib.auth) you may enable sending PII data.

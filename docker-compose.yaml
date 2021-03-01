@@ -1,5 +1,22 @@
 version: '3.1'
 services:
+  django: &django
+    # build:
+    #   context: .
+    #   dockerfile: .docker/django/app
+    # image: invo-prod:latest
+    image: invo-dev:latest
+    links:
+      - db
+      - redis
+      - search
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@invo-db/invo
+      CACHE_URL: redis://invo-redis/0
+    networks:
+      - invo
+    volumes:
+      - ./invo:/app/invo/
   nginx:
     image: nginx:latest
     links:
@@ -9,46 +26,27 @@ services:
     command: [nginx-debug, '-g', 'daemon off;']
     networks:
       - invo
-      # - host
     ports:
       - 8080:80
   app:
-    # build:
-    #   context: .
-    #   dockerfile: .docker/django/app
-    # image: invo-prod:latest
-    image: invo-dev:latest
-    links:
-      - db
-      - redis
-      - es
+    <<: *django
     # command: ./manage.py runserver 0.0.0.0:8000
     # command: supervisord -n -c ./invo/supervisord.conf
-    # command: daphne --root-path=/api -b 0.0.0.0 -p 8000 invo.asgi:application
-    command: uvicorn --reload --lifespan=off --root-path=/api --host 0.0.0.0 --port 8000 invo.asgi:application
+    # command: daphne -u /run/daphne/daphned.sock --fd 0 --access-log - --proxy-headers invo.asgi:application
+    # command: daphne -u /run/daphne/daphned.sock --fd 0 --root-path=/api --access-log - --proxy-headers invo.asgi:application
+    # command: daphne --root-path=api/ -b 0.0.0.0 -p 8000 invo.asgi:application
     # command: daphne -b 0.0.0.0 -p 8000 invo.asgi:application
+    # command: uvicorn --reload --lifespan=off --root-path=/api --host 0.0.0.0 --port 8000 invo.asgi:application
+    # command: uvicorn --reload --root-path=/api --lifespan=off --proxy-headers --host 0.0.0.0 --port 8000 invo.asgi:application
+    # command: daphne -b 0.0.0.0 -p 8000 invo.asgi:application
+    command: uvicorn --reload --lifespan=off --proxy-headers --host 0.0.0.0 --port 8000 invo.asgi:application
     env_file: .env.ngrok
-    environment:
-      DATABASE_URL: postgres://postgres:postgres@invo-db/invo
-      CACHE_URL: redis://invo-redis/0
-    networks:
-      - invo
     ports:
       - 8000:8000
-    volumes:
-      - ./invo:/app/invo/
   qworkers:
-    image: invo-prod:latest
-    links:
-      - db
-      - redis
+    <<: *django
     command: python ./manage.py qcluster
-    env_file: .env
-    environment:
-      DATABASE_URL: postgres://postgres:postgres@invo-db/invo
-      CACHE_URL: redis://invo-redis/0
-    networks:
-      - invo
+    env_file: .env.ngrok
   db:
     restart: always
     image: postgres:latest
@@ -75,9 +73,8 @@ services:
       invo:
         aliases:
           - invo-redis
-  es:
+  search:
     image: elasticsearch:5.6.16
-    container_name: es
     # environment:
       # - node.name=es01
       # - cluster.name=es-docker-cluster
@@ -108,6 +105,3 @@ networks:
   invo:
     name: invo-net
     driver: bridge
-  # host:
-  #   name: host
-  #   external: true

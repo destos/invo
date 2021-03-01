@@ -8,10 +8,9 @@ Local Configurations
 from configurations import values
 
 from .common import Common
-from .sentry import Sentry
 
 
-class Local(Sentry, Common):
+class Local(Common):
 
     # DEBUG
     DEBUG = values.BooleanValue(True)

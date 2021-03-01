@@ -75,3 +75,5 @@ docker build --rm --tag invo-test --file .docker/django/app . --target test
 docker build --rm --tag invo-prod --file .docker/django/app . --target production
 
 poetry run isort invo/apps ./manage.py
+ngrok start invo_app invo_api
+docker-compose run --name invo_debug_app --rm --service-ports app

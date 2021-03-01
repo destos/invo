@@ -19,6 +19,9 @@ class Ngrok(Sentry, Common):
     # END DEBUG
 
     CORS_ALLOW_CREDENTIALS = True
+    # origin list isn't working...
+    CORS_ORIGIN_WHITELIST = ["https://myinvo.ngrok.io"]
+    CORS_ORIGIN_ALLOWS_ALL = True
 
     @property
     def MIDDLEWARE(self):
@@ -30,7 +33,7 @@ class Ngrok(Sentry, Common):
     # whitenoise
     STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
     WHITENOISE_MANIFEST_STRICT = False
-    # STATIC_URL = "https://myinvo.ngrok.io/api/static/"
+    STATIC_URL = "static/"
 
     USE_X_FORWARDED_HOST = True
     # FORCE_SCRIPT_NAME = "/api/"
