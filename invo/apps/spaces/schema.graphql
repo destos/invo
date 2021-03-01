@@ -59,6 +59,13 @@ interface SpaceInterface {
   parent: SpaceTypes
   parents: [SpaceTypes!]!
   children(filter: SpaceFilter): [SpaceTypes!]!
+  childSpaces(
+    first: Int
+    last: Int
+    after: String
+    before: String
+    filter: SpaceFilter
+  ): Connection!
   isLeaf: Boolean!
   isChild: Boolean!
   isRoot: Boolean!
@@ -89,6 +96,13 @@ type SpaceNode implements Node & SpaceInterface & TimeStamped & Protocol {
   parent: SpaceTypes
   parents: [SpaceTypes!]!
   children(filter: SpaceFilter): [SpaceTypes!]!
+  childSpaces(
+    first: Int
+    last: Int
+    after: String
+    before: String
+    filter: SpaceFilter
+  ): Connection!
   isLeaf: Boolean!
   isChild: Boolean!
   isRoot: Boolean!
@@ -118,6 +132,13 @@ type GridSpaceNode implements Node & SpaceInterface & TimeStamped & Protocol {
   parent: SpaceTypes
   parents: [SpaceTypes!]!
   children(filter: SpaceFilter): [SpaceTypes!]!
+  childSpaces(
+    first: Int
+    last: Int
+    after: String
+    before: String
+    filter: SpaceFilter
+  ): Connection!
   isLeaf: Boolean!
   isChild: Boolean!
   isRoot: Boolean!
@@ -141,8 +162,18 @@ type GridSpaceNode implements Node & SpaceInterface & TimeStamped & Protocol {
 union SpaceTypes = SpaceNode | GridSpaceNode
 
 extend type Query {
+  "Singular Space Node"
   space(id: ID!): SpaceTypes
+  "Get all Space Nodes"
   getSpaces(filter: SpaceFilter): [SpaceTypes!]!
+  "Space Node connection interface"
+  spaces(
+    first: Int
+    last: Int
+    after: String
+    before: String
+    filter: SpaceFilter
+  ): Connection!
 }
 
 # TODO: make all these new mutations work.
