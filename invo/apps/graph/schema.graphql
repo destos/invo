@@ -29,3 +29,8 @@ extend type WaffleSample implements TimeStamped {
 type Query
 
 type Mutation
+
+type Subscription {
+    counter: Int!
+    waffle: Waffle!
+}

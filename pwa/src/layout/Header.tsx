@@ -1,4 +1,5 @@
 import { Badge, Button } from "@material-ui/core"
+import { gql, useSubscription } from "@apollo/client"
 import AppBar, { AppBarProps } from "@material-ui/core/AppBar"
 import IconButton from "@material-ui/core/IconButton"
 import { fade, makeStyles } from "@material-ui/core/styles"
@@ -54,6 +55,21 @@ const Header: React.FC<HeaderProps> = ({ ...appBarProps }) => {
   const classes = useStyles()
   const { situation, site, searchPopup, situDrawer } = useSitu()
 
+  const SUB = gql`
+    subscription wafit {
+      waffle {
+        flag(name: "bamf") {
+          active
+        }
+      }
+    }
+  `
+  const sub = useSubscription(SUB)
+  const {data} = sub
+  console.info(sub)
+  const waffle = data?.waffle ?? {flag: {active: false}}
+  //  {counter}
+
   return (
     <AppBar {...appBarProps}>
       <Toolbar>
@@ -66,7 +82,7 @@ const Header: React.FC<HeaderProps> = ({ ...appBarProps }) => {
           <MenuIcon />
         </IconButton>
         <Typography className={classes.title} variant="h6" noWrap>
-          Invo ({site?.name})
+          My Invo ({site?.name}) {waffle.flag.active ? "bamf": "wat"}
         </Typography>
         <IconButton component={RouterLink} to="/">
           <AppsIcon />

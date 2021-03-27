@@ -10,6 +10,7 @@ https://docs.djangoproject.com/en/3.1/howto/deployment/asgi/
 import os
 
 from configurations import importer
+
 # from channels.http import AsgiHandler
 from channels.routing import ProtocolTypeRouter, URLRouter
 from django.urls import re_path, path
@@ -27,12 +28,20 @@ from channels.security.websocket import AllowedHostsOriginValidator
 from channels.auth import AuthMiddlewareStack
 from graph.asgi import application as graph_application
 
-router = ProtocolTypeRouter({
-    "websocket": URLRouter([
-        re_path(r"^ws/$", graph_application)
-    ]),
-    "http": django_asgi_app,
-})
+application = ProtocolTypeRouter(
+    {
+        # "websocket": URLRouter([
+        #     re_path(r"^ws/$", graph_application)
+        # ]),
+        "http": django_asgi_app,
+        # URLRouter([
+        # path("graphql/", graph_application),
+        #     url("", django_asgi_app),
+        # ]),
+        "websocket": AllowedHostsOriginValidator(
+            AuthMiddlewareStack(URLRouter([path("ws/", graph_application)]))
+        ),
+    }
+)
 
-# application = django_asgi_app
-# application = SentryAsgiMiddleware(router)
+# application = SentryAsgiMiddleware(application)
