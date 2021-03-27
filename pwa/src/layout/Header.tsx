@@ -65,9 +65,9 @@ const Header: React.FC<HeaderProps> = ({ ...appBarProps }) => {
     }
   `
   const sub = useSubscription(SUB)
-  const {data} = sub
+  const { data } = sub
   console.info(sub)
-  const waffle = data?.waffle ?? {flag: {active: false}}
+  const waffle = data?.waffle ?? { flag: { active: false } }
   //  {counter}
 
   return (
@@ -82,7 +82,7 @@ const Header: React.FC<HeaderProps> = ({ ...appBarProps }) => {
           <MenuIcon />
         </IconButton>
         <Typography className={classes.title} variant="h6" noWrap>
-          My Invo ({site?.name}) {waffle.flag.active ? "bamf": "wat"}
+          My Invo ({site?.name}) {waffle.flag.active ? "bamf" : "wat"}
         </Typography>
         <IconButton component={RouterLink} to="/">
           <AppsIcon />
