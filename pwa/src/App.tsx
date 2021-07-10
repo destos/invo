@@ -19,6 +19,7 @@ Sentry.init({
   debug: process.env.NODE_ENV !== "production",
   integrations: [
     new Integrations.BrowserTracing({
+      tracingOrigins: ["localhost", "myinvo.app", /^\//],
       routingInstrumentation: Sentry.reactRouterV5Instrumentation(
         history,
         // @ts-ignore
@@ -32,7 +33,7 @@ Sentry.init({
   // for finer control
   tracesSampleRate: 1.0,
   environment: process.env.NODE_ENV,
-  release: "my-project-name@" + process.env.REACT_APP_VERSION
+  release: "invo@" + process.env.REACT_APP_VERSION
 })
 
 function App() {
