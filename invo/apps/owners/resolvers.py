@@ -53,7 +53,7 @@ class OwnerResolverMixin:
         if issubclass(model, SingularSite):
             return serializer.save(site=get_current_site(self.request))
         else:
-            site=get_current_site(self.request)
+            site = get_current_site(self.request)
             instance = serializer.save()
             instance.sites.add(site)
             return instance
@@ -61,6 +61,7 @@ class OwnerResolverMixin:
 
 class SiteResolver(ModelResolver):
     """Resolve related sites or current site"""
+
     queryset = Site.objects.all()
 
     def current(self, info, **kwargs):
