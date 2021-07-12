@@ -36,7 +36,7 @@ def print_layouts(layouts):
 
 
 # @pytest.mark.django_db()
-def test_layout_grid_reconciliation():
+def xtest_layout_grid_reconciliation():
     """
     Grid reconciliation
 

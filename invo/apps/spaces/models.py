@@ -11,7 +11,6 @@ When looking For an item you can request different levels of grids to narrow dow
 from copy import deepcopy
 from decimal import Decimal as D
 from functools import reduce
-from numbers import Number
 from typing import NamedTuple, Union
 
 import glom
@@ -23,9 +22,8 @@ from django_measurement.models import MeasurementField
 from measurement.measures import Distance, Volume
 from model_utils import FieldTracker
 from mptt.fields import TreeForeignKey
-from mptt.models import MPTTModel
 from owners.models import SingularSite
-from polymorphic_tree.models import PolymorphicMPTTModel, PolymorphicTreeForeignKey
+from polymorphic_tree.models import PolymorphicMPTTModel
 from protocol.models import Protocol
 from safedelete.models import SOFT_DELETE_CASCADE, SafeDeleteModel
 
@@ -232,7 +230,7 @@ class SpaceNode(SingularSite, Protocol, TimeStampedModel, PolymorphicMPTTModel, 
         old_dimensions = Dimensions(*size)
         old_basis, _ = self.calculate_grid_basis(old_dimensions, old_scale)
         new_basis = self.grid_basis
-        delta = D(old_basis / new_basis)
+        delta = D(old_basis / new_basis[0])
         for child in self.children.all():
             child.scale_layout(delta)
             child.save(update_fields=("data",))
@@ -319,7 +317,7 @@ class GridSpaceNode(SpaceNode):
                             child = children.get(data__position=[col, row])
                         except SpaceNode.DoesNotExist:
                             child = child_class(
-                                name=f"{col},{row}", data=dict(position=[col, row])
+                                name=f"{col},{row}", data=dict(position=[col, row]), site=self.site
                             )
                             child.insert_at(self, position="last-child", save=False)
                         finally:
@@ -378,7 +376,7 @@ class GridSpaceNode(SpaceNode):
     #     return dict(cols=cols, row_basis=rows / y)
 
 
-templates = dict(home_depo_shelve=dict(grid_size=[1, 6]))
+# templates = dict(home_depo_shelve=dict(grid_size=[1, 6]))
 
 # class DrawerNode(GridSpaceNode):
 # Maybe for parts/tools different drawers for things?
