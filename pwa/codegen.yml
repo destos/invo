@@ -28,11 +28,11 @@ generates:
       - fragment-matcher
     config:
       apolloClientVersion: 3
-  src/generated/graphql.schema.json:
-    plugins:
-      - introspection
-    # config:
-    #   minify: true
+  # src/generated/graphql.schema.json:
+  #   plugins:
+  #     - introspection
+  #   # config:
+  #   #   minify: true
 
   # src/generated/jsonSchema.json:
   #   plugins:
