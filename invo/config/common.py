@@ -16,7 +16,9 @@ from os.path import join
 from pathlib import Path
 
 import dj_search_url
+import pgconnection
 from configurations import Configuration, values
+
 from .mixins.waffle import Waffle
 from .values import TimeDeltaValue
 
@@ -81,6 +83,9 @@ class Common(Waffle, Configuration):
         "rest_framework_simplejwt.token_blacklist",
         "django_q",
         "memoize",
+        "pghistory",
+        "pgtrigger",
+        "pgconnection",
     )
 
     LOCAL_APPS = (
@@ -277,6 +282,8 @@ class Common(Waffle, Configuration):
     # Additional database setup
     @classmethod
     def post_setup(cls):
+        super().post_setup()
+        cls.DATABASES = pgconnection.configure(cls.DATABASES)
         cls.DATABASES["default"]["ATOMIC_REQUESTS"] = True
 
     # CORS
