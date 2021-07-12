@@ -29,7 +29,9 @@ export type Query = {
   item: Maybe<ItemTypes>;
   items: Connection;
   /** Suggest the type of item based on the name */
-  suggestType: Maybe<ItemTypesEnum>;
+  suggestType: ItemTypesEnum;
+  /** Search for items by their text contents */
+  itemSearch: Connection;
   entitySearch: Array<SearchResult>;
 };
 
@@ -49,6 +51,15 @@ export type QueryGetSpacesArgs = {
 };
 
 
+export type QuerySpacesArgs = {
+  first: Maybe<Scalars['Int']>;
+  last: Maybe<Scalars['Int']>;
+  after: Maybe<Scalars['String']>;
+  before: Maybe<Scalars['String']>;
+  filter: Maybe<SpaceFilter>;
+};
+
+
 export type QueryItemArgs = {
   id: Scalars['ID'];
 };
@@ -64,6 +75,15 @@ export type QueryItemsArgs = {
 
 export type QuerySuggestTypeArgs = {
   name: Scalars['String'];
+};
+
+
+export type QueryItemSearchArgs = {
+  search: Scalars['String'];
+  first: Maybe<Scalars['Int']>;
+  last: Maybe<Scalars['Int']>;
+  after: Maybe<Scalars['String']>;
+  before: Maybe<Scalars['String']>;
 };
 
 
@@ -1186,6 +1206,147 @@ type SearchObject_TrackedConsumable_Fragment = (
 );
 
 export type SearchObjectFragment = SearchObject_SpaceNode_Fragment | SearchObject_GridSpaceNode_Fragment | SearchObject_Item_Fragment | SearchObject_Tool_Fragment | SearchObject_Consumable_Fragment | SearchObject_TrackedConsumable_Fragment;
+
+export type ItemSearchQueryVariables = Exact<{
+  search: Scalars['String'];
+  first: Maybe<Scalars['Int']>;
+  last: Maybe<Scalars['Int']>;
+  after: Maybe<Scalars['String']>;
+  before: Maybe<Scalars['String']>;
+}>;
+
+
+export type ItemSearchQuery = (
+  { __typename?: 'Query' }
+  & { itemSearch: (
+    { __typename?: 'Connection' }
+    & { pageInfo: Maybe<(
+      { __typename?: 'PageInfo' }
+      & Pick<PageInfo, 'hasNextPage' | 'endCursor' | 'count'>
+    )>, edges: Maybe<Array<Maybe<(
+      { __typename?: 'Edge' }
+      & { node: Maybe<{ __typename?: 'User' } | { __typename?: 'Group' } | { __typename?: 'Permission' } | { __typename?: 'Situation' } | { __typename?: 'SpaceNode' } | { __typename?: 'GridSpaceNode' } | (
+        { __typename?: 'Item' }
+        & SearchItem_Item_Fragment
+      ) | (
+        { __typename?: 'Tool' }
+        & SearchItem_Tool_Fragment
+      ) | (
+        { __typename?: 'Consumable' }
+        & SearchItem_Consumable_Fragment
+      ) | (
+        { __typename?: 'TrackedConsumable' }
+        & SearchItem_TrackedConsumable_Fragment
+      )> }
+    )>>> }
+  ) }
+);
+
+type SearchItem_Item_Fragment = (
+  { __typename?: 'Item' }
+  & Pick<Item, 'id' | 'name'>
+  & { space: Maybe<(
+    { __typename?: 'SpaceNode' }
+    & Pick<SpaceNode, 'id' | 'name'>
+    & { parents: Array<(
+      { __typename?: 'SpaceNode' }
+      & Pick<SpaceNode, 'id' | 'name'>
+    ) | (
+      { __typename?: 'GridSpaceNode' }
+      & Pick<GridSpaceNode, 'id' | 'name'>
+    )> }
+  ) | (
+    { __typename?: 'GridSpaceNode' }
+    & Pick<GridSpaceNode, 'id' | 'name'>
+    & { parents: Array<(
+      { __typename?: 'SpaceNode' }
+      & Pick<SpaceNode, 'id' | 'name'>
+    ) | (
+      { __typename?: 'GridSpaceNode' }
+      & Pick<GridSpaceNode, 'id' | 'name'>
+    )> }
+  )> }
+);
+
+type SearchItem_Tool_Fragment = (
+  { __typename?: 'Tool' }
+  & Pick<Tool, 'id' | 'name'>
+  & { space: Maybe<(
+    { __typename?: 'SpaceNode' }
+    & Pick<SpaceNode, 'id' | 'name'>
+    & { parents: Array<(
+      { __typename?: 'SpaceNode' }
+      & Pick<SpaceNode, 'id' | 'name'>
+    ) | (
+      { __typename?: 'GridSpaceNode' }
+      & Pick<GridSpaceNode, 'id' | 'name'>
+    )> }
+  ) | (
+    { __typename?: 'GridSpaceNode' }
+    & Pick<GridSpaceNode, 'id' | 'name'>
+    & { parents: Array<(
+      { __typename?: 'SpaceNode' }
+      & Pick<SpaceNode, 'id' | 'name'>
+    ) | (
+      { __typename?: 'GridSpaceNode' }
+      & Pick<GridSpaceNode, 'id' | 'name'>
+    )> }
+  )> }
+);
+
+type SearchItem_Consumable_Fragment = (
+  { __typename?: 'Consumable' }
+  & Pick<Consumable, 'id' | 'name'>
+  & { space: Maybe<(
+    { __typename?: 'SpaceNode' }
+    & Pick<SpaceNode, 'id' | 'name'>
+    & { parents: Array<(
+      { __typename?: 'SpaceNode' }
+      & Pick<SpaceNode, 'id' | 'name'>
+    ) | (
+      { __typename?: 'GridSpaceNode' }
+      & Pick<GridSpaceNode, 'id' | 'name'>
+    )> }
+  ) | (
+    { __typename?: 'GridSpaceNode' }
+    & Pick<GridSpaceNode, 'id' | 'name'>
+    & { parents: Array<(
+      { __typename?: 'SpaceNode' }
+      & Pick<SpaceNode, 'id' | 'name'>
+    ) | (
+      { __typename?: 'GridSpaceNode' }
+      & Pick<GridSpaceNode, 'id' | 'name'>
+    )> }
+  )> }
+);
+
+type SearchItem_TrackedConsumable_Fragment = (
+  { __typename?: 'TrackedConsumable' }
+  & Pick<TrackedConsumable, 'id' | 'name'>
+  & { space: Maybe<(
+    { __typename?: 'SpaceNode' }
+    & Pick<SpaceNode, 'id' | 'name'>
+    & { parents: Array<(
+      { __typename?: 'SpaceNode' }
+      & Pick<SpaceNode, 'id' | 'name'>
+    ) | (
+      { __typename?: 'GridSpaceNode' }
+      & Pick<GridSpaceNode, 'id' | 'name'>
+    )> }
+  ) | (
+    { __typename?: 'GridSpaceNode' }
+    & Pick<GridSpaceNode, 'id' | 'name'>
+    & { parents: Array<(
+      { __typename?: 'SpaceNode' }
+      & Pick<SpaceNode, 'id' | 'name'>
+    ) | (
+      { __typename?: 'GridSpaceNode' }
+      & Pick<GridSpaceNode, 'id' | 'name'>
+    )> }
+  )> }
+);
+
+export type SearchItemFragment = SearchItem_Item_Fragment | SearchItem_Tool_Fragment | SearchItem_Consumable_Fragment | SearchItem_TrackedConsumable_Fragment;
 
 export type GetActiveSituationQueryVariables = Exact<{ [key: string]: never; }>;
 

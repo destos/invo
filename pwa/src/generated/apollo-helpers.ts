@@ -1,5 +1,5 @@
 import { FieldPolicy, FieldReadFunction, TypePolicies } from '@apollo/client/cache';
-export type QueryKeySpecifier = ('waffle' | 'currentUser' | 'currentSite' | 'activeSituation' | 'getIrnEntity' | 'space' | 'getSpaces' | 'item' | 'items' | 'suggestType' | 'entitySearch' | QueryKeySpecifier)[];
+export type QueryKeySpecifier = ('waffle' | 'currentUser' | 'currentSite' | 'activeSituation' | 'getIrnEntity' | 'space' | 'getSpaces' | 'spaces' | 'item' | 'items' | 'suggestType' | 'itemSearch' | 'entitySearch' | QueryKeySpecifier)[];
 export type QueryFieldPolicy = {
 	waffle?: FieldPolicy<any> | FieldReadFunction<any>,
 	currentUser?: FieldPolicy<any> | FieldReadFunction<any>,

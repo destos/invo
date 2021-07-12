@@ -7,10 +7,13 @@ import Typography from "@material-ui/core/Typography"
 import AppsIcon from "@material-ui/icons/Apps"
 import MenuIcon from "@material-ui/icons/Menu"
 import SearchIcon from "@material-ui/icons/Search"
+import { SearchItemFragment } from "client/types"
+import ItemSearchAutocomplete from "components/autocompletes/ItemSearchAutocomplete"
 import useSitu from "hooks/useSitu"
 import { bindToggle } from "material-ui-popup-state/hooks"
 import React from "react"
-import { Link as RouterLink } from "react-router-dom"
+import { Link as RouterLink, useHistory } from "react-router-dom"
+import { spaceItemDetailUrl } from "routes"
 
 const useStyles = makeStyles((theme) => ({
   menuButton: {
@@ -51,8 +54,15 @@ const useStyles = makeStyles((theme) => ({
 export interface HeaderProps extends AppBarProps {}
 
 const Header: React.FC<HeaderProps> = ({ ...appBarProps }) => {
+  const history = useHistory()
   const classes = useStyles()
   const { situation, site, searchPopup, situDrawer } = useSitu()
+
+  const handleSelect = (value: SearchItemFragment) => {
+    if (value.space) {
+      history.push(spaceItemDetailUrl(value.space.id, value.id))
+    }
+  }
 
   return (
     <AppBar {...appBarProps}>
@@ -68,6 +78,7 @@ const Header: React.FC<HeaderProps> = ({ ...appBarProps }) => {
         <Typography className={classes.title} variant="h6" noWrap>
           Invo ({site?.name})
         </Typography>
+        <ItemSearchAutocomplete onSelect={handleSelect}/>
         <IconButton component={RouterLink} to="/">
           <AppsIcon />
         </IconButton>
