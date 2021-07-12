@@ -249,21 +249,16 @@ class Common(Waffle, Configuration):
     LOGGING = {
         "version": 1,
         "disable_existing_loggers": False,
-        "filters": {"require_debug_false": {"()": "django.utils.log.RequireDebugFalse"}},
+        # "filters": {"require_debug_false": {"()": "django.utils.log.RequireDebugFalse"}},
         "formatters": {"rich": {"datefmt": "[%X]", "rich_tracebacks": True}},
         "handlers": {
             "console": {
                 "class": "rich.logging.RichHandler",
                 "formatter": "rich",
                 "level": "DEBUG",
-            },
-        },
-        "loggers": {
-            "": {
-                'level': 'DEBUG',
-                'handlers': ['console']
             }
         },
+        "loggers": {"django": {"handlers": ["console"]}, "": {"handlers": ["console"]}},
     }
     # END LOGGING CONFIGURATION
 
@@ -274,7 +269,7 @@ class Common(Waffle, Configuration):
             "default": {
                 "BACKEND": "channels_redis.core.RedisChannelLayer",
                 "CONFIG": {
-                    "hosts": [self.CACHES["default"]['LOCATION']],
+                    "hosts": [self.CACHES["default"]["LOCATION"]],
                 },
             },
         }
