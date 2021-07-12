@@ -34,6 +34,6 @@ generates:
     # config:
     #   minify: true
 
-  src/generated/jsonSchema.json:
-    plugins:
-      - codegen_plugins/jsonSchema.js
+  # src/generated/jsonSchema.json:
+  #   plugins:
+  #     - codegen_plugins/jsonSchema.js
