@@ -15,6 +15,7 @@ import { createBrowserHistory } from "history"
 const history = createBrowserHistory()
 
 Sentry.init({
+  enabled: false,
   dsn: process.env.REACT_APP_SENTRY_DSN,
   debug: process.env.NODE_ENV !== "production",
   integrations: [
