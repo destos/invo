@@ -5,9 +5,9 @@ documents:
   # - ./src/fragments/*.{ts,tsx,js}
   - ./src/queries/*.{ts,tsx,js}
 generates:
-  src/generated/apollo-helpers.ts:
-    plugins:
-      - typescript-apollo-client-helpers
+  # src/generated/apollo-helpers.ts:
+  #   plugins:
+  #     - typescript-apollo-client-helpers
   src/client/types.ts:
     plugins:
       - typescript
