@@ -94,20 +94,39 @@ skip_glob = "*/migrations/*"
 # [tool.flakehell.plugins]
 # flake8-isort = ["+*"]
 
-[tool.coverage]
-# https://github.com/nedbat/coveragepy
-    [tool.coverage.run]
+# [tool.coverage]
+# # https://github.com/nedbat/coveragepy
+# [tool.coverage.run]
 
-    source = ["app"]
-    branch = true
-    omit = ['']
+# source = ["app"]
+# branch = true
+# omit = ['']
 
-    [tool.coverage.report]
-    exclude_lines = [
-        "# noqa",
-        "raise NotImplementedError"
-    ]
+# [tool.coverage.report]
+# exclude_lines = [
+#     "# noqa",
+#     "raise NotImplementedError"
+# ]
 
 [build-system]
 build-backend = "poetry.masonry.api"
 requires = ["poetry>=0.12"]
+
+[tool.pyright]
+include = ["invo"]
+# exclude = ["**/node_modules", "**/__pycache__", # "src/experimental", # "src/typestubs" ]
+exclude = ["**/node_modules", "**/__pycache__" ]
+# ignore = ["src/oldstuff"]
+# stubPath = "src/stubs"
+venv = "invo-J7DWE4E6-py3.9"
+
+# reportMissingImports = true
+# reportMissingTypeStubs = false
+
+pythonVersion = "3.7"
+pythonPlatform = "Linux"
+
+executionEnvironments = [ { root = "invo" } ]
+  # { root = "src/web", pythonVersion = "3.5", pythonPlatform = "Windows", extraPaths = [ "src/service_libs" ] },
+  # { root = "src/sdk", pythonVersion = "3.0", extraPaths = [ "src/backend" ] },
+  # { root = "src/tests", extraPaths = ["src/tests/e2e", "src/sdk" ]},

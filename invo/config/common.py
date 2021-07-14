@@ -115,6 +115,7 @@ class Common(Waffle, Configuration):
         "django.middleware.clickjacking.XFrameOptionsMiddleware",
         "django.contrib.sites.middleware.CurrentSiteMiddleware",
         "corsheaders.middleware.CorsMiddleware",
+        # "graph.middleware.SimpleMiddleware",
     ]
     # END MIDDLEWARE CONFIGURATION
 
@@ -219,6 +220,7 @@ class Common(Waffle, Configuration):
     # AUTHENTICATION CONFIGURATION
     AUTHENTICATION_BACKENDS = ("django.contrib.auth.backends.ModelBackend",)
 
+    # 'rest_framework_simplejwt.authentication.JWTAuthentication',
     # Password validation
     # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
@@ -246,6 +248,7 @@ class Common(Waffle, Configuration):
     # the site admins on every HTTP 500 error when DEBUG=False.
     # See http://docs.djangoproject.com/en/dev/topics/logging for
     # more details on how to customize your logging configuration.
+
     LOGGING = {
         "version": 1,
         "disable_existing_loggers": False,
