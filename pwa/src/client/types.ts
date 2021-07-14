@@ -19,13 +19,17 @@ export type Scalars = {
 
 export type Query = {
   __typename?: 'Query';
-  waffle: Maybe<Waffle>;
+  waffle: Waffle;
   currentUser: Maybe<User>;
   currentSite: Site;
   activeSituation: Maybe<Situation>;
   getIrnEntity: Maybe<Protocol>;
+  /** Singular Space Node */
   space: Maybe<SpaceTypes>;
+  /** Get all Space Nodes */
   getSpaces: Array<SpaceTypes>;
+  /** Space Node connection interface */
+  spaces: Connection;
   item: Maybe<ItemTypes>;
   items: Connection;
   /** Suggest the type of item based on the name */
@@ -93,19 +97,22 @@ export type QueryEntitySearchArgs = {
 
 export type Waffle = {
   __typename?: 'Waffle';
-  flags: Maybe<Array<Maybe<WaffleFlag>>>;
-  switches: Maybe<Array<Maybe<WaffleSwitch>>>;
-  samples: Maybe<Array<Maybe<WaffleSample>>>;
-  all: Maybe<Array<Maybe<WaffleItem>>>;
+  flags: Array<WaffleFlag>;
+  switches: Array<WaffleSwitch>;
+  samples: Array<WaffleSample>;
+  all: Array<WaffleItem>;
   /** Retrieve a flag */
   flag: Maybe<WaffleFlag>;
   /** Retrieve a switch */
   switch: Maybe<WaffleSwitch>;
   /** Retrieve a sample */
   sample: Maybe<WaffleSample>;
-  flagDefault: Maybe<Scalars['Boolean']>;
-  switchDefault: Maybe<Scalars['Boolean']>;
-  sampleDefault: Maybe<Scalars['Boolean']>;
+  /** The default flag value as specified in the settings */
+  flagDefault: Scalars['Boolean'];
+  /** The default switch value as specified in the settings */
+  switchDefault: Scalars['Boolean'];
+  /** The default sample value as specified in the settings */
+  sampleDefault: Scalars['Boolean'];
 };
 
 
@@ -232,6 +239,7 @@ export type SpaceNode = Node & SpaceInterface & TimeStamped & Protocol & {
   parent: Maybe<SpaceTypes>;
   parents: Array<SpaceTypes>;
   children: Array<SpaceTypes>;
+  childSpaces: Connection;
   isLeaf: Scalars['Boolean'];
   isChild: Scalars['Boolean'];
   isRoot: Scalars['Boolean'];
@@ -251,6 +259,15 @@ export type SpaceNodeChildrenArgs = {
 };
 
 
+export type SpaceNodeChildSpacesArgs = {
+  first: Maybe<Scalars['Int']>;
+  last: Maybe<Scalars['Int']>;
+  after: Maybe<Scalars['String']>;
+  before: Maybe<Scalars['String']>;
+  filter: Maybe<SpaceFilter>;
+};
+
+
 export type SpaceNodeItemsArgs = {
   first: Maybe<Scalars['Int']>;
   last: Maybe<Scalars['Int']>;
@@ -265,6 +282,7 @@ export type SpaceInterface = {
   parent: Maybe<SpaceTypes>;
   parents: Array<SpaceTypes>;
   children: Array<SpaceTypes>;
+  childSpaces: Connection;
   isLeaf: Scalars['Boolean'];
   isChild: Scalars['Boolean'];
   isRoot: Scalars['Boolean'];
@@ -280,6 +298,15 @@ export type SpaceInterface = {
 
 
 export type SpaceInterfaceChildrenArgs = {
+  filter: Maybe<SpaceFilter>;
+};
+
+
+export type SpaceInterfaceChildSpacesArgs = {
+  first: Maybe<Scalars['Int']>;
+  last: Maybe<Scalars['Int']>;
+  after: Maybe<Scalars['String']>;
+  before: Maybe<Scalars['String']>;
   filter: Maybe<SpaceFilter>;
 };
 
@@ -365,6 +392,7 @@ export type GridSpaceNode = Node & SpaceInterface & TimeStamped & Protocol & {
   parent: Maybe<SpaceTypes>;
   parents: Array<SpaceTypes>;
   children: Array<SpaceTypes>;
+  childSpaces: Connection;
   isLeaf: Scalars['Boolean'];
   isChild: Scalars['Boolean'];
   isRoot: Scalars['Boolean'];
@@ -381,6 +409,15 @@ export type GridSpaceNode = Node & SpaceInterface & TimeStamped & Protocol & {
 
 
 export type GridSpaceNodeChildrenArgs = {
+  filter: Maybe<SpaceFilter>;
+};
+
+
+export type GridSpaceNodeChildSpacesArgs = {
+  first: Maybe<Scalars['Int']>;
+  last: Maybe<Scalars['Int']>;
+  after: Maybe<Scalars['String']>;
+  before: Maybe<Scalars['String']>;
   filter: Maybe<SpaceFilter>;
 };
 
@@ -1353,13 +1390,24 @@ export type GetActiveSituationQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetActiveSituationQuery = (
   { __typename?: 'Query' }
-  & { currentSite: (
+  & { currentUser: Maybe<(
+    { __typename?: 'User' }
+    & { sites: Array<(
+      { __typename?: 'Site' }
+      & SituationSiteFragment
+    )> }
+  )>, currentSite: (
     { __typename?: 'Site' }
-    & Pick<Site, 'domain' | 'name'>
+    & SituationSiteFragment
   ), activeSituation: Maybe<(
     { __typename?: 'Situation' }
     & SituationBitFragment
   )> }
+);
+
+export type SituationSiteFragment = (
+  { __typename?: 'Site' }
+  & Pick<Site, 'domain' | 'name'>
 );
 
 export type AddToActiveSituationMutationVariables = Exact<{
@@ -1394,6 +1442,19 @@ export type RemoveFromActiveSituationMutation = (
       & SituationBitFragment
     ) }
   ) }
+);
+
+export type AbandonActiveSituationMutationVariables = Exact<{
+  irns: Array<Scalars['IRN']>;
+}>;
+
+
+export type AbandonActiveSituationMutation = (
+  { __typename?: 'Mutation' }
+  & { abandonSituation: Maybe<(
+    { __typename?: 'Situation' }
+    & SituationBitFragment
+  )> }
 );
 
 export type LayoutBitFragment = (

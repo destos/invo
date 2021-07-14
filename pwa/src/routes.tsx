@@ -8,6 +8,7 @@ import UnAuthedRoot from "./layout/UnAuthedRoot"
 import ExamplesView from "./views/Examples"
 import LoginView from "./views/auth/Login"
 import SignUpView from "./views/auth/SignUp"
+import AllSpaces from "views/AllSpaces"
 
 const RootSpaceView = lazy(
   () => import(/* webpackChunkName: "spaces" */ "./views/RootSpace")
@@ -22,26 +23,27 @@ const SpaceView = lazy(
 const routes: Array<RouteConfig> = [
   {
     component: UnAuthedRoot,
-    path: "/auth*",
+    path: "/auth/*",
+    exact: false,
     routes: [
+      // {
+      //   path: "/auth",
+      //   exact: true,
+      //   render: () => <Redirect to="/auth/login/" />
+      // },
       {
-        path: "/auth",
-        exact: true,
-        render: () => <Redirect to="/auth/login" />
-      },
-      {
-        path: "/auth/login",
+        path: "/auth/login/",
         exact: true,
         component: LoginView
       },
       {
-        path: "/auth/signup",
+        path: "/auth/signup/",
         exact: true,
         component: SignUpView
       },
       // TODO: make forgot view/backend functionality
       {
-        path: "/auth/forgot",
+        path: "/auth/forgot/",
         exact: true,
         component: SignUpView
       }
@@ -57,6 +59,11 @@ const routes: Array<RouteConfig> = [
         component: RootSpaceView
         // TODO: SpaceView props
       },
+      // {
+      //   path: "/search",
+      //   exact: true,
+      //   component: ItemSearchView
+      // }
       {
         path: "/select",
         exact: true,
@@ -64,6 +71,11 @@ const routes: Array<RouteConfig> = [
       },
       {
         path: "/space/:id",
+        exact: true,
+        component: SpaceView
+      },
+      {
+        path: "/space/:id/item/:itemId",
         exact: true,
         component: SpaceView
       },
@@ -77,6 +89,10 @@ const routes: Array<RouteConfig> = [
         path: "/examples/",
         exact: true,
         component: ExamplesView
+      },
+      {
+        path: "/spaces/",
+        component: AllSpaces
       }
     ]
   }
@@ -90,5 +106,8 @@ const routes: Array<RouteConfig> = [
 
 export const spaceDetailUrl = (id: Scalars["ID"]) =>
   generatePath("/space/:id", { id })
+
+export const spaceItemDetailUrl = (id: Scalars["ID"], itemId: Scalars["ID"]) =>
+  generatePath("/space/:id/item/:itemId", { id, itemId })
 
 export default routes
