@@ -1,8 +1,12 @@
 from typing import NamedTuple, Union
 
+import jwt
 import segno
 from django.apps import apps
 from django.conf import settings
+from django.db import models
+from django.utils.functional import cached_property
+from memoize import memoize
 
 
 class UrnNamespaceRegistrar:
@@ -49,7 +53,7 @@ class IRN(NamedTuple):
         return self.get_model().objects.get(id=self.nss)
 
 
-class Protocol:
+class Protocol(models.Model):
     # TODO: model setup/init assert that used on polymorphic model or the ident
 
     # @property
@@ -57,24 +61,32 @@ class Protocol:
     #     """The urn invo namespace id, identifies the type of entity we're working with"""
 
     # TODO: memoize per model type?
-    @property
+    @cached_property
     def urn_etype(self):
         # Only works on polymorphic models right now
         return self.get_real_concrete_instance_class()._meta.label_lower
 
-    @property
+    @cached_property
     def urn(self):
         return IRN.build(etype=self.urn_etype, nss=self.pk)
 
-    @property
+    @cached_property
     def irn(self):
         return str(self.urn)
 
     def make_qr(self):
         return segno.make(self.irn, error="H")
 
-    # TODO: memoize
-    @property
-    def qr(self):
+    @memoize(timeout=320)
+    def qr(self, *args):
         qr = self.make_qr()
         return qr.svg_data_uri()
+
+    @memoize(timeout=320)
+    def jwt_qr(self, *args, **kwargs):
+        data = self.urn._asdict()
+        token = jwt.encode(data, "secret")
+        return segno.make(token, *args, **kwargs)
+
+    class Meta:
+        abstract = True

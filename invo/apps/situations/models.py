@@ -5,14 +5,15 @@ from django.db import models
 from django_extensions.db.models import TimeStampedModel
 from django_fsm import FSMIntegerField, transition
 from items.models import Item
+from owners.models import SingularSite
 from polymorphic.contrib.guardian import get_polymorphic_base_content_type
 from safedelete.models import SOFT_DELETE, SOFT_DELETE_CASCADE, SafeDeleteModel
 from spaces.models import SpaceNode
 
-from .managers import SituationManager
+from .managers import SituationManager, CurrentSiteSituationManager
 
 
-class Situation(SafeDeleteModel, TimeStampedModel):
+class Situation(SingularSite, SafeDeleteModel, TimeStampedModel):
     """
     Situations are moments when a user is interacting with the app and we want a way to continue to flow
     """
@@ -64,12 +65,13 @@ class Situation(SafeDeleteModel, TimeStampedModel):
     exit_condition = FSMIntegerField(default=Exit.OPEN, choices=Exit.choices)
 
     objects = SituationManager()
+    current_site_objects = CurrentSiteSituationManager()
 
     class Meta(TimeStampedModel.Meta):
         ordering = ("created",)
 
     def __str__(self):
-        return f"{self.user.username} ({self.States(self.state).label}, {self.Exit(self.exit_condition).label})"
+        return f"{self.user} ({self.States(self.state).label}, {self.Exit(self.exit_condition).label})"
 
     def __repr__(self):
         return f"<Situation: {str(self)}>"
@@ -98,7 +100,10 @@ class Situation(SafeDeleteModel, TimeStampedModel):
             manager.remove(*objects)
 
     @transition(
-        field=state, source=(States.SELECTING), target=States.ADDING, conditions=[has_space]
+        field=state,
+        source=(States.SELECTING),
+        target=States.ADDING,
+        conditions=[has_space],
     )
     def chose_item(space):
         """Set situation state to adding when trying to add an item"""
@@ -106,7 +111,10 @@ class Situation(SafeDeleteModel, TimeStampedModel):
         pass
 
     @transition(
-        field=state, source=(States.SELECTING), target=States.PLACING, conditions=[has_item]
+        field=state,
+        source=(States.SELECTING),
+        target=States.PLACING,
+        conditions=[has_item],
     )
     def chose_space(space):
         """Set situation state to placing when trying to place an item"""

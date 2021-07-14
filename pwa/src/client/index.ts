@@ -10,32 +10,19 @@ import { possibleTypes } from "../generated/possibleTypes.json"
 // import { withScalars } from "apollo-link-scalars"
 // import { irn } from "../utils/urns"
 
+import { apolloLinkJWT } from "./auth"
+
 // const schema = buildClientSchema(
 //   (introspectionResult as unknown) as IntrospectionQuery
 // )
 
+const isBrowser = typeof window !== "undefined"
+
 const httpLink = createHttpLink({
-  // TODO: full url from env
   uri: process.env.REACT_APP_API_GATEWAY,
-  // credentials: 'same-origin'
+  // credentials: "same-origin"
   credentials: "include"
 })
-
-// const authLink = setContext((request, { cookies, headers }) => {
-//   // get the authentication sessionid from local storage if it exists
-//   // const sessionId = localStorage.getItem('sessionid')
-//   // return the headers to the context so httpLink can read them
-//   return {
-//     // cookies: {
-//     //   ...cookies,
-//     //   sessionId
-//     // },
-//     headers: {
-//       ...headers,
-//       // Cookies: sessionId ? `sessionid=${sessionId}` : "",
-//     }
-//   }
-// })
 
 // const typesMap = {
 //   IRN: {
@@ -58,11 +45,12 @@ const link = ApolloLink.from([
   //   removeTypenameFromInputs: true,
   //   validateEnums: true,
   // }),
-  // authLink,
+  apolloLinkJWT,
   httpLink
 ])
 
 const client = new ApolloClient({
+  connectToDevTools: isBrowser,
   cache: new InMemoryCache({ possibleTypes }),
   link
 })

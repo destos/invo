@@ -9,25 +9,30 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/dev/ref/settings/
 """
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 import sys
+from datetime import timedelta
 from os.path import join
 from pathlib import Path
 
 import dj_search_url
+import pgconnection
 from configurations import Configuration, values
+
+from .mixins.waffle import Waffle
+from .values import TimeDeltaValue
 
 # Monkey patch to allow for proper haystack backend for elasticsearch 5 when selecting elasticsearch
 dj_search_url.SCHEMES[
     "elasticsearch"
 ] = "haystack.backends.elasticsearch5_backend.Elasticsearch5SearchEngine"
 
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = Path(__file__).resolve().parent.parent
 sys.path.append(join(BASE_DIR, "apps"))
 
 
-class Common(Configuration):
+class Common(Waffle, Configuration):
 
     BASE_DIR = BASE_DIR
 
@@ -47,6 +52,7 @@ class Common(Configuration):
     # END DEBUG
 
     ALLOWED_HOSTS = values.ListValue(["*"])
+    ROOT_DOMAIN = values.Value()
 
     # APP CONFIGURATION
     DJANGO_APPS = (
@@ -58,9 +64,11 @@ class Common(Configuration):
         "django.contrib.sessions",
         "django.contrib.messages",
         "django.contrib.staticfiles",
+        "django.contrib.sites",
     )
 
     THIRD_PARTY_APPS = (
+        "channels",
         "django_extensions",
         "safedelete",
         "mptt",
@@ -72,9 +80,17 @@ class Common(Configuration):
         "ariadne_extended.payload",
         "ariadne_extended.contrib.waffle_graph",
         "haystack",
+        "rest_framework_simplejwt.token_blacklist",
+        "django_q",
+        "memoize",
+        "pghistory",
+        "pgtrigger",
+        "pgconnection",
     )
 
     LOCAL_APPS = (
+        "accounts",
+        "owners",
         "situations",
         "protocol",
         "graph",
@@ -88,16 +104,19 @@ class Common(Configuration):
     # END APP CONFIGURATION
 
     # MIDDLEWARE CONFIGURATION
-    MIDDLEWARE = (
+    # MIDDLEWARE = values.BackendsValue([
+    MIDDLEWARE = [
         "django.middleware.security.SecurityMiddleware",
         "django.contrib.sessions.middleware.SessionMiddleware",
-        "corsheaders.middleware.CorsMiddleware",
         "django.middleware.common.CommonMiddleware",
         "django.middleware.csrf.CsrfViewMiddleware",
         "django.contrib.auth.middleware.AuthenticationMiddleware",
         "django.contrib.messages.middleware.MessageMiddleware",
         "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    )
+        "django.contrib.sites.middleware.CurrentSiteMiddleware",
+        "corsheaders.middleware.CorsMiddleware",
+        # "graph.middleware.SimpleMiddleware",
+    ]
     # END MIDDLEWARE CONFIGURATION
 
     # EMAIL CONFIGURATION
@@ -118,14 +137,14 @@ class Common(Configuration):
     # END DATABASE CONFIGURATION
 
     # CACHING
-    # Do this here because thanks to django-pylibmc-sasl and pylibmc
-    # memcacheify (used on heroku) is painful to install on windows.
-    CACHES = {
-        "default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache", "LOCATION": ""}
-    }
+    CACHES = values.CacheURLValue("locmem://invo")
     # END CACHING
 
     # GENERAL CONFIGURATION
+
+    # Use custom auth model
+    AUTH_USER_MODEL = "accounts.User"
+
     # See: https://docs.djangoproject.com/en/dev/ref/settings/#time-zone
     TIME_ZONE = "America/Chicago"
 
@@ -133,7 +152,7 @@ class Common(Configuration):
     LANGUAGE_CODE = "en-us"
 
     # See: https://docs.djangoproject.com/en/dev/ref/settings/#site-id
-    SITE_ID = 1
+    SITE_ID = None
 
     # See: https://docs.djangoproject.com/en/dev/ref/settings/#use-i18n
     USE_I18N = True
@@ -165,7 +184,7 @@ class Common(Configuration):
 
     # STATIC FILE CONFIGURATION
     # See: https://docs.djangoproject.com/en/dev/ref/settings/#static-root
-    # STATIC_ROOT = join(os.path.dirname(BASE_DIR), 'staticfiles')
+    STATIC_ROOT = join(os.path.dirname(BASE_DIR), "staticfiles")
 
     # See: https://docs.djangoproject.com/en/dev/ref/settings/#static-url
     STATIC_URL = "/static/"
@@ -195,13 +214,13 @@ class Common(Configuration):
 
     # See: https://docs.djangoproject.com/en/dev/ref/settings/#wsgi-application
     WSGI_APPLICATION = "invo.wsgi.application"
+    ASGI_APPLICATION = "invo.asgi.application"
     # End URL Configuration
 
     # AUTHENTICATION CONFIGURATION
-    # AUTHENTICATION_BACKENDS = (
-    #     'django.contrib.auth.backends.ModelBackend',
-    # )
+    AUTHENTICATION_BACKENDS = ("django.contrib.auth.backends.ModelBackend",)
 
+    # 'rest_framework_simplejwt.authentication.JWTAuthentication',
     # Password validation
     # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
@@ -229,11 +248,12 @@ class Common(Configuration):
     # the site admins on every HTTP 500 error when DEBUG=False.
     # See http://docs.djangoproject.com/en/dev/topics/logging for
     # more details on how to customize your logging configuration.
+
     LOGGING = {
         "version": 1,
         "disable_existing_loggers": False,
-        "filters": {"require_debug_false": {"()": "django.utils.log.RequireDebugFalse"}},
-        "formatters": {"rich": {"datefmt": "[%X]"}},
+        # "filters": {"require_debug_false": {"()": "django.utils.log.RequireDebugFalse"}},
+        "formatters": {"rich": {"datefmt": "[%X]", "rich_tracebacks": True}},
         "handlers": {
             "console": {
                 "class": "rich.logging.RichHandler",
@@ -241,26 +261,27 @@ class Common(Configuration):
                 "level": "DEBUG",
             }
         },
-        "loggers": {"django": {"handlers": ["console"]}},
-        # "handlers": {
-        #     "mail_admins": {
-        #         "level": "ERROR",
-        #         "filters": ["require_debug_false"],
-        #         "class": "django.utils.log.AdminEmailHandler",
-        #     }
-        # },
-        # "loggers": {
-        #     "django.request": {
-        #         "handlers": ["mail_admins"],
-        #         "level": "ERROR",
-        #         "propagate": True,
-        #     },
-        # },
+        "loggers": {"django": {"handlers": ["console"]}, "": {"handlers": ["console"]}},
     }
     # END LOGGING CONFIGURATION
 
+    # Channels
+    @property
+    def CHANNEL_LAYERS(self):
+        return {
+            "default": {
+                "BACKEND": "channels_redis.core.RedisChannelLayer",
+                "CONFIG": {
+                    "hosts": [self.CACHES["default"]["LOCATION"]],
+                },
+            },
+        }
+
+    # Additional database setup
     @classmethod
     def post_setup(cls):
+        super().post_setup()
+        cls.DATABASES = pgconnection.configure(cls.DATABASES)
         cls.DATABASES["default"]["ATOMIC_REQUESTS"] = True
 
     # CORS
@@ -268,11 +289,24 @@ class Common(Configuration):
     CORS_ALLOWED_ORIGIN_REGEXES = values.ListValue([])
     CORS_ORIGIN_ALLOWS_ALL = values.BooleanValue(False)
     CORS_ALLOW_CREDENTIALS = values.BooleanValue(True)
+    # CORS_URLS_REGEX = r"^/api/.*$"
 
-    # Waffle app
-    WAFFLE_FLAG_DEFAULT = values.BooleanValue(False)
-    WAFFLE_SWITCH_DEFAULT = values.BooleanValue(False)
-    WAFFLE_SAMPLE_DEFAULT = values.BooleanValue(False)
+    # JWT
+    ACCESS_TOKEN_LIFETIME = TimeDeltaValue(timedelta(minutes=5))
+    REFRESH_TOKEN_LIFETIME = TimeDeltaValue(timedelta(days=2))
+    ROTATE_REFRESH_TOKENS = values.BooleanValue(True)
+    BLACKLIST_AFTER_ROTATION = values.BooleanValue(True)
+    UPDATE_LAST_LOGIN = values.BooleanValue(True)
+
+    @property
+    def SIMPLE_JWT(self):
+        return {
+            "ACCESS_TOKEN_LIFETIME": self.ACCESS_TOKEN_LIFETIME,
+            "REFRESH_TOKEN_LIFETIME": self.REFRESH_TOKEN_LIFETIME,
+            "ROTATE_REFRESH_TOKENS": self.ROTATE_REFRESH_TOKENS,
+            "BLACKLIST_AFTER_ROTATION": self.BLACKLIST_AFTER_ROTATION,
+            "UPDATE_LAST_LOGIN": self.UPDATE_LAST_LOGIN,
+        }
 
     HAYSTACK_CONNECTIONS = values.SearchURLValue("elasticsearch://127.0.0.1:9200/invo")
     HAYSTACK_FUZZY_MIN_SIM = 0.2
@@ -280,10 +314,18 @@ class Common(Configuration):
     # HAYSTACK_SIGNAL_PROCESSOR = "haystack.signals.RealtimeSignalProcessor"
     HAYSTACK_SIGNAL_PROCESSOR = "haystack.signals.BaseSignalProcessor"
 
+    # Django Q
+    Q_CLUSTER = {
+        # default={"name": "main", "workers": 4, "timeout": 90, "django_redis": "default"},
+        "name": "main",
+        "workers": 4,
+        "timeout": 90,
+        "django_redis": "default",
+    }
+
     # INVO APP SETTINGS
 
     # instance namespace used to distinguish different invo instances, if needed
     # TODO: maybe tie to sites framework?
     # nullable
     INVO_APP_IRN_NAMESPACE = values.Value("stage")
-    # INVO_APP_IRN_NAMESPACE = None

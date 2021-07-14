@@ -123,7 +123,15 @@ extend type Query {
   item(id: ID!): ItemTypes
   items(first: Int, last: Int, after: String, before: String): Connection!
   "Suggest the type of item based on the name"
-  suggestType(name: String!): ItemTypesEnum
+  suggestType(name: String!): ItemTypesEnum!
+  "Search for items by their text contents"
+  itemSearch(
+    search: String!
+    first: Int
+    last: Int
+    after: String
+    before: String
+  ): Connection!
 }
 
 extend type Mutation {

@@ -1,0 +1,48 @@
+# User app types
+
+type Group implements Node {
+  id: ID!
+  name: String
+  permissions: [Permission]
+}
+
+type Permission implements Node {
+  id: ID!
+  name: String
+  contentType: String
+  codename: String
+}
+
+type User implements Node {
+  id: ID!
+  email: String!
+  firstName: String
+  lastName: String
+  isStaff: Boolean!
+  isActive: Boolean!
+  groups: [Group]!
+  userPermissions: [Permission]!
+  allPermissions: [String]!
+  groupPermissions: [String]!
+}
+
+input CreateUserInput {
+  email: String!
+  firstName: String!
+  lastName: String!
+  password: String!
+}
+
+type UserPayload implements Payload {
+  success: Boolean!
+  errors: [FieldError!]!
+  object: User
+}
+
+extend type Query {
+  currentUser: User
+}
+
+extend type Mutation {
+  createUser(input: CreateUserInput!): UserPayload!
+}

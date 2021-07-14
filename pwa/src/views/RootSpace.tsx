@@ -1,4 +1,5 @@
 // Show the top level spaces in your invo app
+// TODO: get rid of and merge with Space.tsx, use props to customize
 import { useMutation, useQuery } from "@apollo/client"
 import {
   Link,
@@ -9,7 +10,8 @@ import {
   Breadcrumbs,
   Grid,
   Typography,
-  Button
+  Button,
+  IconButton
 } from "@material-ui/core"
 import { makeStyles } from "@material-ui/styles"
 import {
@@ -27,6 +29,7 @@ import React, { FC } from "react"
 import GridLayout, { ReactGridLayoutProps } from "react-grid-layout"
 import { Link as RouterLink } from "react-router-dom"
 import { spaceDetailUrl } from "routes"
+import AddIcon from "@material-ui/icons/Add"
 
 const useStyles = makeStyles((theme: Theme) => ({
   rootSpaces: { width: "100%" },
@@ -92,12 +95,14 @@ const RootSpace: FC<RootSpaceProps> = () => {
           Spaces
         </Link>
       </Breadcrumbs>
-      <Grid container>
+      <Grid container spacing={3} alignItems="center">
         <Grid item>
           <Typography variant="h3">Root Spaces</Typography>
         </Grid>
         <Grid item>
-          <Button {...bindTrigger(addSpacePopupState)}>Add Space</Button>
+          <IconButton {...bindTrigger(addSpacePopupState)} size="medium">
+            <AddIcon />
+          </IconButton>
         </Grid>
       </Grid>
       <GridLayout
@@ -115,9 +120,12 @@ const RootSpace: FC<RootSpaceProps> = () => {
                 <CardHeader
                   title={space.name}
                   to={spaceDetailUrl(space.id)}
-                  component={Link}
+                  component={RouterLink}
                 />
-                <CardContent>{space.itemCount}</CardContent>
+                <CardContent>
+                  {space.itemCount}
+                  {/* <RouterLink to={spaceDetailUrl(space.id)}>Wat</RouterLink> */}
+                </CardContent>
               </Card>
             </div>
           )

@@ -58,7 +58,7 @@ export const spaceListContent = gql`
   ${timeStamped}
 `
 
-const fragments = gql`
+export const situationBit = gql`
   fragment SituationBit on Situation {
     id
     ...Times
@@ -74,4 +74,3 @@ const fragments = gql`
   ${timeStamped}
   ${itemListContent}
 `
-export default fragments

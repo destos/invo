@@ -19,16 +19,23 @@ export type Scalars = {
 
 export type Query = {
   __typename?: 'Query';
+  waffle: Waffle;
   currentUser: Maybe<User>;
-  waffle: Maybe<Waffle>;
+  currentSite: Site;
   activeSituation: Maybe<Situation>;
   getIrnEntity: Maybe<Protocol>;
+  /** Singular Space Node */
   space: Maybe<SpaceTypes>;
+  /** Get all Space Nodes */
   getSpaces: Array<SpaceTypes>;
+  /** Space Node connection interface */
+  spaces: Connection;
   item: Maybe<ItemTypes>;
   items: Connection;
   /** Suggest the type of item based on the name */
-  suggestType: Maybe<ItemTypesEnum>;
+  suggestType: ItemTypesEnum;
+  /** Search for items by their text contents */
+  itemSearch: Connection;
   entitySearch: Array<SearchResult>;
 };
 
@@ -44,6 +51,15 @@ export type QuerySpaceArgs = {
 
 
 export type QueryGetSpacesArgs = {
+  filter: Maybe<SpaceFilter>;
+};
+
+
+export type QuerySpacesArgs = {
+  first: Maybe<Scalars['Int']>;
+  last: Maybe<Scalars['Int']>;
+  after: Maybe<Scalars['String']>;
+  before: Maybe<Scalars['String']>;
   filter: Maybe<SpaceFilter>;
 };
 
@@ -66,59 +82,37 @@ export type QuerySuggestTypeArgs = {
 };
 
 
+export type QueryItemSearchArgs = {
+  search: Scalars['String'];
+  first: Maybe<Scalars['Int']>;
+  last: Maybe<Scalars['Int']>;
+  after: Maybe<Scalars['String']>;
+  before: Maybe<Scalars['String']>;
+};
+
+
 export type QueryEntitySearchArgs = {
   search: SearchInput;
 };
 
-export type User = Node & {
-  __typename?: 'User';
-  id: Scalars['ID'];
-  username: Maybe<Scalars['String']>;
-  firstName: Maybe<Scalars['String']>;
-  lastName: Maybe<Scalars['String']>;
-  email: Scalars['String'];
-  isStaff: Scalars['Boolean'];
-  isActive: Scalars['Boolean'];
-  groups: Array<Maybe<Group>>;
-  userPermissions: Array<Maybe<Permission>>;
-  allPermissions: Array<Maybe<Scalars['String']>>;
-  groupPermissions: Array<Maybe<Scalars['String']>>;
-};
-
-export type Node = {
-  id: Scalars['ID'];
-};
-
-export type Group = Node & {
-  __typename?: 'Group';
-  id: Scalars['ID'];
-  name: Maybe<Scalars['String']>;
-  permissions: Maybe<Array<Maybe<Permission>>>;
-};
-
-export type Permission = Node & {
-  __typename?: 'Permission';
-  id: Scalars['ID'];
-  name: Maybe<Scalars['String']>;
-  contentType: Maybe<Scalars['String']>;
-  codename: Maybe<Scalars['String']>;
-};
-
 export type Waffle = {
   __typename?: 'Waffle';
-  flags: Maybe<Array<Maybe<WaffleFlag>>>;
-  switches: Maybe<Array<Maybe<WaffleSwitch>>>;
-  samples: Maybe<Array<Maybe<WaffleSample>>>;
-  all: Maybe<Array<Maybe<WaffleItem>>>;
+  flags: Array<WaffleFlag>;
+  switches: Array<WaffleSwitch>;
+  samples: Array<WaffleSample>;
+  all: Array<WaffleItem>;
   /** Retrieve a flag */
   flag: Maybe<WaffleFlag>;
   /** Retrieve a switch */
   switch: Maybe<WaffleSwitch>;
   /** Retrieve a sample */
   sample: Maybe<WaffleSample>;
-  flagDefault: Maybe<Scalars['Boolean']>;
-  switchDefault: Maybe<Scalars['Boolean']>;
-  sampleDefault: Maybe<Scalars['Boolean']>;
+  /** The default flag value as specified in the settings */
+  flagDefault: Scalars['Boolean'];
+  /** The default switch value as specified in the settings */
+  switchDefault: Scalars['Boolean'];
+  /** The default sample value as specified in the settings */
+  sampleDefault: Scalars['Boolean'];
 };
 
 
@@ -179,6 +173,47 @@ export type WaffleSample = WaffleItem & TimeStamped & {
   modified: Scalars['DateTime'];
 };
 
+export type User = Node & {
+  __typename?: 'User';
+  id: Scalars['ID'];
+  email: Scalars['String'];
+  firstName: Maybe<Scalars['String']>;
+  lastName: Maybe<Scalars['String']>;
+  isStaff: Scalars['Boolean'];
+  isActive: Scalars['Boolean'];
+  groups: Array<Maybe<Group>>;
+  userPermissions: Array<Maybe<Permission>>;
+  allPermissions: Array<Maybe<Scalars['String']>>;
+  groupPermissions: Array<Maybe<Scalars['String']>>;
+  sites: Array<Site>;
+};
+
+export type Node = {
+  id: Scalars['ID'];
+};
+
+export type Group = Node & {
+  __typename?: 'Group';
+  id: Scalars['ID'];
+  name: Maybe<Scalars['String']>;
+  permissions: Maybe<Array<Maybe<Permission>>>;
+};
+
+export type Permission = Node & {
+  __typename?: 'Permission';
+  id: Scalars['ID'];
+  name: Maybe<Scalars['String']>;
+  contentType: Maybe<Scalars['String']>;
+  codename: Maybe<Scalars['String']>;
+};
+
+export type Site = {
+  __typename?: 'Site';
+  active: Scalars['Boolean'];
+  domain: Scalars['String'];
+  name: Scalars['String'];
+};
+
 export type Situation = Node & TimeStamped & {
   __typename?: 'Situation';
   id: Scalars['ID'];
@@ -204,6 +239,7 @@ export type SpaceNode = Node & SpaceInterface & TimeStamped & Protocol & {
   parent: Maybe<SpaceTypes>;
   parents: Array<SpaceTypes>;
   children: Array<SpaceTypes>;
+  childSpaces: Connection;
   isLeaf: Scalars['Boolean'];
   isChild: Scalars['Boolean'];
   isRoot: Scalars['Boolean'];
@@ -223,6 +259,15 @@ export type SpaceNodeChildrenArgs = {
 };
 
 
+export type SpaceNodeChildSpacesArgs = {
+  first: Maybe<Scalars['Int']>;
+  last: Maybe<Scalars['Int']>;
+  after: Maybe<Scalars['String']>;
+  before: Maybe<Scalars['String']>;
+  filter: Maybe<SpaceFilter>;
+};
+
+
 export type SpaceNodeItemsArgs = {
   first: Maybe<Scalars['Int']>;
   last: Maybe<Scalars['Int']>;
@@ -237,6 +282,7 @@ export type SpaceInterface = {
   parent: Maybe<SpaceTypes>;
   parents: Array<SpaceTypes>;
   children: Array<SpaceTypes>;
+  childSpaces: Connection;
   isLeaf: Scalars['Boolean'];
   isChild: Scalars['Boolean'];
   isRoot: Scalars['Boolean'];
@@ -252,6 +298,15 @@ export type SpaceInterface = {
 
 
 export type SpaceInterfaceChildrenArgs = {
+  filter: Maybe<SpaceFilter>;
+};
+
+
+export type SpaceInterfaceChildSpacesArgs = {
+  first: Maybe<Scalars['Int']>;
+  last: Maybe<Scalars['Int']>;
+  after: Maybe<Scalars['String']>;
+  before: Maybe<Scalars['String']>;
   filter: Maybe<SpaceFilter>;
 };
 
@@ -337,6 +392,7 @@ export type GridSpaceNode = Node & SpaceInterface & TimeStamped & Protocol & {
   parent: Maybe<SpaceTypes>;
   parents: Array<SpaceTypes>;
   children: Array<SpaceTypes>;
+  childSpaces: Connection;
   isLeaf: Scalars['Boolean'];
   isChild: Scalars['Boolean'];
   isRoot: Scalars['Boolean'];
@@ -353,6 +409,15 @@ export type GridSpaceNode = Node & SpaceInterface & TimeStamped & Protocol & {
 
 
 export type GridSpaceNodeChildrenArgs = {
+  filter: Maybe<SpaceFilter>;
+};
+
+
+export type GridSpaceNodeChildSpacesArgs = {
+  first: Maybe<Scalars['Int']>;
+  last: Maybe<Scalars['Int']>;
+  after: Maybe<Scalars['String']>;
+  before: Maybe<Scalars['String']>;
   filter: Maybe<SpaceFilter>;
 };
 
@@ -529,7 +594,8 @@ export type SearchResult = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  root: Maybe<Scalars['Boolean']>;
+  createUser: UserPayload;
+  registerSite: SitePayload;
   selectEntities: SituationPayload;
   unselectEntities: SituationPayload;
   abandonSituation: Maybe<Situation>;
@@ -551,6 +617,16 @@ export type Mutation = {
   moveItem: ItemPayload;
   /** Removes an item from a space */
   removeItem: ItemPayload;
+};
+
+
+export type MutationCreateUserArgs = {
+  input: CreateUserInput;
+};
+
+
+export type MutationRegisterSiteArgs = {
+  subDomain: Scalars['String'];
 };
 
 
@@ -645,6 +721,43 @@ export type MutationRemoveItemArgs = {
   id: Scalars['ID'];
 };
 
+export type CreateUserInput = {
+  email: Scalars['String'];
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+  password: Scalars['String'];
+};
+
+export type UserPayload = Payload & {
+  __typename?: 'UserPayload';
+  success: Scalars['Boolean'];
+  errors: Array<FieldError>;
+  object: Maybe<User>;
+};
+
+export type Payload = {
+  success: Maybe<Scalars['Boolean']>;
+  errors: Maybe<Array<Maybe<FieldError>>>;
+};
+
+export type FieldError = {
+  __typename?: 'FieldError';
+  name: Maybe<Scalars['String']>;
+  values: Maybe<Array<Maybe<ErrorDetail>>>;
+};
+
+export type ErrorDetail = {
+  __typename?: 'ErrorDetail';
+  error: Maybe<Scalars['String']>;
+  code: Maybe<Scalars['String']>;
+};
+
+export type SitePayload = {
+  __typename?: 'SitePayload';
+  success: Scalars['Boolean'];
+  site: Site;
+};
+
 export type SituationPayload = {
   __typename?: 'SituationPayload';
   success: Scalars['Boolean'];
@@ -678,23 +791,6 @@ export type SpacePayload = Payload & {
   success: Scalars['Boolean'];
   errors: Array<FieldError>;
   object: Maybe<SpaceTypes>;
-};
-
-export type Payload = {
-  success: Maybe<Scalars['Boolean']>;
-  errors: Maybe<Array<Maybe<FieldError>>>;
-};
-
-export type FieldError = {
-  __typename?: 'FieldError';
-  name: Maybe<Scalars['String']>;
-  values: Maybe<Array<Maybe<ErrorDetail>>>;
-};
-
-export type ErrorDetail = {
-  __typename?: 'ErrorDetail';
-  error: Maybe<Scalars['String']>;
-  code: Maybe<Scalars['String']>;
 };
 
 export type GridSpaceInput = {
@@ -744,6 +840,31 @@ export enum SpaceTypesEnum {
   /** GridSpaceNode */
   Grid = 'GRID'
 }
+
+export type UserDetailsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type UserDetailsQuery = (
+  { __typename?: 'Query' }
+  & { user: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'email' | 'firstName' | 'lastName'>
+  )> }
+);
+
+export type UserSignUpMutationVariables = Exact<{
+  input: CreateUserInput;
+}>;
+
+
+export type UserSignUpMutation = (
+  { __typename?: 'Mutation' }
+  & { createUser: (
+    { __typename?: 'UserPayload' }
+    & Pick<UserPayload, 'success'>
+    & ErrorFragment_UserPayload_Fragment
+  ) }
+);
 
 type Times_WaffleFlag_Fragment = (
   { __typename?: 'WaffleFlag' }
@@ -797,6 +918,18 @@ type Times_TrackedConsumable_Fragment = (
 
 export type TimesFragment = Times_WaffleFlag_Fragment | Times_WaffleSwitch_Fragment | Times_WaffleSample_Fragment | Times_Situation_Fragment | Times_SpaceNode_Fragment | Times_GridSpaceNode_Fragment | Times_Item_Fragment | Times_Tool_Fragment | Times_Consumable_Fragment | Times_TrackedConsumable_Fragment;
 
+type ErrorFragment_UserPayload_Fragment = (
+  { __typename?: 'UserPayload' }
+  & { errors: Array<(
+    { __typename?: 'FieldError' }
+    & Pick<FieldError, 'name'>
+    & { values: Maybe<Array<Maybe<(
+      { __typename?: 'ErrorDetail' }
+      & Pick<ErrorDetail, 'code' | 'error'>
+    )>>> }
+  )> }
+);
+
 type ErrorFragment_SpacePayload_Fragment = (
   { __typename?: 'SpacePayload' }
   & { errors: Array<(
@@ -821,7 +954,7 @@ type ErrorFragment_ItemPayload_Fragment = (
   )> }
 );
 
-export type ErrorFragmentFragment = ErrorFragment_SpacePayload_Fragment | ErrorFragment_ItemPayload_Fragment;
+export type ErrorFragmentFragment = ErrorFragment_UserPayload_Fragment | ErrorFragment_SpacePayload_Fragment | ErrorFragment_ItemPayload_Fragment;
 
 type ItemListContent_Item_Fragment = (
   { __typename?: 'Item' }
@@ -1111,6 +1244,147 @@ type SearchObject_TrackedConsumable_Fragment = (
 
 export type SearchObjectFragment = SearchObject_SpaceNode_Fragment | SearchObject_GridSpaceNode_Fragment | SearchObject_Item_Fragment | SearchObject_Tool_Fragment | SearchObject_Consumable_Fragment | SearchObject_TrackedConsumable_Fragment;
 
+export type ItemSearchQueryVariables = Exact<{
+  search: Scalars['String'];
+  first: Maybe<Scalars['Int']>;
+  last: Maybe<Scalars['Int']>;
+  after: Maybe<Scalars['String']>;
+  before: Maybe<Scalars['String']>;
+}>;
+
+
+export type ItemSearchQuery = (
+  { __typename?: 'Query' }
+  & { itemSearch: (
+    { __typename?: 'Connection' }
+    & { pageInfo: Maybe<(
+      { __typename?: 'PageInfo' }
+      & Pick<PageInfo, 'hasNextPage' | 'endCursor' | 'count'>
+    )>, edges: Maybe<Array<Maybe<(
+      { __typename?: 'Edge' }
+      & { node: Maybe<{ __typename?: 'User' } | { __typename?: 'Group' } | { __typename?: 'Permission' } | { __typename?: 'Situation' } | { __typename?: 'SpaceNode' } | { __typename?: 'GridSpaceNode' } | (
+        { __typename?: 'Item' }
+        & SearchItem_Item_Fragment
+      ) | (
+        { __typename?: 'Tool' }
+        & SearchItem_Tool_Fragment
+      ) | (
+        { __typename?: 'Consumable' }
+        & SearchItem_Consumable_Fragment
+      ) | (
+        { __typename?: 'TrackedConsumable' }
+        & SearchItem_TrackedConsumable_Fragment
+      )> }
+    )>>> }
+  ) }
+);
+
+type SearchItem_Item_Fragment = (
+  { __typename?: 'Item' }
+  & Pick<Item, 'id' | 'name'>
+  & { space: Maybe<(
+    { __typename?: 'SpaceNode' }
+    & Pick<SpaceNode, 'id' | 'name'>
+    & { parents: Array<(
+      { __typename?: 'SpaceNode' }
+      & Pick<SpaceNode, 'id' | 'name'>
+    ) | (
+      { __typename?: 'GridSpaceNode' }
+      & Pick<GridSpaceNode, 'id' | 'name'>
+    )> }
+  ) | (
+    { __typename?: 'GridSpaceNode' }
+    & Pick<GridSpaceNode, 'id' | 'name'>
+    & { parents: Array<(
+      { __typename?: 'SpaceNode' }
+      & Pick<SpaceNode, 'id' | 'name'>
+    ) | (
+      { __typename?: 'GridSpaceNode' }
+      & Pick<GridSpaceNode, 'id' | 'name'>
+    )> }
+  )> }
+);
+
+type SearchItem_Tool_Fragment = (
+  { __typename?: 'Tool' }
+  & Pick<Tool, 'id' | 'name'>
+  & { space: Maybe<(
+    { __typename?: 'SpaceNode' }
+    & Pick<SpaceNode, 'id' | 'name'>
+    & { parents: Array<(
+      { __typename?: 'SpaceNode' }
+      & Pick<SpaceNode, 'id' | 'name'>
+    ) | (
+      { __typename?: 'GridSpaceNode' }
+      & Pick<GridSpaceNode, 'id' | 'name'>
+    )> }
+  ) | (
+    { __typename?: 'GridSpaceNode' }
+    & Pick<GridSpaceNode, 'id' | 'name'>
+    & { parents: Array<(
+      { __typename?: 'SpaceNode' }
+      & Pick<SpaceNode, 'id' | 'name'>
+    ) | (
+      { __typename?: 'GridSpaceNode' }
+      & Pick<GridSpaceNode, 'id' | 'name'>
+    )> }
+  )> }
+);
+
+type SearchItem_Consumable_Fragment = (
+  { __typename?: 'Consumable' }
+  & Pick<Consumable, 'id' | 'name'>
+  & { space: Maybe<(
+    { __typename?: 'SpaceNode' }
+    & Pick<SpaceNode, 'id' | 'name'>
+    & { parents: Array<(
+      { __typename?: 'SpaceNode' }
+      & Pick<SpaceNode, 'id' | 'name'>
+    ) | (
+      { __typename?: 'GridSpaceNode' }
+      & Pick<GridSpaceNode, 'id' | 'name'>
+    )> }
+  ) | (
+    { __typename?: 'GridSpaceNode' }
+    & Pick<GridSpaceNode, 'id' | 'name'>
+    & { parents: Array<(
+      { __typename?: 'SpaceNode' }
+      & Pick<SpaceNode, 'id' | 'name'>
+    ) | (
+      { __typename?: 'GridSpaceNode' }
+      & Pick<GridSpaceNode, 'id' | 'name'>
+    )> }
+  )> }
+);
+
+type SearchItem_TrackedConsumable_Fragment = (
+  { __typename?: 'TrackedConsumable' }
+  & Pick<TrackedConsumable, 'id' | 'name'>
+  & { space: Maybe<(
+    { __typename?: 'SpaceNode' }
+    & Pick<SpaceNode, 'id' | 'name'>
+    & { parents: Array<(
+      { __typename?: 'SpaceNode' }
+      & Pick<SpaceNode, 'id' | 'name'>
+    ) | (
+      { __typename?: 'GridSpaceNode' }
+      & Pick<GridSpaceNode, 'id' | 'name'>
+    )> }
+  ) | (
+    { __typename?: 'GridSpaceNode' }
+    & Pick<GridSpaceNode, 'id' | 'name'>
+    & { parents: Array<(
+      { __typename?: 'SpaceNode' }
+      & Pick<SpaceNode, 'id' | 'name'>
+    ) | (
+      { __typename?: 'GridSpaceNode' }
+      & Pick<GridSpaceNode, 'id' | 'name'>
+    )> }
+  )> }
+);
+
+export type SearchItemFragment = SearchItem_Item_Fragment | SearchItem_Tool_Fragment | SearchItem_Consumable_Fragment | SearchItem_TrackedConsumable_Fragment;
+
 export type GetActiveSituationQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1118,11 +1392,22 @@ export type GetActiveSituationQuery = (
   { __typename?: 'Query' }
   & { currentUser: Maybe<(
     { __typename?: 'User' }
-    & Pick<User, 'id' | 'username' | 'firstName' | 'lastName'>
-  )>, activeSituation: Maybe<(
+    & { sites: Array<(
+      { __typename?: 'Site' }
+      & SituationSiteFragment
+    )> }
+  )>, currentSite: (
+    { __typename?: 'Site' }
+    & SituationSiteFragment
+  ), activeSituation: Maybe<(
     { __typename?: 'Situation' }
     & SituationBitFragment
   )> }
+);
+
+export type SituationSiteFragment = (
+  { __typename?: 'Site' }
+  & Pick<Site, 'domain' | 'name'>
 );
 
 export type AddToActiveSituationMutationVariables = Exact<{
@@ -1157,6 +1442,19 @@ export type RemoveFromActiveSituationMutation = (
       & SituationBitFragment
     ) }
   ) }
+);
+
+export type AbandonActiveSituationMutationVariables = Exact<{
+  irns: Array<Scalars['IRN']>;
+}>;
+
+
+export type AbandonActiveSituationMutation = (
+  { __typename?: 'Mutation' }
+  & { abandonSituation: Maybe<(
+    { __typename?: 'Situation' }
+    & SituationBitFragment
+  )> }
 );
 
 export type LayoutBitFragment = (

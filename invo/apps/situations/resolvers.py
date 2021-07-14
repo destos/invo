@@ -1,14 +1,19 @@
 from ariadne_extended.resolvers import ListModelMixin, ModelResolver
 from django.contrib.auth.models import AnonymousUser
+from django.contrib.sites.shortcuts import get_current_site
 from graph.types import mutation, query
 
 from .models import Situation
 from .types import situation
+from owners.resolvers import OwnerResolverMixin
 
 
-class SituationResolver(ModelResolver):
+class SituationResolver(OwnerResolverMixin, ModelResolver):
     model = Situation
     queryset = Situation.objects.all()
+
+    def get_queryset(self):
+        return super().get_queryset().filter(site=get_current_site(self.request))
 
     def get_active(self):
         user = getattr(self.request, "user", None)
@@ -19,14 +24,18 @@ class SituationResolver(ModelResolver):
         # No active situation found create and return a new one
         if situ is None:
             # if no active, make it
-            return Situation.objects.create(user=user)
+            site = get_current_site(self.request)
+            return Situation.objects.create(user=user, site=site)
         return situ
 
     def active(self, info, **kwargs):
-        return self.get_active()
+        active = self.get_active()
+        self.check_object_permissions(self.request, active)
+        return active
 
     def select_entities(self, into, irns=list(), **kwargs):
         active = self.get_active()
+        self.check_object_permissions(self.request, active)
         entities = []
         if active is not None:
             entities = [i.get_instance() for i in irns]
@@ -38,6 +47,7 @@ class SituationResolver(ModelResolver):
 
     def unselect_entities(self, into, irns=list(), **kwargs):
         active = self.get_active()
+        self.check_object_permissions(self.request, active)
         entities = []
         if active is not None:
             entities = [i.get_instance() for i in irns]

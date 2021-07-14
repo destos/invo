@@ -139,3 +139,9 @@ cython_debug/
 .env.test
 .vscode/settings.json
 pwa/.eslintcache
+
+# Dobi build
+.build/
+.dobi/
+.env.ngrok
+invo.paw

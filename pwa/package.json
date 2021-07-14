@@ -1,6 +1,6 @@
 {
   "name": "pwa",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "dependencies": {
     "@apollo/client": "^3.3.4",
@@ -9,8 +9,11 @@
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.57",
     "@material-ui/pickers": "^3.2.10",
+    "@react-native-async-storage/async-storage": "^1.13.3",
     "@rjsf/core": "^2.4.0",
     "@rjsf/material-ui": "^2.4.0",
+    "@sentry/react": "^6.8.0",
+    "@sentry/tracing": "^6.8.0",
     "@testing-library/jest-dom": "^5.11.6",
     "@testing-library/react": "^11.2.2",
     "@testing-library/user-event": "^12.5.0",
@@ -23,9 +26,12 @@
     "@types/react-router-config": "^5.0.1",
     "@types/react-router-dom": "^5.1.6",
     "@types/yup": "^0.29.10",
+    "apollo-link-jwt": "^1.1.5",
     "apollo-link-scalars": "^2.0.2",
+    "env-cmd": "^10.1.0",
     "graphql": "^15.4.0",
     "graphql-2-json-schema": "^0.2.0",
+    "jwt-decode": "^3.1.2",
     "lodash": "^4.17.20",
     "material-ui-popup-state": "^1.7.1",
     "react": "^17.0.1",
@@ -37,6 +43,7 @@
     "react-router-config": "^5.1.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^4.0.1",
+    "tiny-warning": "^1.0.3",
     "typescript": "^4.1.2",
     "urn-lib": "^1.2.0",
     "web-vitals": "^0.2.4",
@@ -44,7 +51,9 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "start:ngrok": "env-cmd -f .env.ngrok npm start",
     "build": "react-scripts build",
+    "build:staging": "env-cmd -f .env.staging npm run build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "gen": "graphql-codegen --config codegen.yml",
@@ -78,6 +87,7 @@
     "@graphql-codegen/typescript-graphql-files-modules": "1.18.0",
     "@graphql-codegen/typescript-operations": "1.17.10",
     "@graphql-codegen/typescript-react-apollo": "2.1.1",
+    "@types/cookie": "^0.4.0",
     "prettier": "2.2.0"
   }
 }

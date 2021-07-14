@@ -1,4 +1,4 @@
-import { Badge, Button, Chip } from "@material-ui/core"
+import { Badge, Button, Link, Menu, MenuItem, MenuList } from "@material-ui/core"
 import AppBar, { AppBarProps } from "@material-ui/core/AppBar"
 import IconButton from "@material-ui/core/IconButton"
 import { fade, makeStyles } from "@material-ui/core/styles"
@@ -7,10 +7,17 @@ import Typography from "@material-ui/core/Typography"
 import AppsIcon from "@material-ui/icons/Apps"
 import MenuIcon from "@material-ui/icons/Menu"
 import SearchIcon from "@material-ui/icons/Search"
+import { SearchItemFragment } from "client/types"
+import ItemSearchAutocomplete from "components/autocompletes/ItemSearchAutocomplete"
 import useSitu from "hooks/useSitu"
-import { bindToggle, bindTrigger } from "material-ui-popup-state/hooks"
+import {
+  bindMenu,
+  bindToggle,
+  usePopupState
+} from "material-ui-popup-state/hooks"
 import React from "react"
-import { Link as RouterLink } from "react-router-dom"
+import { Link as RouterLink, useHistory } from "react-router-dom"
+import { spaceItemDetailUrl } from "routes"
 
 const useStyles = makeStyles((theme) => ({
   menuButton: {
@@ -50,14 +57,27 @@ const useStyles = makeStyles((theme) => ({
 
 export interface HeaderProps extends AppBarProps {}
 
-const Header: React.FC<HeaderProps> = ({...appBarProps}) => {
+const Header: React.FC<HeaderProps> = ({ ...appBarProps }) => {
+  const history = useHistory()
   const classes = useStyles()
-  const { situation, searchPopup, situDrawer } = useSitu()
+  const { situation, site, sites, searchPopup, situDrawer } = useSitu()
+
+  const siteMenuState = usePopupState({
+    variant: "popover",
+    popupId: "siteMenu"
+  })
+
+  const handleSelect = (value: SearchItemFragment) => {
+    if (value.space) {
+      history.push(spaceItemDetailUrl(value.space.id, value.id))
+    }
+  }
 
   return (
     <AppBar {...appBarProps}>
       <Toolbar>
         <IconButton
+          {...bindToggle(siteMenuState)}
           edge="start"
           className={classes.menuButton}
           color="inherit"
@@ -65,17 +85,39 @@ const Header: React.FC<HeaderProps> = ({...appBarProps}) => {
         >
           <MenuIcon />
         </IconButton>
+        <Menu
+          {...bindMenu(siteMenuState)}
+          getContentAnchorEl={null}
+          keepMounted
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left"
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "left"
+          }}
+        >
+          <MenuList>
+            {sites.map((site)=> (
+              <MenuItem component={Link} href={site.domain} color="inherit">{site.name}</MenuItem>
+            ))}
+          </MenuList>
+        </Menu>
         <Typography className={classes.title} variant="h6" noWrap>
-          Invo
+          Invo ({site?.name})
         </Typography>
+        <ItemSearchAutocomplete onSelect={handleSelect} />
         <IconButton component={RouterLink} to="/">
           <AppsIcon />
         </IconButton>
-        <Button component={RouterLink} to="/select">Select</Button>
+        <Button component={RouterLink} to="/select">
+          Select
+        </Button>
         <IconButton onClick={(e) => searchPopup.open(e)}>
           <SearchIcon />
         </IconButton>
-        {situation ? (
+        {situation && !situDrawer.isOpen ? (
           <>
             <Badge
               color="secondary"

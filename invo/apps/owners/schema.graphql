@@ -1,0 +1,29 @@
+type Site {
+  active: Boolean!
+  domain: String!
+  name: String!
+}
+
+type SitePayload {
+  success: Boolean!
+  site: Site!
+}
+
+extend type Query {
+  currentSite: Site!
+}
+
+extend type Mutation {
+  registerSite(subDomain: String!): SitePayload!
+}
+
+extend type User {
+  sites: [Site!]!
+}
+
+# TODO: think about site flow in relation to a recent sign up.
+# A user should be forced to either get added to someones Site or register their own.
+# A user is only allowed one Site for "unpaid" account but can be added to others
+# When they register a valid site they're forwarded to that sub domain automatically
+# Let them know they can book mark this sub-domain to get back to their stuff quicker
+# Add site switching menu in the top left. Main app bar shows current space or site name.

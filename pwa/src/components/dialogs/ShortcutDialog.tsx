@@ -54,8 +54,7 @@ const ShortcutDialog: React.FunctionComponent<ShortcutDialogProps> = ({
       <DialogContentText>
         Theses are global shortcuts that are used throughout the site
       </DialogContentText>
-      <DialogContent>
-      </DialogContent>
+      <DialogContent></DialogContent>
       <DialogActions>
         <Button
           onClick={() => closeDialog(undefined, undefined)}

@@ -1,6 +1,7 @@
 # ignore some dotfiles/dirs
 .git
 .github
+.do
 .dockerignore
 .gitignore
 .editorconfig

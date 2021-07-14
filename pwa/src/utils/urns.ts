@@ -5,8 +5,8 @@ export var irn = URN.create("irn", {
     // protocol is automatically added (protocol = urn or arn or whatever)
     "ins",
     "etype",
-    "nss",
+    "nss"
   ],
   separator: ":",
-  allowEmpty: true,
+  allowEmpty: true
 })

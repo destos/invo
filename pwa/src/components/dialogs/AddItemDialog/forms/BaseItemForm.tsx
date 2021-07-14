@@ -6,7 +6,6 @@ import { SelectElement, TextFieldElement } from "react-form-hook-mui"
 interface Props {}
 
 const BaseItemForm: React.FC<Props> = ({}) => {
-
   return (
     <>
       <Grid item xs={8}>

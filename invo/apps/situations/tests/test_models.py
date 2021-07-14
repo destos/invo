@@ -9,12 +9,12 @@ from situations.models import Situation
 # Create your tests here.
 class TestSituation(TestCase):
     def setUp(self):
-        self.user = baker.make(settings.AUTH_USER_MODEL, username="test_user")
+        self.user = baker.make(settings.AUTH_USER_MODEL, email="test@user.com")
 
     def test_attr(self):
         situ = baker.make(Situation, user=self.user)
-        self.assertEqual(str(situ), "test_user (Start, Open)")
-        self.assertEqual(repr(situ), "<Situation: test_user (Start, Open)>")
+        self.assertEqual(str(situ), "test@user.com (Start, Open)")
+        self.assertEqual(repr(situ), "<Situation: test@user.com (Start, Open)>")
         self.assertEqual(situ._meta.get_latest_by, "modified")
         self.assertEqual(situ._meta.ordering, ("created",))
         self.assertEqual(situ._meta.abstract, False)
@@ -152,7 +152,7 @@ class TestSituation(TestCase):
 
 # class TestSituationScenarios(TestCase):
 #     def setUp(self):
-#         self.user = baker.make(settings.AUTH_USER_MODEL, username="test_user")
+#         self.user = baker.make(settings.AUTH_USER_MODEL, email="test@email.com")
 
 #     def test_adding_new_part(self):
 #         item = baker.make("items.Item")

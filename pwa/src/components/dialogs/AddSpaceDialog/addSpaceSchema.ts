@@ -10,7 +10,10 @@ const combinedSchema = yup
       .min(2, "Item name must be longer")
       .max(50, "Item name too long"),
     // Type selector, is stripped on cast in submission handler for now.
-    type: yup.string().oneOf([SpaceTypesEnum.Space, SpaceTypesEnum.Grid]).default(SpaceTypesEnum.Space),
+    type: yup
+      .string()
+      .oneOf([SpaceTypesEnum.Space, SpaceTypesEnum.Grid])
+      .default(SpaceTypesEnum.Space),
     dimensions: yup.object().shape({
       x: yup.string(),
       y: yup.string(),

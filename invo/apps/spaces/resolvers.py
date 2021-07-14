@@ -1,6 +1,8 @@
+from ariadne_extended.cursor_pagination import RelayModelMixin
 from ariadne_extended.resolvers import ListModelMixin, ModelResolver
 from graph.types import mutation, query
 from items.resolvers import ItemResolver
+from owners.resolvers import OwnerResolverMixin
 
 from .filters import SpaceNodeFilter
 from .models import GridSpaceNode, SpaceNode
@@ -8,7 +10,7 @@ from .serializers import GridSpaceNodeSerializer, SpaceNodeSerializer
 from .types import grid_space_node, space_interface
 
 
-class SpaceNodeResolver(ListModelMixin, ModelResolver):
+class SpaceNodeResolver(OwnerResolverMixin, ListModelMixin, ModelResolver):
     model = SpaceNode
     filterset_class = SpaceNodeFilter
     serializer_class = SpaceNodeSerializer
@@ -21,6 +23,10 @@ class SpaceNodeResolver(ListModelMixin, ModelResolver):
         return space
 
 
+class RelaySpaceNodeResolver(RelayModelMixin, SpaceNodeResolver):
+    pass
+
+
 class GridSpaceNodeResolver(SpaceNodeResolver):
     model = GridSpaceNode
     serializer_class = GridSpaceNodeSerializer
@@ -30,6 +36,7 @@ class GridSpaceNodeResolver(SpaceNodeResolver):
 grid_space_node.set_field("gridSize", lambda g, i: dict(cols=g.grid_size[0], rows=g.grid_size[1]))
 
 query.set_field("space", SpaceNodeResolver.as_resolver(method="retrieve"))
+query.set_field("spaces", RelaySpaceNodeResolver.as_resolver(method="list"))
 query.set_field("getSpaces", SpaceNodeResolver.as_resolver(method="list"))
 
 mutation.set_field("addSpace", SpaceNodeResolver.as_resolver(method="create"))
@@ -45,6 +52,7 @@ space_interface.set_field("items", ItemResolver.as_nested_resolver(method="list"
 space_interface.set_field("isLeaf", lambda m, i: m.is_leaf_node())
 space_interface.set_field("isChild", lambda m, i: m.is_child_node())
 space_interface.set_field("isRoot", lambda m, i: m.is_root_node())
+space_interface.set_field("childSpaces", RelaySpaceNodeResolver.as_nested_resolver(method="list"))
 
 
 @space_interface.field("parents")

@@ -1,0 +1,96 @@
+meta:
+  project: invo
+  default: production
+
+# Local packages for private/WIP python modules
+mount=local_packages:
+  bind: ../python/
+  path: /opt/python
+
+mount=venv:
+  bind: .build/venv
+  path: /opt/setup/.venv
+
+# image=dist-img:
+#   image: invo-build
+#   context: .
+#   dockerfile: .docker/django/Dockerfile
+#   # tags:
+#   target: production
+#   depends: [local_packages]
+#   annotations:
+#     description: "Build the dist image"
+
+env=production-env:
+  files: [.env, .env.production]
+
+env=dev-env:
+  files: [.env, .env.dev]
+
+
+image=build-img:
+  image: invo-builder
+  context: .
+  dockerfile: .docker/django/Dockerfile
+  target: builder-base
+  annotations:
+    description: "Build the builder image"
+
+image=prod-img:
+  image: invo-prod
+  context: .
+  dockerfile: .docker/django/Dockerfile
+  target: production
+  tags:
+    - 'latest'
+    - '{git.short-sha}'
+    - '{git.sha}'
+    - '{time.YYYY-MM-DDThh-mm:}'
+    - '{env.APP_VERSION}'
+  depends: [build-img]
+  annotations:
+    description: "Build the production image"
+
+image=dev-img:
+  image: invo-dev
+  context: .
+  dockerfile: .docker/django/Dockerfile
+  target: production
+  tags:
+    - 'latest'
+    - '{git.short-sha}'
+    - '{git.sha}'
+    - '{time.YYYY-MM-DDThh-mm:}'
+    - '{env.APP_VERSION}'
+  depends: [build-img]
+  annotations:
+    description: "Build the dev image"
+
+job=build:
+  use: build-img
+  mounts: [local_packages, venv]
+  command: "poetry install --no-dev"
+
+job=build-dev:
+  use: build-img
+  mounts: [local_packages, venv]
+  command: "poetry install"
+
+job=production:
+  use: prod-img
+  mounts: [venv]
+  depends: [build, production-env]
+  command: "echo 'Here is your image, you filthy animal'"
+
+job=dev:
+  use: dev-img
+  mounts: [venv]
+  # TODO: bug, build-dev needs to trigger poetry install after build-img is build not after dev-image is done
+  depends: [build-dev, production-env]
+  command: "echo 'okay'"
+
+# job=push:
+#   command: "tag"
+
+# TODO: poetry env directory for prod/dev should be separate so they aren't mixed during prod builds.
+# DEV build does not include dev config files. do we want to run developer tools?

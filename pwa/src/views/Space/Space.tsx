@@ -4,6 +4,7 @@ import {
   Badge,
   Breadcrumbs,
   Button,
+  ButtonGroup,
   Card,
   CardContent,
   CardHeader,
@@ -52,13 +53,14 @@ import { Link as RouterLink, RouteComponentProps } from "react-router-dom"
 import { spaceDetailUrl } from "routes"
 import { relayDeconstructor } from "utils/relay"
 import ItemsList from "./components/ItemsList"
+import AddIcon from "@material-ui/icons/Add"
 
 // TODO: when we detect the space is a leaf node, don't care about displaying layout
 
 const useStyles = makeStyles((theme: Theme) => ({
   gridLayout: { width: "100%" },
   card: { height: "100%" },
-  fookingPanel: {
+  tabPanel: {
     padding: 0
   }
 }))
@@ -200,6 +202,7 @@ const Space: FC<SpaceProps> = ({ match }) => {
   if (space?.isLeaf) {
     pageLayout = "list"
   }
+  const isSelected = situ.isSpaceSelected(space?.irn)
 
   const Content =
     pageLayout === "tabs" ? (
@@ -221,14 +224,14 @@ const Space: FC<SpaceProps> = ({ match }) => {
           />
         </TabList>
         <Divider />
-        <TabPanel value="layout" className={classes.fookingPanel}>
+        <TabPanel value="layout" className={classes.tabPanel}>
           <Layout
             space={space}
             handleChange={handleChange}
             measureBeforeMount={true}
           />
         </TabPanel>
-        <TabPanel value="items" className={classes.fookingPanel}>
+        <TabPanel value="items" className={classes.tabPanel}>
           <ItemsList itemData={itemData} />
         </TabPanel>
       </TabContext>
@@ -274,20 +277,30 @@ const Space: FC<SpaceProps> = ({ match }) => {
         ))}
         <Typography color="textPrimary">{space?.name}</Typography>
       </Breadcrumbs>
-      <Grid container>
+      <Grid container spacing={3} alignItems="center">
         <Grid item>
           <Typography variant="h3">{space?.name}</Typography>
         </Grid>
         <Grid item>
-          <Button {...bindTrigger(addItemPopupState)}>Add Item</Button>
-          <Button {...bindTrigger(addSpacePopupState)}>Add Space</Button>
-          <Button
-            onClick={(e) => {
-              situ.select([space?.irn])
-            }}
-          >
-            Select
-          </Button>
+          <ButtonGroup size="small">
+            <Button
+              {...bindTrigger(addItemPopupState)}
+              variant="contained"
+              color="primary"
+              startIcon={<AddIcon />}
+            >
+              Add Item
+            </Button>
+            <Button {...bindTrigger(addSpacePopupState)}>Add Space</Button>
+            <ToggleButton
+              onClick={(e) => {
+                situ.selectToggle([space?.irn])
+              }}
+              selected={isSelected}
+            >
+              {isSelected ? "Unselect" : "Select"}
+            </ToggleButton>
+          </ButtonGroup>
         </Grid>
         <Grid item>
           <ToggleButtonGroup
