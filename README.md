@@ -53,9 +53,10 @@ poetry export -f requirements.txt --output requirements.txt
 Run tests with test config:
 ```bash
 DJANGO_CONFIGURATION=Test poetry run ptw -- -s invo/apps
+DJANGO_CONFIGURATION=Test poetry run pytest
 ```
 
-Run black formattings:
+Run black formatting:
 ```bash
 poetry run black ./invo/
 ```
@@ -77,3 +78,9 @@ docker build --rm --tag invo-prod --file .docker/django/app . --target productio
 poetry run isort invo/apps ./manage.py
 ngrok start invo_app invo_api
 docker-compose run --name invo_debug_app --rm --service-ports app
+docker-compose run --name qmonitor --rm django ./manage.py qmonitor
+
+```bash
+# Run the django shell container
+docker-compose run --name invo_debug_app_shell --rm --service-ports django_shell
+```
