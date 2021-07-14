@@ -12,6 +12,7 @@ import {
   createContext,
   Dispatch,
   SetStateAction,
+  useCallback,
   useContext,
   useEffect,
   useState
@@ -104,12 +105,16 @@ export const apolloLinkJWT = ApolloLinkJWT({
 // Authentication providers
 interface IAuthContext {
   user: Maybe<Partial<User>>
+  isAuthed: boolean
   setTokens: Dispatch<SetStateAction<Tokens | null>>
+  signOut: Function
 }
 
 const defaultAuth: IAuthContext = {
   user: null,
-  setTokens: () => {}
+  isAuthed: false,
+  setTokens: () => {},
+  signOut: () => {}
 }
 
 export const AuthContext = createContext<IAuthContext>(defaultAuth)
@@ -137,7 +142,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
 }) => {
   const [tokens, setTokens] = useState<Tokens | null>(null)
   const [user, setUser] = useState<Maybe<Partial<User>>>(null)
-  const history = useHistory()
+  // const history = useHistory()
+
   const [getUser, { loading }] = useLazyQuery<
     UserDetailsQuery,
     UserDetailsQueryVariables
@@ -196,8 +202,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
     getUser()
   }, [])
 
+  const isAuthed = !!user
+
+  const signOut = useCallback(() => {
+    const event = new CustomEvent<string>("signOut", { detail: undefined })
+    return window.dispatchEvent(event)
+  }, [user])
+
   return (
-    <AuthContext.Provider value={{ user, setTokens }}>
+    <AuthContext.Provider value={{ user, isAuthed, setTokens, signOut }}>
       {children}
       {/* {renderRoutes(route?.routes)} */}
     </AuthContext.Provider>
