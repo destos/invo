@@ -3,6 +3,7 @@ import django_fsm
 from django.conf import settings
 from django.test import TestCase
 from model_bakery import baker
+
 from situations.models import Situation
 
 

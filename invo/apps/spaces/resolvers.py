@@ -1,13 +1,13 @@
 from ariadne_extended.cursor_pagination import RelayModelMixin
 from ariadne_extended.resolvers import ListModelMixin, ModelResolver
-from graph.types import mutation, query
-from items.resolvers import ItemResolver
-from owners.resolvers import OwnerResolverMixin
 
 from .filters import SpaceNodeFilter
 from .models import GridSpaceNode, SpaceNode
 from .serializers import GridSpaceNodeSerializer, SpaceNodeSerializer
 from .types import grid_space_node, space_interface
+from graph.types import mutation, query
+from items.resolvers import ItemResolver
+from owners.resolvers import OwnerResolverMixin
 
 
 class SpaceNodeResolver(OwnerResolverMixin, ListModelMixin, ModelResolver):

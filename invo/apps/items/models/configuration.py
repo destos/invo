@@ -7,10 +7,11 @@ from django.utils.translation import ugettext_lazy as _
 from django_extensions.db.fields import AutoSlugField
 from django_extensions.db.models import TimeStampedModel
 from marshmallow import Schema, fields
-from owners.models import SharedSite
 from safedelete.models import SOFT_DELETE_CASCADE, SafeDeleteModel
 
 from invo.utils.pghistory import enable_history
+
+from owners.models import SharedSite
 
 
 @pgtrigger.register(pgtrigger.Protect(name="protect_deletes", operation=(pgtrigger.Delete)))

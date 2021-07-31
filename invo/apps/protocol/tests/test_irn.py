@@ -1,6 +1,7 @@
 import pytest
-from items.models import Item
 from model_bakery import baker
+
+from items.models import Item
 from protocol.models import IRN
 
 

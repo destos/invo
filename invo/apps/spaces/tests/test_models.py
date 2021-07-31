@@ -6,6 +6,7 @@ from django.contrib.sites.models import Site
 from django.test import TestCase
 from measurement.measures import Distance
 from model_bakery import baker
+
 from spaces import models
 
 

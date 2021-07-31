@@ -1,10 +1,10 @@
 from ariadne_extended.resolvers import ListModelMixin, ModelResolver
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.sites.shortcuts import get_current_site
-from graph.types import mutation, query
 
 from .models import Situation
 from .types import situation
+from graph.types import mutation, query
 from owners.resolvers import OwnerResolverMixin
 
 

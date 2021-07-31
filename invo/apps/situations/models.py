@@ -1,13 +1,16 @@
+from enum import Enum
 from itertools import groupby
 
 from django.conf import settings
 from django.db import models
 from django_extensions.db.models import TimeStampedModel
 from django_fsm import FSMIntegerField, transition
-from items.models import Item
-from owners.models import SingularSite
 from polymorphic.contrib.guardian import get_polymorphic_base_content_type
 from safedelete.models import SOFT_DELETE, SOFT_DELETE_CASCADE, SafeDeleteModel
+
+from .managers import CurrentSiteSituationManager, SituationManager
+from items.models import Item
+from owners.models import SingularSite
 from spaces.models import SpaceNode
 
 from .managers import SituationManager, CurrentSiteSituationManager

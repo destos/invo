@@ -1,14 +1,11 @@
 from ariadne.contrib.django.views import GraphQLView, MiddlewareManager
-from django.urls.conf import include
-from graph.middleware import JWTMiddleware
 from django.contrib import admin
 from django.urls import path
+from django.urls.conf import include
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
+
+from graph.middleware import JWTMiddleware
 from graph.schema import schema
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-    TokenVerifyView,
-)
 
 # TODO: using cookies for tokens is more secure. Investigate
 # from graph.views import CookieTokenObtainPairView
