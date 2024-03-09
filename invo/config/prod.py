@@ -5,6 +5,7 @@ Production Configurations
 - Meant to be served from digital ocean
 """
 from copy import copy
+
 from configurations import values
 
 from .common import Common

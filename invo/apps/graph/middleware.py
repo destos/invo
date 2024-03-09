@@ -1,7 +1,6 @@
 """ariadne_django_jwt middleware module"""
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
-
 __all__ = ["JWTMiddleware"]
 
 

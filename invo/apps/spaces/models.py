@@ -22,9 +22,7 @@ from django_measurement.models import MeasurementField
 from measurement.measures import Distance, Volume
 from model_utils import FieldTracker
 from mptt.fields import TreeForeignKey
-from owners.models import SingularSite
 from polymorphic_tree.models import PolymorphicMPTTModel
-from protocol.models import Protocol
 from safedelete.models import SOFT_DELETE_CASCADE, SafeDeleteModel
 
 from .layouts import Layout
@@ -34,6 +32,8 @@ from .managers import (
     SpaceNodeDeletedManager,
     SpaceNodeManager,
 )
+from owners.models import SingularSite
+from protocol.models import Protocol
 
 
 def default_data(*args):

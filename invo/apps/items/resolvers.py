@@ -1,10 +1,10 @@
 from ariadne_extended.cursor_pagination import RelayModelMixin
 from ariadne_extended.resolvers import ModelResolver
 from django.contrib.postgres.search import SearchQuery, SearchVector
-from graph.types import mutation, query
 
 from . import models, serializers
 from .types import item_interface
+from graph.types import mutation, query
 from owners.resolvers import OwnerResolverMixin
 
 

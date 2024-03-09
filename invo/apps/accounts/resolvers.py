@@ -1,8 +1,8 @@
 from ariadne_extended.resolvers.model import ModelResolver
-from graph.types import mutation, query
 
-from .types import group, permission, user
 from .serializers import UserSerializer
+from .types import group, permission, user
+from graph.types import mutation, query
 
 
 class UserResolver(ModelResolver):

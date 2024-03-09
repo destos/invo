@@ -1,6 +1,7 @@
 import pytest
 from measurement.measures import Distance
 from model_bakery import baker
+
 from spaces.models import GridSpaceNode, SpaceNode
 from spaces.serializers import GridSpaceNodeSerializer, SpaceNodeSerializer
 

@@ -1,10 +1,11 @@
 from ariadne_extended.resolvers import InputMixin, Resolver
-from graph.types import query
 from haystack import connections
 from haystack.constants import DEFAULT_ALIAS
 from haystack.query import SQ, EmptySearchQuerySet, SearchQuerySet
 from haystack.utils import get_model_ct
 from haystack.utils.app_loading import haystack_get_model
+
+from graph.types import query
 
 
 class SearchResolver(InputMixin, Resolver):

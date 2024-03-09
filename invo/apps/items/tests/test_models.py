@@ -1,10 +1,12 @@
 from unittest.mock import patch
-from marshmallow import fields
+
 from django.test import TestCase
-from items import models
+from marshmallow import fields
 from model_bakery import baker
-from spaces.models import SpaceNode
+
+from items import models
 from items.models import Declaration
+from spaces.models import SpaceNode
 
 
 class TestItemQueryset(TestCase):

@@ -3,14 +3,14 @@ from decimal import Decimal as D
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django_extensions.db.models import TimeStampedModel
-from owners.models import SharedSite
 from polymorphic.models import PolymorphicModel
-from protocol.models import Protocol
 from safedelete.models import SOFT_DELETE_CASCADE, SafeDeleteModel
 
 from invo.utils.pghistory import enable_history
 
 from ..managers import CurrentSiteItemManager, ItemManager
+from owners.models import SharedSite
+from protocol.models import Protocol
 
 
 @enable_history(related_name="item_history")

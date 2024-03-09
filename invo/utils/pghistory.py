@@ -1,5 +1,7 @@
-import pghistory
 from functools import wraps
+
+import pghistory
+
 
 # TODO: likely can exclude polymorphic ids/fields?
 def enable_history(**track_kwargs):

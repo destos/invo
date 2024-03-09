@@ -1,5 +1,6 @@
 from polymorphic.managers import PolymorphicManager
 from polymorphic.query import PolymorphicQuerySet
+
 from spaces.models import SpaceNode
 
 
