@@ -16,7 +16,7 @@ django-safedelete = "^0.5.6"
 pyhumps = "^1.6.1"
 python = "^3.9"
 # TODO: fix extended and django-measurement packages.
-ariadne-extended = {path = "../python/ariadne-extended"}
+ariadne-extended = "0.2.4"
 django-filter = "^2.4.0"
 django-waffle = "^2.0.0"
 dateutils = "^0.6.11"

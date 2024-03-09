@@ -33,7 +33,7 @@ class SituationResolver(OwnerResolverMixin, ModelResolver):
         self.check_object_permissions(self.request, active)
         return active
 
-    def select_entities(self, into, irns=list(), **kwargs):
+    def select_entities(self, info, irns=list(), **kwargs):
         active = self.get_active()
         self.check_object_permissions(self.request, active)
         entities = []
@@ -45,7 +45,7 @@ class SituationResolver(OwnerResolverMixin, ModelResolver):
 
         return dict(object=active, entities=entities, success=False)
 
-    def unselect_entities(self, into, irns=list(), **kwargs):
+    def unselect_entities(self, info, irns=list(), **kwargs):
         active = self.get_active()
         self.check_object_permissions(self.request, active)
         entities = []

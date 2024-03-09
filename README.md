@@ -83,4 +83,7 @@ docker-compose run --name qmonitor --rm django ./manage.py qmonitor
 ```bash
 # Run the django shell container
 docker-compose run --name invo_debug_app_shell --rm --service-ports django_shell
+
+# Isort on app
+poetry run isort invo/
 ```
