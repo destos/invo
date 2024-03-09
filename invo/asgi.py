@@ -28,12 +28,20 @@ from channels.security.websocket import AllowedHostsOriginValidator
 
 from graph.asgi import application as graph_application
 
-router = ProtocolTypeRouter(
+application = ProtocolTypeRouter(
     {
-        "websocket": URLRouter([re_path(r"^ws/$", graph_application)]),
+        # "websocket": URLRouter([
+        #     re_path(r"^ws/$", graph_application)
+        # ]),
         "http": django_asgi_app,
+        # URLRouter([
+        # path("graphql/", graph_application),
+        #     url("", django_asgi_app),
+        # ]),
+        "websocket": AllowedHostsOriginValidator(
+            AuthMiddlewareStack(URLRouter([path("ws/", graph_application)]))
+        ),
     }
 )
 
-# application = django_asgi_app
-application = SentryAsgiMiddleware(router)
+# application = SentryAsgiMiddleware(application)
