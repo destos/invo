@@ -5,9 +5,9 @@ documents:
   # - ./src/fragments/*.{ts,tsx,js}
   - ./src/queries/*.{ts,tsx,js}
 generates:
-  src/generated/apollo-helpers.ts:
-    plugins:
-      - typescript-apollo-client-helpers
+  # src/generated/apollo-helpers.ts:
+  #   plugins:
+  #     - typescript-apollo-client-helpers
   src/client/types.ts:
     plugins:
       - typescript
@@ -28,12 +28,12 @@ generates:
       - fragment-matcher
     config:
       apolloClientVersion: 3
-  src/generated/graphql.schema.json:
-    plugins:
-      - introspection
-    # config:
-    #   minify: true
+  # src/generated/graphql.schema.json:
+  #   plugins:
+  #     - introspection
+  #   # config:
+  #   #   minify: true
 
-  src/generated/jsonSchema.json:
-    plugins:
-      - codegen_plugins/jsonSchema.js
+  # src/generated/jsonSchema.json:
+  #   plugins:
+  #     - codegen_plugins/jsonSchema.js

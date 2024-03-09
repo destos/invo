@@ -36,7 +36,7 @@ class SpaceNodeSerializer(serializers.ModelSerializer):
 
 
 class GridSpaceNodeSerializer(SpaceNodeSerializer):
-    grid_size = serializers.DictField(allow_empty=True)
+    # grid_size = serializers.DictField(allow_empty=True)
 
     class Meta(SpaceNodeSerializer.Meta):
         model = models.GridSpaceNode

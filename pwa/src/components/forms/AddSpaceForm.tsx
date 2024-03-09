@@ -1,6 +1,5 @@
 import Form from "@rjsf/material-ui"
 import React from "react"
-// import schema from "generated/jsonSchema.json"
 
 interface AddSpaceFormProps {}
 // schema.properties.Mutation.properties.addSpace

@@ -3,14 +3,17 @@ from decimal import Decimal as D
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django_extensions.db.models import TimeStampedModel
-from owners.models import SharedSite
 from polymorphic.models import PolymorphicModel
-from protocol.models import Protocol
 from safedelete.models import SOFT_DELETE_CASCADE, SafeDeleteModel
 
-from .managers import CurrentSiteItemManager, ItemManager
+from invo.utils.pghistory import enable_history
+
+from ..managers import CurrentSiteItemManager, ItemManager
+from owners.models import SharedSite
+from protocol.models import Protocol
 
 
+@enable_history(related_name="item_history")
 class Item(SharedSite, Protocol, TimeStampedModel, PolymorphicModel, SafeDeleteModel):
     """Base item that can be stored in different spaces"""
 
@@ -26,16 +29,29 @@ class Item(SharedSite, Protocol, TimeStampedModel, PolymorphicModel, SafeDeleteM
         blank=True,
         null=True,
         related_name="items",
-        on_delete=models.SET_NULL,
+        on_delete=models.DO_NOTHING,
+    )
+
+    declaration = models.ForeignKey(
+        "items.Declaration",
+        blank=True,
+        null=True,
+        related_name="items",
+        on_delete=models.DO_NOTHING,
     )
 
     def __str__(self):
         return self.name
 
+    @property
+    def description(self):
+        return ""
+
     objects = ItemManager()
     current_site_objects = CurrentSiteItemManager()
 
 
+@enable_history(related_name="consumable_history")
 class Consumable(Item):
     """Tracks the amount of a particular item, usually placed all together."""
 
@@ -69,6 +85,7 @@ class Consumable(Item):
         return self.warning_enabled and self.count <= self.warning_count
 
 
+@enable_history(related_name="tracked_consumable_history")
 class TrackedConsumable(Consumable):
     """Serialized consumable consumption for tracking"""
 
@@ -86,8 +103,12 @@ class TrackedConsumable(Consumable):
         return super().consume(amount=len(equipment), **kwargs)
 
 
+@enable_history(related_name="tool_history")
 class Tool(Item):
     """Tools allow you to store """
 
     # TODO: toolhub tool taxonomy system, mqtt yo! make it better this time.
     pass
+
+
+__all__ = ["Item", "Consumable", "TrackedConsumable", "Tool"]

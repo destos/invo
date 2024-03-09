@@ -16,7 +16,9 @@ from os.path import join
 from pathlib import Path
 
 import dj_search_url
+import pgconnection
 from configurations import Configuration, values
+
 from .mixins.waffle import Waffle
 from .values import TimeDeltaValue
 
@@ -81,6 +83,9 @@ class Common(Waffle, Configuration):
         "rest_framework_simplejwt.token_blacklist",
         "django_q",
         "memoize",
+        "pghistory",
+        "pgtrigger",
+        "pgconnection",
     )
 
     LOCAL_APPS = (
@@ -110,6 +115,7 @@ class Common(Waffle, Configuration):
         "django.middleware.clickjacking.XFrameOptionsMiddleware",
         "django.contrib.sites.middleware.CurrentSiteMiddleware",
         "corsheaders.middleware.CorsMiddleware",
+        # "graph.middleware.SimpleMiddleware",
     ]
     # END MIDDLEWARE CONFIGURATION
 
@@ -214,6 +220,7 @@ class Common(Waffle, Configuration):
     # AUTHENTICATION CONFIGURATION
     AUTHENTICATION_BACKENDS = ("django.contrib.auth.backends.ModelBackend",)
 
+    # 'rest_framework_simplejwt.authentication.JWTAuthentication',
     # Password validation
     # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
@@ -241,24 +248,20 @@ class Common(Waffle, Configuration):
     # the site admins on every HTTP 500 error when DEBUG=False.
     # See http://docs.djangoproject.com/en/dev/topics/logging for
     # more details on how to customize your logging configuration.
+
     LOGGING = {
         "version": 1,
         "disable_existing_loggers": False,
-        "filters": {"require_debug_false": {"()": "django.utils.log.RequireDebugFalse"}},
+        # "filters": {"require_debug_false": {"()": "django.utils.log.RequireDebugFalse"}},
         "formatters": {"rich": {"datefmt": "[%X]", "rich_tracebacks": True}},
         "handlers": {
             "console": {
                 "class": "rich.logging.RichHandler",
                 "formatter": "rich",
                 "level": "DEBUG",
-            },
-        },
-        "loggers": {
-            "": {
-                'level': 'DEBUG',
-                'handlers': ['console']
             }
         },
+        "loggers": {"django": {"handlers": ["console"]}, "": {"handlers": ["console"]}},
     }
     # END LOGGING CONFIGURATION
 
@@ -269,7 +272,7 @@ class Common(Waffle, Configuration):
             "default": {
                 "BACKEND": "channels_redis.core.RedisChannelLayer",
                 "CONFIG": {
-                    "hosts": [self.CACHES["default"]['LOCATION']],
+                    "hosts": [self.CACHES["default"]["LOCATION"]],
                 },
             },
         }
@@ -277,6 +280,8 @@ class Common(Waffle, Configuration):
     # Additional database setup
     @classmethod
     def post_setup(cls):
+        super().post_setup()
+        cls.DATABASES = pgconnection.configure(cls.DATABASES)
         cls.DATABASES["default"]["ATOMIC_REQUESTS"] = True
 
     # CORS

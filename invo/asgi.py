@@ -9,12 +9,11 @@ https://docs.djangoproject.com/en/3.1/howto/deployment/asgi/
 
 import os
 
-from configurations import importer
-
 # from channels.http import AsgiHandler
 from channels.routing import ProtocolTypeRouter, URLRouter
-from django.urls import re_path, path
+from configurations import importer
 from django.core.asgi import get_asgi_application
+from django.urls import path, re_path
 from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "invo.config")
@@ -24,8 +23,9 @@ importer.install()
 # Get asi application must come before further imports to prevent django model ready errors.
 django_asgi_app = get_asgi_application()
 
-from channels.security.websocket import AllowedHostsOriginValidator
 from channels.auth import AuthMiddlewareStack
+from channels.security.websocket import AllowedHostsOriginValidator
+
 from graph.asgi import application as graph_application
 
 application = ProtocolTypeRouter(

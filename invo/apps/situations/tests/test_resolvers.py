@@ -7,8 +7,9 @@ from django.conf import settings
 from django.contrib.sites.models import Site
 from django.test import RequestFactory, TestCase
 from glom import glom
-from graph.schema import schema
 from model_bakery import baker
+
+from graph.schema import schema
 
 active_query = """
     query {

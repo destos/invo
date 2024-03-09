@@ -1,5 +1,6 @@
 from typing import NamedTuple, Union
 
+import jwt
 import segno
 from django.apps import apps
 from django.conf import settings
@@ -80,6 +81,12 @@ class Protocol(models.Model):
     def qr(self, *args):
         qr = self.make_qr()
         return qr.svg_data_uri()
+
+    @memoize(timeout=320)
+    def jwt_qr(self, *args, **kwargs):
+        data = self.urn._asdict()
+        token = jwt.encode(data, "secret")
+        return segno.make(token, *args, **kwargs)
 
     class Meta:
         abstract = True

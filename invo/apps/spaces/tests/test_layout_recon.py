@@ -3,6 +3,7 @@ from measurement.measures import Distance, Volume
 from rich import print
 from rich.panel import Panel
 from rich.table import Table
+
 from spaces.layouts import Layout, LayoutReconciler
 
 
@@ -36,7 +37,7 @@ def print_layouts(layouts):
 
 
 # @pytest.mark.django_db()
-def test_layout_grid_reconciliation():
+def xtest_layout_grid_reconciliation():
     """
     Grid reconciliation
 

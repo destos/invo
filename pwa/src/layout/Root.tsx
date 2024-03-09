@@ -2,9 +2,10 @@ import {
   Container,
   CssBaseline,
   LinearProgress,
-  Theme
+  Theme,
+  useMediaQuery,
+  useTheme
 } from "@material-ui/core"
-import { createStyles } from "@material-ui/core/styles"
 import { makeStyles } from "@material-ui/styles"
 import { ErrorBoundary } from "@sentry/react"
 import { useAuth } from "client/auth"
@@ -21,58 +22,56 @@ import SituationDrawer from "./SituationDrawer"
 
 const drawerWidth = 420
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      display: "flex"
-    },
-    appBar: {
-      transition: theme.transitions.create(["margin", "width"], {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen
-      })
-    },
-    appBarShift: {
-      width: `calc(100% - ${drawerWidth}px)`,
-      transition: theme.transitions.create(["margin", "width"], {
-        easing: theme.transitions.easing.easeOut,
-        duration: theme.transitions.duration.enteringScreen
-      }),
-      marginRight: drawerWidth
-    },
-    drawer: {
-      width: drawerWidth,
-      flexShrink: 0
-    },
-    drawerPaper: {
-      width: drawerWidth
-    },
-    drawerHeader: {
-      display: "flex",
-      alignItems: "center",
-      padding: theme.spacing(0, 1),
-      // necessary for content to be below app bar
-      ...theme.mixins.toolbar,
-      justifyContent: "flex-start"
-    },
-    content: {
-      flexGrow: 1,
-      padding: theme.spacing(3),
-      transition: theme.transitions.create("margin", {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen
-      }),
-      marginRight: -drawerWidth
-    },
-    contentShift: {
-      transition: theme.transitions.create("margin", {
-        easing: theme.transitions.easing.easeOut,
-        duration: theme.transitions.duration.enteringScreen
-      }),
-      marginRight: 0
-    }
-  })
-)
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    display: "flex"
+  },
+  appBar: {
+    transition: theme.transitions.create(["margin", "width"], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen
+    })
+  },
+  appBarShift: {
+    width: `calc(100% - ${drawerWidth}px)`,
+    transition: theme.transitions.create(["margin", "width"], {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen
+    }),
+    marginRight: drawerWidth
+  },
+  drawer: {
+    width: drawerWidth,
+    flexShrink: 0
+  },
+  drawerPaper: {
+    width: drawerWidth
+  },
+  drawerHeader: {
+    display: "flex",
+    alignItems: "center",
+    padding: theme.spacing(0, 1),
+    // necessary for content to be below app bar
+    ...theme.mixins.toolbar,
+    justifyContent: "flex-start"
+  },
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing(3),
+    transition: theme.transitions.create("margin", {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen
+    }),
+    marginRight: -drawerWidth
+  },
+  contentShift: {
+    transition: theme.transitions.create("margin", {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen
+    }),
+    marginRight: 0
+  }
+}))
 
 export interface RootProps {
   route?: RouteConfig | undefined
@@ -81,6 +80,8 @@ export interface RootProps {
 const Root: React.FC<RootProps> = ({ route }) => {
   const classes = useStyles()
   const auth = useAuth()
+  const theme = useTheme()
+  const fullScreen = useMediaQuery(theme.breakpoints.down("xs"))
 
   const searchPopupState = usePopupState({
     variant: "popover",
@@ -146,8 +147,16 @@ const Root: React.FC<RootProps> = ({ route }) => {
             paper: classes.drawerPaper
           }}
         />
-        <SearchDialog {...bindPopover(searchPopupState)} title="Search" />
-        <ShortcutDialog {...bindPopover(shortcutsPopupState)} title="Search" />
+        <SearchDialog
+          {...bindPopover(searchPopupState)}
+          title="Search"
+          fullScreen={fullScreen}
+        />
+        <ShortcutDialog
+          {...bindPopover(shortcutsPopupState)}
+          title="Search"
+          fullScreen={fullScreen}
+        />
       </ActiveSituProvider>
     </div>
   )

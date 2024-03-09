@@ -7,6 +7,8 @@ enum SituationState {
     ADDING
     "User decided to place items in a space"
     PLACING
+    "When you want to move a space somewhere else"
+    MOVING
     "User added more inventory"
     INCREMENT
     "User consumed some inventory"
@@ -45,4 +47,19 @@ extend type Mutation {
     selectEntities(irns: [IRN!]!): SituationPayload!
     unselectEntities(irns: [IRN!]!): SituationPayload!
     abandonSituation: Situation
+}
+
+# item/space Movement results and suggestions
+
+# Items moving into a space
+# Taking Items out of a space (items only selected)
+# Spaces moving into spaces, moving the nesting ( and validation )
+# Item space moving into another space. select an item, but act on the space it is inside.
+# Selected items moving into a new space
+#
+
+type SituationProposal {
+  from: SpaceNode
+  to: SpaceNode
+  moving: [Protocol!]!
 }

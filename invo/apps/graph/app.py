@@ -2,7 +2,7 @@ from django.apps import AppConfig
 
 
 class GraphConfig(AppConfig):
-    name = 'graph'
+    name = "graph"
 
-    def ready(self):
-        import graph.signals  # noqa: F401
+    # def ready(self):
+    #     import graph.signals  # noqa: F401

@@ -1,15 +1,28 @@
 from ariadne_extended.cursor_pagination import RelayModelMixin
 from ariadne_extended.resolvers import ModelResolver
-from graph.types import mutation, query
+from django.contrib.postgres.search import SearchQuery, SearchVector
 
 from . import models, serializers
 from .types import item_interface
+from graph.types import mutation, query
 from owners.resolvers import OwnerResolverMixin
 
 
+class ItemSearchBackend:
+    def filter_queryset(self, request, qs, resolver):
+        # import ipdb; ipdb.set_trace()
+        search = resolver.operation_kwargs.get("search", None)
+        if search:
+            sv = SearchVector("name", weight="A")
+            return qs.annotate(search=sv).filter(search=SearchQuery(search))
+        return qs
+
+
 class ItemResolver(OwnerResolverMixin, RelayModelMixin, ModelResolver):
+    filter_backends = ModelResolver.filter_backends + [ItemSearchBackend]
     model = models.Item
     queryset = models.Item.objects.all()
+    ordering = ("created",)
 
     type_serializers = {
         models.Item: serializers.ItemSerializer,
@@ -41,6 +54,8 @@ def resolve_space_parents(item, info, **kwargs):
 
 
 def resolve_suggest_type(parent, info, **kwargs):
+    # TODO: I think the idea here is to see what we're trying to name the item, and then suggest
+    # the type of
     return "ITEM"
 
 
@@ -59,6 +74,7 @@ mutation.set_field(
     "updateConsumable",
     ItemResolver.as_resolver(method="update", model=models.Consumable),
 )
+query.set_field("itemSearch", ItemResolver.as_resolver(method="list", type="search"))
 
 mutation.set_field("deleteItem", ItemResolver.as_resolver(method="destroy"))
 # TODO: moveItem, removeItem, putBackItem

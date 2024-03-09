@@ -1,12 +1,13 @@
 import pytest
-from items.models import Item
 from model_bakery import baker
+
+from items.models import Item
 from protocol.models import IRN
 
 
 def test_irn_class():
     # Default named tuple usage
-    irn = IRN("irn", "test", "items.item", "456")
+    irn = IRN("irn", "test", "items.item", 456)
 
     assert str(irn) == "irn:test:items.item:456"
 
@@ -23,7 +24,7 @@ def test_irn_parse():
 
 def test_irn_build(settings):
     # with positional args
-    irn = IRN.build("items.item", "456")
+    irn = IRN.build("items.item", 456)
     assert str(irn) == "irn:test:items.item:456"
 
     # with kwargs
@@ -32,7 +33,7 @@ def test_irn_build(settings):
 
 
 def test_get_model():
-    irn = IRN.build("items.item", "456")
+    irn = IRN.build("items.item", 456)
     model = irn.get_model()
     assert model == Item
 
@@ -40,6 +41,6 @@ def test_get_model():
 @pytest.mark.django_db()
 def test_get_instance():
     item = baker.make("items.Item", id=456)
-    irn = IRN.build("items.item", "456")
+    irn = IRN.build("items.item", 456)
     instance = irn.get_instance()
     assert instance == item

@@ -1,18 +1,25 @@
 import { gql } from "@apollo/client"
-import fragments from "./fragments"
+import { situationBit } from "./fragments"
 
 export const SITU_QUERY = gql`
   query getActiveSituation {
-    # TODO: Is a connection needed to invalidate cache when a new situation is active?
+    currentUser {
+      sites {
+        ...SituationSite
+      }
+    }
     currentSite {
-      domain
-      name
+      ...SituationSite
     }
     activeSituation {
       ...SituationBit
     }
   }
-  ${fragments}
+  ${situationBit}
+  fragment SituationSite on Site {
+    domain
+    name
+  }
 `
 
 export const SELECT_ENTITIES = gql`
@@ -24,7 +31,7 @@ export const SELECT_ENTITIES = gql`
       }
     }
   }
-  ${fragments}
+  ${situationBit}
 `
 
 export const UNSELECT_ENTITIES = gql`
@@ -36,5 +43,14 @@ export const UNSELECT_ENTITIES = gql`
       }
     }
   }
-  ${fragments}
+  ${situationBit}
+`
+
+export const ABANDON_SITUATION = gql`
+  mutation abandonActiveSituation($irns: [IRN!]!) {
+    abandonSituation {
+      ...SituationBit
+    }
+  }
+  ${situationBit}
 `
