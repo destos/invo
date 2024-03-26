@@ -50,12 +50,12 @@ services:
       - 8000:8000
     profiles:
       - debug
-  qworkers:
-    <<: *django
-    command: python ./manage.py qcluster
-    # env_file: .env.ngrok
-    profiles:
-      - debug
+  # qworkers:
+  #   <<: *django
+  #   command: python ./manage.py qcluster
+  #   # env_file: .env.ngrok
+  #   profiles:
+  #     - debug
   # scripts and debugging
   django_shell:
     <<: *django

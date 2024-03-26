@@ -23,9 +23,9 @@ from .mixins.waffle import Waffle
 from .values import TimeDeltaValue
 
 # Monkey patch to allow for proper haystack backend for elasticsearch 5 when selecting elasticsearch
-dj_search_url.SCHEMES[
-    "elasticsearch"
-] = "haystack.backends.elasticsearch5_backend.Elasticsearch5SearchEngine"
+dj_search_url.SCHEMES["elasticsearch"] = (
+    "haystack.backends.elasticsearch5_backend.Elasticsearch5SearchEngine"
+)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -33,6 +33,7 @@ sys.path.append(join(BASE_DIR, "apps"))
 
 
 class Common(Waffle, Configuration):
+    DOTENV = ".env"
 
     BASE_DIR = BASE_DIR
 
@@ -74,14 +75,7 @@ class Common(Waffle, Configuration):
         "mptt",
         "waffle",
         "corsheaders",
-        "ariadne.contrib.django",
-        "ariadne_extended.graph_loader",
-        "ariadne_extended.cursor_pagination",
-        "ariadne_extended.payload",
-        "ariadne_extended.contrib.waffle_graph",
         "haystack",
-        "rest_framework_simplejwt.token_blacklist",
-        "django_q",
         "memoize",
         "pghistory",
         "pgtrigger",
@@ -93,7 +87,6 @@ class Common(Waffle, Configuration):
         "owners",
         "situations",
         "protocol",
-        "graph",
         "spaces",
         "items",
         "entity_search",
@@ -115,7 +108,6 @@ class Common(Waffle, Configuration):
         "django.middleware.clickjacking.XFrameOptionsMiddleware",
         "django.contrib.sites.middleware.CurrentSiteMiddleware",
         "corsheaders.middleware.CorsMiddleware",
-        # "graph.middleware.SimpleMiddleware",
     ]
     # END MIDDLEWARE CONFIGURATION
 
@@ -220,7 +212,6 @@ class Common(Waffle, Configuration):
     # AUTHENTICATION CONFIGURATION
     AUTHENTICATION_BACKENDS = ("django.contrib.auth.backends.ModelBackend",)
 
-    # 'rest_framework_simplejwt.authentication.JWTAuthentication',
     # Password validation
     # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
@@ -283,6 +274,8 @@ class Common(Waffle, Configuration):
         super().post_setup()
         cls.DATABASES = pgconnection.configure(cls.DATABASES)
         cls.DATABASES["default"]["ATOMIC_REQUESTS"] = True
+
+    DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
     # CORS
     CORS_ORIGIN_WHITELIST = values.ListValue([])

@@ -17,17 +17,8 @@ def main():
             "forget to activate a virtual environment?"
         ) from exc
 
-    # monkay, get out of the trees
-    from django.core.exceptions import FieldDoesNotExist
-    from django.db import models
-
-    models.FieldDoesNotExist = FieldDoesNotExist
-
     execute_from_command_line(sys.argv)
 
 
 if __name__ == "__main__":
-    from ariadne_extended.utils.monkey import patch_autoreload
-
-    patch_autoreload()
     main()

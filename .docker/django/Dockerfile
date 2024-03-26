@@ -4,7 +4,7 @@ ARG POETRY_HOME="/opt/poetry"
 ARG SETUP_PATH="/opt/setup"
 ARG VENV_PATH="${SETUP_PATH}/.venv/"
 
-FROM python:3.9-slim-buster as python-base
+FROM python:3.12-slim-buster as python-base
 
 ENV \
   # python
@@ -25,7 +25,7 @@ ENV \
   PIP_DISABLE_PIP_VERSION_CHECK=on \
   PIP_DEFAULT_TIMEOUT=100 \
   # poetry:
-  POETRY_VERSION=1.1.4 \
+  POETRY_VERSION=1.8.2 \
   POETRY_NO_INTERACTION=1 \
   POETRY_VIRTUALENVS_CREATE=true \
   POETRY_VIRTUALENVS_IN_PROJECT=true \

@@ -16,7 +16,7 @@ from typing import NamedTuple, Union
 import glom
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django_extensions.db.models import TimeStampedModel
 from django_measurement.models import MeasurementField
 from measurement.measures import Distance, Volume

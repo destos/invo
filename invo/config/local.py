@@ -36,3 +36,5 @@ class Local(Common):
     CORS_ALLOW_CREDENTIALS = True
 
     INVO_APP_IRN_NAMESPACE = values.Value("local")
+
+    ALLOWED_HOSTS = ["*"]
