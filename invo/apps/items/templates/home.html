@@ -1,0 +1,17 @@
+{% load static django_htmx %}<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Invo</title>
+  <script src="{% static 'js/htmx.min.js' %}" defer></script>
+  {% django_htmx_script %}
+  <link rel="manifest" href="{% static 'manifest.json' %}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{% static '/icons/favicon-32x32.png' %}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{% static '/icons/favicon-16x16.png' %}">
+  <link rel="icon" type="image/x-icon" href="{% static '/icons/favicon.ico' %}">
+</head>
+<body>
+  {% block body %}{% endblock body %}
+</body>
+</html>
