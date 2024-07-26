@@ -80,6 +80,9 @@ class Common(Waffle, Configuration):
         "pghistory",
         "pgtrigger",
         "pgconnection",
+        "django_htmx",
+        "slippers",
+        "template_partials",
     )
 
     LOCAL_APPS = (
@@ -108,6 +111,7 @@ class Common(Waffle, Configuration):
         "django.middleware.clickjacking.XFrameOptionsMiddleware",
         "django.contrib.sites.middleware.CurrentSiteMiddleware",
         "corsheaders.middleware.CorsMiddleware",
+        "django_htmx.middleware.HtmxMiddleware",
     ]
     # END MIDDLEWARE CONFIGURATION
 
@@ -158,11 +162,16 @@ class Common(Waffle, Configuration):
 
     # TEMPLATE CONFIGURATION
     # See: https://docs.djangoproject.com/en/dev/ref/settings/#template-context-processors
+    default_loaders = [
+        "django.template.loaders.filesystem.Loader",
+        "django.template.loaders.app_directories.Loader",
+    ]
+    cached_loaders = [("django.template.loaders.cached.Loader", default_loaders)]
+    partial_loaders = [("template_partials.loader.Loader", cached_loaders)]
     TEMPLATES = [
         {
             "BACKEND": "django.template.backends.django.DjangoTemplates",
             "DIRS": [],
-            "APP_DIRS": True,
             "OPTIONS": {
                 "context_processors": [
                     "django.template.context_processors.debug",
@@ -170,6 +179,12 @@ class Common(Waffle, Configuration):
                     "django.contrib.auth.context_processors.auth",
                     "django.contrib.messages.context_processors.messages",
                 ],
+                "builtins": [
+                    "slippers.templatetags.slippers",
+                    "template_partials.templatetags.partials",
+                    "pattern_library.loader_tags",
+                ],
+                "loaders": partial_loaders
             },
         },
     ]
@@ -182,15 +197,13 @@ class Common(Waffle, Configuration):
     STATIC_URL = "/static/"
 
     # See: https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#std:setting-STATICFILES_DIRS
-    # STATICFILES_DIRS = (
-    #     join(BASE_DIR, 'static'),
-    # )
+    STATICFILES_DIRS = (join(BASE_DIR, "static"),)
 
     # See: https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#staticfiles-finders
-    # STATICFILES_FINDERS = (
-    #     'django.contrib.staticfiles.finders.FileSystemFinder',
-    #     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    # )
+    STATICFILES_FINDERS = (
+        "django.contrib.staticfiles.finders.FileSystemFinder",
+        "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+    )
     # END STATIC FILE CONFIGURATION
 
     # MEDIA CONFIGURATION
@@ -242,7 +255,7 @@ class Common(Waffle, Configuration):
 
     LOGGING = {
         "version": 1,
-        "disable_existing_loggers": False,
+        "disable_existing_loggers": True,
         # "filters": {"require_debug_false": {"()": "django.utils.log.RequireDebugFalse"}},
         "formatters": {"rich": {"datefmt": "[%X]", "rich_tracebacks": True}},
         "handlers": {
