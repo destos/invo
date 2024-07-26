@@ -53,15 +53,8 @@ def resolve_space_parents(item, info, **kwargs):
     return []
 
 
-def resolve_suggest_type(parent, info, **kwargs):
-    # TODO: I think the idea here is to see what we're trying to name the item, and then suggest
-    # the type of
-    return "ITEM"
-
-
 query.set_field("item", ItemResolver.as_resolver(method="retrieve"))
 query.set_field("items", ItemResolver.as_resolver(method="list"))
-query.set_field("suggestType", resolve_suggest_type)
 
 mutation.set_field("addItem", ItemResolver.as_resolver(method="create"))
 mutation.set_field("addTool", ItemResolver.as_resolver(method="create", model=models.Tool))
