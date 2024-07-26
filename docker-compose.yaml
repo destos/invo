@@ -75,6 +75,7 @@ services:
       - donotstart
 
   # Databases
+  # TODO: postgis
   db:
     restart: always
     image: postgres:latest

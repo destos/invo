@@ -83,6 +83,10 @@ class Common(Waffle, Configuration):
         "django_htmx",
         "slippers",
         "template_partials",
+        # to dev
+        "django_browser_reload",
+        "debug_toolbar",
+        "pattern_library",
     )
 
     LOCAL_APPS = (
@@ -110,8 +114,10 @@ class Common(Waffle, Configuration):
         "django.contrib.messages.middleware.MessageMiddleware",
         "django.middleware.clickjacking.XFrameOptionsMiddleware",
         "django.contrib.sites.middleware.CurrentSiteMiddleware",
+        "django_browser_reload.middleware.BrowserReloadMiddleware",
         "corsheaders.middleware.CorsMiddleware",
         "django_htmx.middleware.HtmxMiddleware",
+        "debug_toolbar.middleware.DebugToolbarMiddleware",
     ]
     # END MIDDLEWARE CONFIGURATION
 
@@ -319,15 +325,6 @@ class Common(Waffle, Configuration):
     HAYSTACK_FUZZY_MAX_EXPANSIONS = 50
     # HAYSTACK_SIGNAL_PROCESSOR = "haystack.signals.RealtimeSignalProcessor"
     HAYSTACK_SIGNAL_PROCESSOR = "haystack.signals.BaseSignalProcessor"
-
-    # Django Q
-    Q_CLUSTER = {
-        # default={"name": "main", "workers": 4, "timeout": 90, "django_redis": "default"},
-        "name": "main",
-        "workers": 4,
-        "timeout": 90,
-        "django_redis": "default",
-    }
 
     # INVO APP SETTINGS
 
