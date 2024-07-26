@@ -1,0 +1,27 @@
+{
+  "short_name": "Invo",
+  "name": "Invo",
+  "theme_color": "#f37e17",
+  "background_color": "#321911",
+  "icons": [
+    {
+      "purpose": "maskable",
+      "sizes": "512x512",
+      "src": "icons/icon512_maskable.png",
+      "type": "image/png"
+    },
+    {
+      "purpose": "any",
+      "sizes": "512x512",
+      "src": "icons/icon512_rounded.png",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "scope": "/",
+  "description": "Manage your home inventory efficiently and effortlessly.",
+  "lang": "en-US",
+  "dir": "rtl"
+}
