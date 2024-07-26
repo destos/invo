@@ -1,0 +1,41 @@
+{% extends "home.html" %}
+
+{% load partials %}
+
+{% block body %}
+
+<h1>Items</h1>
+
+{% startpartial items-list-content inline=True %}
+<div id="items-list-content"
+  hx-target="closest li" hx-swap="outerHTML"
+>
+  {% for item in items %}
+  <li>
+    {{ item.id }}
+    {{ item }}
+    <button                
+      hx-get="/contact/${contact.id}/edit"
+      hx-trigger="edit"
+      onClick="htmx.trigger">
+    </button>
+  </li>
+  {% endfor %}
+
+  <h2>Create</h2>
+
+  {% startpartial items-list-create-form inline=True %}
+    <form
+      id="items-list-create-form"
+      hx-post="{% url "item_create" %}"
+      hx-target="#items-list-content"
+    >
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Create</button>
+    </form>
+  {% endpartial %}
+</div>
+{% endpartial %}
+
+{% endblock body %}
